@@ -43,7 +43,6 @@ public final class CryptUtil {
      * @param key 密钥
      * @param iv 偏移向量，对称加密ECB模式和非对称加密传null
      * @param blockSize 分段加密数据块大小，传-1不分段
-     * @param seed 随机数源种子
      */
     public static byte[] encrypt(String data, String algorithm, Key key, byte[] iv, int blockSize) throws Exception {
         Cipher cipher = Cipher.getInstance(algorithm);
@@ -114,7 +113,6 @@ public final class CryptUtil {
      * @param data 待签名数据
      * @param algorithm 算法[/模式][/填充]
      * @param privateKey 私钥
-     * @param seed 随机数源种子
      */
     public static byte[] sign(String data, String algorithm, PrivateKey privateKey) throws Exception {
         Signature signature = Signature.getInstance(algorithm);
