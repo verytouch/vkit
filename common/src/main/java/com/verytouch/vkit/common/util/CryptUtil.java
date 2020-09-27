@@ -11,7 +11,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.*;
+import java.security.interfaces.RSAPrivateCrtKey;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.RSAPublicKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.function.BiFunction;
@@ -52,13 +54,11 @@ public final class CryptUtil {
      */
     public static byte[] encrypt(String data, String algorithm, Key key, byte[] iv, int blockSize) throws Exception {
         Cipher cipher = Cipher.getInstance(algorithm);
-        SecureRandom secureRandom = new SecureRandom();
-        secureRandom.setSeed(System.currentTimeMillis());
         if (iv != null) {
             IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
-            cipher.init(Cipher.ENCRYPT_MODE, key, ivParameterSpec, secureRandom);
+            cipher.init(Cipher.ENCRYPT_MODE, key, ivParameterSpec);
         } else {
-            cipher.init(Cipher.ENCRYPT_MODE, key, secureRandom);
+            cipher.init(Cipher.ENCRYPT_MODE, key);
         }
         if (blockSize == -1) {
             return cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
@@ -246,14 +246,14 @@ public final class CryptUtil {
         /**
          * 非对称算法密钥对生成并保存pkcs8格式到指定文件
          */
-        public static void keyPairPkcs8(String algorithm, int keySize, Path pub, Path pri) throws Exception {
+        public static void keyPairPKCS8(String algorithm, int keySize, Path pub, Path pri) throws Exception {
             KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(algorithm);
             keyPairGenerator.initialize(keySize);
             KeyPair keyPair = keyPairGenerator.generateKeyPair();
 
-            BiFunction<byte[], String[], String> pkcs8Fun = (data, addtional) -> {
+            BiFunction<byte[], String[], String> pkcs8Fun = (data, prefixSuffix) -> {
                 String s = Base64.getEncoder().encodeToString(data).replaceAll("(.{64})", "$1\n");
-                return String.format("%s\n%s\n%s", addtional[0], s, addtional[1]);
+                return String.format("%s\n%s\n%s", prefixSuffix[0], s, prefixSuffix[1]);
             };
 
             Files.write(pub, pkcs8Fun.apply(keyPair.getPublic().getEncoded(), PKCS8_PUBLIC).getBytes());
@@ -281,7 +281,7 @@ public final class CryptUtil {
         /**
          * pkcs8公钥还原
          */
-        public static PublicKey publicKeyFromPkcs8(String algorithm, String pkcs8) throws Exception {
+        public static PublicKey publicKeyFromPKCS8(String algorithm, String pkcs8) throws Exception {
             String base64 = pkcs8.replace(PKCS8_PUBLIC[0], "")
                     .replace(PKCS8_PUBLIC[1], "")
                     .replaceAll("[\r\n]", "");
@@ -291,7 +291,7 @@ public final class CryptUtil {
         /**
          * pkcs8私钥还原
          */
-        public static PrivateKey privateKeyFromPkcs8(String algorithm, String pkcs8) throws Exception {
+        public static PrivateKey privateKeyFromPKCS8(String algorithm, String pkcs8) throws Exception {
             String base64 = pkcs8.replace(PKCS8_PRIVATE[0], "")
                     .replace(PKCS8_PRIVATE[1], "")
                     .replaceAll("[\r\n]", "");
@@ -306,12 +306,12 @@ public final class CryptUtil {
 
         private AES() {}
 
-        private static final String ALG = "AES/CTR/NoPadding";
-        private static final byte[] IV = "1234567812345678".getBytes();
-        private static final int KEY_SIZE = 256;
+        private static final String ALG = "AES/CBC/PKCS5Padding";
+        private static final byte[] IV = new byte[16];
+        private static final int KEY_SIZE = 128;
 
         /**
-         * 生成256位密钥
+         * 生成128位密钥
          */
         public static byte[] secretKey() throws Exception {
             return KeyGen.secretKey("AES", KEY_SIZE).getEncoded();
@@ -353,19 +353,28 @@ public final class CryptUtil {
         }
 
         /**
-         * 私钥加密
+         * 私钥提取公钥
          */
-        public static String privateEncryptHex(String data, byte[] key) throws Exception {
-            PrivateKey privateKey = KeyGen.privateKey("RSA", key);
-            return toHex(encrypt(data, "RSA", privateKey, null, ENCRYPT_BLOCK_SIZE));
+        public static PublicKey publickKeyFromPrivateKey(RSAPrivateCrtKey privateKey) throws Exception {
+            KeyFactory keyFactory = KeyFactory.getInstance(privateKey.getAlgorithm());
+            RSAPublicKeySpec rsaPublicKeySpec = new RSAPublicKeySpec(privateKey.getModulus(), privateKey.getPublicExponent());
+            return keyFactory.generatePublic(rsaPublicKeySpec);
         }
 
         /**
-         * 公钥解密
+         * 公钥加密
          */
-        public static String publicDecryptFromHex(String data, byte[] key) throws Exception {
+        public static String publicEncryptHex(String data, byte[] key) throws Exception {
             PublicKey publicKey = KeyGen.publicKey("RSA", key);
-            return decrypt(fromHex(data), "RSA", publicKey, null, DECRYPT_BLOCK_SIZE);
+            return toHex(encrypt(data, "RSA", publicKey, null, ENCRYPT_BLOCK_SIZE));
+        }
+
+        /**
+         * 私钥解密
+         */
+        public static String privateDecryptFromHex(String data, byte[] key) throws Exception {
+            PrivateKey privateKey = KeyGen.privateKey("RSA", key);
+            return decrypt(fromHex(data), "RSA", privateKey, null, DECRYPT_BLOCK_SIZE);
         }
     }
 
@@ -408,18 +417,18 @@ public final class CryptUtil {
     public static enum Algorithm {
         // 对称加密算法
         DES(1, "DES", "密钥长度56，加8校验位"),
-        TRIPPLE_DES(1, "DESede", "密钥长度112, 168，加密方式位DES加密一次，解密一次，再加密一次"),
-        AES(1, "AES", "密钥长度128，192，256"),
+        TRIPPLE_DES(1, "DESede", "密钥长度112, 168，加密方式：DES加密一次，解密一次，再加密一次"),
+        AES(1, "AES", "密钥长度128, 192, 256"),
         RC4(1, "RC4", "密钥长度40-1024"),
         BLOWFISH(1, "Blowfish", "密钥长度32-448，且必须是8的倍数"),
         // 非对称加密算法
-        RSA(2, "RSA", "密钥长度512，1024, 2048, 3072，4096...."),
+        RSA(2, "RSA", "密钥长度512, 1024, 2048, 3072，4096....应该公钥加密私钥解密"),
         // 摘要算法
         MD5(3, "MD5", ""),
         SHA1(3, "SHA-1", ""),
         SHA256(3, "SHA-256", ""),
         // 签名算法
-        DSA(4, "DSA", "密钥长度参考RSA，只用作签名"),
+        DSA(4, "DSA", "密钥长度参考RSA，只用作签名，应该私钥签名公钥验证"),
         MD5_RSA(4, "SHA1withRSA", ""),
         SHA1_RSA(4, "MD5withRSA", "");
 
