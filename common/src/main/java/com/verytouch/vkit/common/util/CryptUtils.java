@@ -24,9 +24,9 @@ import java.util.function.BiFunction;
  * @author verytouch
  * @since 2020/9/17 16:34
  */
-public final class CryptUtil {
+public final class CryptUtils {
 
-    private CryptUtil() {}
+    private CryptUtils() {}
 
     // 电码本模式
     public static final String MODE_ECB = "ECB";
@@ -399,7 +399,7 @@ public final class CryptUtil {
          */
         public static String privateSignHex(String data, byte[] key) throws Exception {
             PrivateKey privateKey = KeyGen.privateKey("DSA", key);
-            return toHex(CryptUtil.sign(data, "DSA", privateKey));
+            return toHex(CryptUtils.sign(data, "DSA", privateKey));
         }
 
         /**

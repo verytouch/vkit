@@ -14,9 +14,9 @@ import java.security.PublicKey;
 import java.security.interfaces.RSAPrivateCrtKey;
 import java.util.Base64;
 
-import static com.verytouch.vkit.common.util.CryptUtil.*;
+import static com.verytouch.vkit.common.util.CryptUtils.*;
 
-public class CryptUtilTest {
+public class CryptUtilsTest {
 
     private static final String DATA = "好好学习, day day up. 123 fight";
 
