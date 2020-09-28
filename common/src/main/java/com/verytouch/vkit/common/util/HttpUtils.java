@@ -6,8 +6,10 @@ import org.apache.commons.io.IOUtils;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -26,7 +28,6 @@ public class HttpUtils {
 
     public static final String APPLICATION_JSON = "application/json";
     public static final String APPLICATION_FORM = "application/x-www-url-form-encoded";
-    public static final String POST = "POST";
 
     private String url;
     private String method = "GET";
@@ -38,33 +39,29 @@ public class HttpUtils {
     private int readTimeout = 10000;
     private boolean followRedirects = false;
     private boolean useCaches = false;
+    private boolean encodeParam = true;
 
     public HttpUtils(String url) {
         this.url = url;
     }
 
     public static String get(String url) throws Exception {
-        return new HttpUtils(url).request();
+        return new HttpUtils(url).get();
     }
 
     public static String get(String url, Map<String, Object> params) throws Exception {
-        return new HttpUtils(url)
-                .params(params)
-                .request();
+        return new HttpUtils(url).params(params).get();
     }
 
     public static String post(String url, Map<String, Object> params) throws Exception {
-        return new HttpUtils(url)
-                .method(POST)
-                .params(params)
-                .request();
+        return new HttpUtils(url).params(params).post();
     }
 
     public static String postJson(String url, String json) throws Exception {
         return new HttpUtils(url)
-                .method(POST)
                 .addHeader("Content-Type", APPLICATION_JSON)
-                .request();
+                .body(json)
+                .post();
     }
 
     public String request() throws Exception {
@@ -95,6 +92,9 @@ public class HttpUtils {
                     IOUtils.copy(new StringReader(body), out, charset);
                 }
             }
+            if (connection.getResponseCode() != 200) {
+                throw new RuntimeException(String.format("request failed: code=%s, message=%s", connection.getResponseCode(), connection.getResponseMessage()));
+            }
             try (InputStream in = connection.getInputStream()) {
                 return IOUtils.toString(in, charset);
             }
@@ -103,6 +103,16 @@ public class HttpUtils {
                 connection.disconnect();
             }
         }
+    }
+
+    public String get() throws Exception {
+        method("GET");
+        return request();
+    }
+
+    public String post() throws Exception {
+        method("POST");
+        return request();
     }
 
     public HttpUtils method(String method) {
@@ -125,6 +135,11 @@ public class HttpUtils {
 
     public HttpUtils params(Map<String, Object> params) {
         this.params = params;
+        if (encodeParam && this.params != null) {
+            for (Map.Entry<String, Object> entry : this.params.entrySet()) {
+                entry.setValue(urlEncode(entry.getValue().toString()));
+            }
+        }
         return this;
     }
 
@@ -132,12 +147,17 @@ public class HttpUtils {
         if (this.params == null) {
             this.params = new HashMap<>();
         }
-        this.params.put(key, value);
+        this.params.put(key, encodeParam ? urlEncode(value) : value);
         return this;
     }
 
     public HttpUtils charset(Charset charset) {
         this.charset = charset;
+        return this;
+    }
+
+    public HttpUtils encodeParam(boolean encodeParam) {
+        this.encodeParam = encodeParam;
         return this;
     }
 
@@ -164,5 +184,13 @@ public class HttpUtils {
     public HttpUtils followRedirects(boolean followRedirects) {
         this.followRedirects = followRedirects;
         return this;
+    }
+
+    private String urlEncode(String value) {
+        try {
+            return URLEncoder.encode(value, charset.name());
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
