@@ -1,5 +1,6 @@
 package com.verytouch.vkit.common.util;
 
+import com.verytouch.vkit.common.base.Assert;
 import lombok.Data;
 import org.apache.commons.io.IOUtils;
 
@@ -65,7 +66,7 @@ public class HttpUtils {
     }
 
     public String request() throws Exception {
-        Objects.requireNonNull(url, "url cannot be null or empty");
+        Assert.nonNull(url, "url cannot be null or empty");
         if (params != null && params.size() > 0) {
             url += "?" + params.entrySet().stream().
                     map(entry -> entry.getKey() + "=" + entry.getValue())
@@ -92,9 +93,8 @@ public class HttpUtils {
                     IOUtils.copy(new StringReader(body), out, charset);
                 }
             }
-            if (connection.getResponseCode() != 200) {
-                throw new RuntimeException(String.format("request failed: code=%s, message=%s", connection.getResponseCode(), connection.getResponseMessage()));
-            }
+            Assert.require(connection.getResponseCode() == 200, String.format("request failed: code=%s, message=%s",
+                    connection.getResponseCode(), connection.getResponseMessage()));
             try (InputStream in = connection.getInputStream()) {
                 return IOUtils.toString(in, charset);
             }

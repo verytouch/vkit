@@ -14,10 +14,12 @@ public class HttpUtilsTest {
 
     @Test
     public void test() throws Exception {
-        final String request = new HttpUtils("http://localhost:8080/hello/key")
-                .addHeader("token", "ecba0375509a4a548b6fc8cabc9575c6")
-                .addParam("algorithm", "AES")
-                .addParam("size", "128")
+        final String request = new HttpUtils("https://api.weixin.qq.com/sns/jscode2session")
+                // .addHeader("appid", "APPID")
+                .addParam("appid", "wxe77d4de1fb91a65a")
+                .addParam("secret", "b57fffc70322664a5fb2a7a0e579ee15")
+                .addParam("js_code", "043bLi0w3IHq2V2tHP0w3E8JJL0bLi0E")
+                .addParam("grant_type", "authorization_code")
                 .request();
         System.out.println(request);
     }
