@@ -2,6 +2,9 @@ package com.verytouch.vkit.common.base;
 
 import lombok.Getter;
 
+import java.util.Map;
+import java.util.regex.Pattern;
+
 /**
  * 断言工具类，失败抛出 {@link AssertException} 应由最外层统一处理
  *
