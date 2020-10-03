@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- *
  * 无限分类工具类
- * @author zhouwei
+ *
+ * @author verytouch
  * @since 2020/10/3 17:40
  */
 public class TreeUtils {
