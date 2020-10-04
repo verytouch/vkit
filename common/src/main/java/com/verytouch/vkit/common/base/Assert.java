@@ -14,7 +14,9 @@ import java.util.regex.Pattern;
 public final class Assert {
 
     /**
-     * 元素满足条件condition
+     * 满足条件condition
+     * @param condition 条件
+     * @param message 错误信息
      */
     public static void require(boolean condition, String message) {
         if (!condition) {
@@ -23,7 +25,9 @@ public final class Assert {
     }
 
     /**
-     * 元素满足条件condition
+     * 满足条件condition
+     * @param condition 条件
+     * @param apiCode 错误码
      */
     public static void require(boolean condition, APICode apiCode) {
         if (!condition) {
@@ -32,14 +36,22 @@ public final class Assert {
     }
 
     /**
-     * 元素满足正则regex
+     * 满足正则regex
+     * @param target 校验对象
+     * @param regex 正则
+     * @param message 错误信息
+     * @return target
      */
-    public static void require(String target, String regex, String message) {
+    public static String require(String target, String regex, String message) {
         require(Pattern.matches(regex, target), message);
+        return target;
     }
 
     /**
-     * 元素非null
+     * 非null
+     * @param target 校验对象
+     * @param message 错误信息
+     * @return target
      */
     public static Object nonNull(Object target, String message) {
         require(target != null, message);
@@ -47,12 +59,17 @@ public final class Assert {
     }
 
     /**
-     * 元素非空
-     * Object -> != null
-     * Iterable -> hasNext()
-     * Array -> length > 0
-     * Map -> size() > 0
-     * Object -> toString() != ""
+     * 非空
+     * <ol>
+     * <li>Object: != null</li>
+     * <li>Iterable: hasNext()</li>
+     * <li>Array: length > 0</li>
+     * <li>Map: size() > 0</li>
+     * <li>Object: toString() != ""</li>
+     * </ol>
+     * @param target 校验对象
+     * @param message 错误信息
+     * @return target
      */
     public static Object nonEmpty(Object target, String message) {
         require(target != null, message);
@@ -70,7 +87,10 @@ public final class Assert {
     }
 
     /**
-     * 元素非空（包括trim后）
+     * 非空（包括trim后）
+     * @param string 校验对象
+     * @param message 错误信息
+     * @return string
      */
     public static String nonBlank(String string, String message) {
         require(string != null, message);
@@ -80,7 +100,12 @@ public final class Assert {
     }
 
     /**
-     * 元素长度处于区间[min, max]
+     * 长度处于区间[min, max]
+     * @param string 校验对象
+     * @param min 最小长度
+     * @param max 最大长度
+     * @param message 错误信息
+     * @return string
      */
     public static String length(String string, int min, int max, String message) {
         require(string != null, message);

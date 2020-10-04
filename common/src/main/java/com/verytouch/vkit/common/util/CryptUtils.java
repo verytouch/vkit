@@ -51,6 +51,8 @@ public final class CryptUtils {
      * @param key 密钥
      * @param iv 偏移向量，对称加密ECB模式和非对称加密传null
      * @param blockSize 分段加密数据块大小，传-1不分段
+     * @return 加密后的byte数组
+     * @throws Exception 失败抛出异常
      */
     public static byte[] encrypt(String data, String algorithm, Key key, byte[] iv, int blockSize) throws Exception {
         Cipher cipher = Cipher.getInstance(algorithm);
@@ -71,6 +73,8 @@ public final class CryptUtils {
      * 通用加密算法，使用默认参数
      * @param data 待加密数据
      * @param key 密钥
+     * @return 加密后的byte数组
+     * @throws Exception 失败抛出异常
      */
     public static byte[] encrypt(String data, Key key) throws Exception {
         return encrypt(data, key.getAlgorithm(), key, null, -1);
@@ -83,8 +87,8 @@ public final class CryptUtils {
      * @param key 密钥
      * @param iv 偏移向量，对称加密ECB模式和非对称加密传null
      * @param blockSize 分段加密数据块大小，传-1不分段
-     * @return
-     * @throws Exception
+     * @return 数据原文
+     * @throws Exception 失败抛出异常
      */
     public static String decrypt(byte[] data, String algorithm, Key key, byte[] iv, int blockSize) throws Exception {
         Cipher cipher;
@@ -110,6 +114,8 @@ public final class CryptUtils {
      * 通用解密方法，使用默认参数
      * @param data 待解密数据
      * @param key 密钥
+     * @return 数据原文
+     * @throws Exception 失败抛出异常
      */
     public static String decrypt(byte[] data, Key key) throws Exception {
         return decrypt(data, key.getAlgorithm(), key, null, -1);
@@ -117,6 +123,11 @@ public final class CryptUtils {
 
     /**
      * 分段加解密
+     * @param cipher Cipher对象
+     * @param data 所有数据
+     * @param blockSize 分段大小
+     * @return 加解密完的数据
+     * @throws Exception 失败抛出异常
      */
     private static byte[] doFinalByBlock(Cipher cipher, byte[] data, int blockSize) throws Exception {
         int dataLen = data.length;
@@ -139,6 +150,8 @@ public final class CryptUtils {
      * @param data 待签名数据
      * @param algorithm 算法[/模式][/填充]
      * @param privateKey 私钥
+     * @return 签名
+     * @throws Exception 失败抛出异常
      */
     public static byte[] sign(String data, String algorithm, PrivateKey privateKey) throws Exception {
         Signature signature = Signature.getInstance(algorithm);
@@ -153,6 +166,8 @@ public final class CryptUtils {
      * @param algorithm 算法[/模式][/填充]
      * @param publicKey 公钥
      * @param sign 签名
+     * @return 是否验签成功
+     * @throws Exception 失败抛出异常
      */
     public static boolean verify(String data, String algorithm, PublicKey publicKey, byte[] sign) throws Exception {
         Signature signature = Signature.getInstance(algorithm);
@@ -165,6 +180,8 @@ public final class CryptUtils {
      * 通用摘要方法
      * @param data 待摘要信息
      * @param algorithm 摘要算法
+     * @return 摘要
+     * @throws Exception 失败抛出异常
      */
     public static byte[] digest(String data, String algorithm) throws Exception {
         MessageDigest digest = MessageDigest.getInstance(algorithm);
@@ -174,6 +191,8 @@ public final class CryptUtils {
 
     /**
      * 16进制编码
+     * @param data 数据
+     * @return 16进制字符串
      */
     public static String toHex(byte[] data) {
         StringBuilder sb = new StringBuilder();
@@ -190,6 +209,8 @@ public final class CryptUtils {
 
     /**
      * 16进制解码
+     * @param hexStr 16进制字符串
+     * @return 原数据
      */
     public static byte[] fromHex(String hexStr) {
         if (hexStr.length() < 1) {
@@ -219,6 +240,10 @@ public final class CryptUtils {
 
         /**
          * 对称算法密钥生成
+         * @param algorithm 算法
+         * @param keySize key长度，按位算
+         * @return 密钥对象
+         * @throws Exception 失败抛出异常
          */
         public static SecretKey secretKey(String algorithm, int keySize) throws Exception {
             KeyGenerator keyGenerator = KeyGenerator.getInstance(algorithm);
@@ -228,6 +253,9 @@ public final class CryptUtils {
 
         /**
          * 对称算法密钥还原
+         * @param algorithm 算法
+         * @param key 密钥字节数组
+         * @return 密钥对象
          */
         public static SecretKey secretKey(String algorithm, byte[] key) {
             return new SecretKeySpec(key, algorithm);
@@ -235,16 +263,24 @@ public final class CryptUtils {
 
         /**
          * 非对称算法密钥对生成
+         * @param algorithm 算法
+         * @param keySize 密钥长度，按位算
+         * @return 密钥对
+         * @throws Exception 失败抛出异常
          */
         public static KeyPair keyPair(String algorithm, int keySize) throws Exception {
             KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(algorithm);
             keyPairGenerator.initialize(keySize);
-            KeyPair keyPair = keyPairGenerator.generateKeyPair();
-            return keyPair;
+            return keyPairGenerator.generateKeyPair();
         }
 
         /**
          * 非对称算法密钥对生成并保存pkcs8格式到指定文件
+         * @param algorithm 算法
+         * @param keySize 密钥长度，按位算
+         * @param pub 公钥保存路径
+         * @param pri 私钥保存路径
+         * @throws Exception 失败抛出异常
          */
         public static void keyPairPKCS8(String algorithm, int keySize, Path pub, Path pri) throws Exception {
             KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(algorithm);
@@ -262,6 +298,10 @@ public final class CryptUtils {
 
         /**
          * 非对称算法公钥还原
+         * @param algorithm 算法
+         * @param key 公钥二进制数组
+         * @return 公钥对象
+         * @throws Exception 失败抛出异常
          */
         public static PublicKey publicKey(String algorithm, byte[] key) throws Exception {
             X509EncodedKeySpec keySpec = new X509EncodedKeySpec(key);
@@ -271,6 +311,10 @@ public final class CryptUtils {
 
         /**
          * 非对称算法私钥还原
+         * @param algorithm 算法
+         * @param key 私钥二进制数组
+         * @return 私钥对象
+         * @throws Exception 失败抛出异常
          */
         public static PrivateKey privateKey(String algorithm, byte[] key) throws Exception {
             PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(key);
@@ -280,6 +324,10 @@ public final class CryptUtils {
 
         /**
          * pkcs8公钥还原
+         * @param algorithm 算法
+         * @param pkcs8 pkcs8公钥字符串
+         * @return 公钥对象
+         * @throws Exception 失败抛出异常
          */
         public static PublicKey publicKeyFromPKCS8(String algorithm, String pkcs8) throws Exception {
             String base64 = pkcs8.replace(PKCS8_PUBLIC[0], "")
@@ -290,6 +338,10 @@ public final class CryptUtils {
 
         /**
          * pkcs8私钥还原
+         * @param algorithm 算法
+         * @param pkcs8 pkcs8私钥字符串
+         * @return 私钥对象
+         * @throws Exception 失败抛出异常
          */
         public static PrivateKey privateKeyFromPKCS8(String algorithm, String pkcs8) throws Exception {
             String base64 = pkcs8.replace(PKCS8_PRIVATE[0], "")
@@ -312,13 +364,19 @@ public final class CryptUtils {
 
         /**
          * 生成128位密钥
+         * @return 密钥字节数组
+         * @throws Exception 失败抛出异常
          */
         public static byte[] secretKey() throws Exception {
             return KeyGen.secretKey("AES", KEY_SIZE).getEncoded();
         }
 
         /**
-         * 加密
+         * 加密并作16进制编码
+         * @param data 原文
+         * @param key 密钥字节数组
+         * @return 16进制密文
+         * @throws Exception 失败抛出异常
          */
         public static String encryptHex(String data, byte[] key) throws Exception {
             SecretKey secretKey = KeyGen.secretKey("AES", key);
@@ -327,6 +385,10 @@ public final class CryptUtils {
 
         /**
          * 解密
+         * @param data 16进制密文
+         * @param key 密钥字节数组
+         * @return 原文
+         * @throws Exception 失败抛出异常
          */
         public static String decryptHex(String data, byte[] key) throws Exception {
             SecretKey secretKey = KeyGen.secretKey("AES", key);
@@ -347,15 +409,20 @@ public final class CryptUtils {
 
         /**
          * 生成1024位密钥对
+         * @return 密钥第
+         * @throws Exception 失败抛出异常
          */
         public static KeyPair keyPair() throws Exception {
             return KeyGen.keyPair("RSA", KEY_SIZE);
         }
 
         /**
-         * 私钥提取公钥
+         * 从私钥中获取公钥
+         * @param privateKey 私钥对象
+         * @return 公钥对象
+         * @throws Exception 失败抛出异常
          */
-        public static PublicKey publickKeyFromPrivateKey(RSAPrivateCrtKey privateKey) throws Exception {
+        public static PublicKey publicKeyFromPrivateKey(RSAPrivateCrtKey privateKey) throws Exception {
             KeyFactory keyFactory = KeyFactory.getInstance(privateKey.getAlgorithm());
             RSAPublicKeySpec rsaPublicKeySpec = new RSAPublicKeySpec(privateKey.getModulus(), privateKey.getPublicExponent());
             return keyFactory.generatePublic(rsaPublicKeySpec);
@@ -363,6 +430,10 @@ public final class CryptUtils {
 
         /**
          * 公钥加密
+         * @param data 原文
+         * @param key 公钥字节数组
+         * @return 16进制密文
+         * @throws Exception 失败抛出异常
          */
         public static String publicEncryptHex(String data, byte[] key) throws Exception {
             PublicKey publicKey = KeyGen.publicKey("RSA", key);
@@ -371,6 +442,10 @@ public final class CryptUtils {
 
         /**
          * 私钥解密
+         * @param data 16进制密文
+         * @param key 私钥二进制数组
+         * @return 原文
+         * @throws Exception 失败抛出异常
          */
         public static String privateDecryptFromHex(String data, byte[] key) throws Exception {
             PrivateKey privateKey = KeyGen.privateKey("RSA", key);
@@ -389,6 +464,8 @@ public final class CryptUtils {
 
         /**
          * 生成1024位密钥对
+         * @return 密钥对
+         * @throws Exception 失败抛出异常
          */
         public static KeyPair keyPair() throws Exception {
             return KeyGen.keyPair("DSA", KEY_SIZE);
@@ -396,6 +473,10 @@ public final class CryptUtils {
 
         /**
          * 私钥签名
+         * @param data 原文
+         * @param key 私钥二进制数组
+         * @return 16进制签名
+         * @throws Exception 失败抛出异常
          */
         public static String privateSignHex(String data, byte[] key) throws Exception {
             PrivateKey privateKey = KeyGen.privateKey("DSA", key);
@@ -404,6 +485,11 @@ public final class CryptUtils {
 
         /**
          * 公钥认证
+         * @param data 原文
+         * @param key 公钥二进制数组
+         * @param sign 16进制签名
+         * @return 是否认证成功
+         * @throws Exception 失败抛出异常
          */
         public static boolean publicVerifyHex(String data, byte[] key, String sign) throws Exception {
             PublicKey publicKey = KeyGen.publicKey("DSA", key);

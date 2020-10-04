@@ -12,6 +12,12 @@ import java.util.function.Supplier;
  */
 public class MapUtils {
 
+    /**
+     * 返回一个元素的Map
+     * @param k 键
+     * @param v 值
+     * @return HashMap
+     */
     public static <K, V> Map<K, V> singleEntryHashMap(K k, V v) {
         Map<K, V> map = new HashMap<>(2);
         map.put(k, v);

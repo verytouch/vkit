@@ -10,7 +10,7 @@
     <version>1.0</version>
     <modules>
         <module>common</module>
-        <module>sms</module>
+        <!--<module>sms</module>-->
     </modules>
 
     <properties>

@@ -15,8 +15,9 @@ public class TreeUtils {
 
 	/**
 	 * 链表转树
-	 * @param list 链表结构元素，分类过程中，其中的元素会逐渐remove掉
+	 * @param list 链表结构数据，分类过程中，其中的元素会逐渐remove掉
 	 * @param rootId 根分类ID，不能由rootID寻找到的元素会遗留在items里
+     * @return 树结构数据
 	 */
 	public static List<? extends TreeAble> listToTree(List<? extends TreeAble> list, Object rootId) {
 		List<TreeAble> tree = new LinkedList<>();
@@ -40,6 +41,7 @@ public class TreeUtils {
     /**
      * 树转成链表
      * @param tree 树结构元素，转换过程中，原本的children会被置null
+     * @return 链表结构数据
      */
 	public static List<? extends TreeAble> treeToList(List<? extends TreeAble> tree) {
 	    List<TreeAble> list = new LinkedList<>();
@@ -60,6 +62,7 @@ public class TreeUtils {
      * 查找子树
      * @param tree 树
      * @param id 子树父节点ID
+     * @return 子树
      */
     public static TreeAble getChildTree(List<? extends TreeAble> tree, Object id) {
         if (tree == null || tree.isEmpty()) {

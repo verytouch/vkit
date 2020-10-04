@@ -44,7 +44,7 @@ public class CryptUtilsTest {
     public void rsaTest() throws Exception {
         String privateKeySpecHex = "30820278020100300d06092a864886f70d0101010500048202623082025e0201000281810099e851b09e80b18fbd570d533fd6070a824637a92da0e1162cff6e4082d475b2bdbe06eeb5f81c12ec32c5efa6ea710b566d29e2ba3b40aad14028c962a8f7f6840a9dd1fca808a54bbf7ce9c4e485a05b2e30078f8e699ce1e2425c423d032dc4997e27bacdd996709190c0be2740818a6f4246488018866dd9fcaf89fa96f30203010001028181008043e760c4980862fcaf0201f15f93baa45b94a3bfcd26096f32e95586333e6bda49f649170a518b4ba1fce7ff39bf406da4c89596132f8fac9845e59ffda5b85384087dcf7600bdc8a385fec840bfd1272ae0034506ba7ee36e409f76f6cdea963420c369045c3df8a62a92a2821b15985ec1c740b43b678a54086ff0458121024100e9c86b7869818f1de938f049d27ec87f43209e3de8d05776016ed99f4864370dc8b49ed7d47c0ee992ac8fb81c53fcc699c884ce68debef0f26c85b3ae90181b024100a888a73334d8c2fc6f1be7cbfc56156347d2e40e13ffaee3e8677755cbccae888fdcc720fb9c00574b7f3dcb2445ec1c6a5fa7a523a947ae259bdaa682d51a0902403eda97aa6413653b117d317d678e96b1408700847c97a72c1eee82ac04768d26b3937c3162fb87b6dcac70677b96491bcc34d11ffdaa05841a697af8f831dd89024100845024d472dcead83c72f01c99d30b9f9237e38b99efd6625f873b8d441f41b73d1adbcaed3ea095e853d133b71a9e3000e3703e9a2cc075dc58ebe4663adfe1024100e72abe0abca6b5f4d5d5819c9b652b9664a5706a82f341d4204b45a6d228411438eb90b20dd86b347105887cb7dee39c1192fa156a59ee34c1e0c70a50fe7aba";
         PrivateKey privateKey = KeyGen.privateKey(Algorithm.RSA.getAlgorithm(), fromHex(privateKeySpecHex));
-        PublicKey publicKey = RSA.publickKeyFromPrivateKey((RSAPrivateCrtKey) privateKey);
+        PublicKey publicKey = RSA.publicKeyFromPrivateKey((RSAPrivateCrtKey) privateKey);
         String s = RSA.publicEncryptHex(DATA, publicKey.getEncoded());
         System.out.println(s);
         System.out.println(RSA.privateDecryptFromHex(s, privateKey.getEncoded()));
@@ -89,7 +89,7 @@ public class CryptUtilsTest {
 
         PrivateKey privateKey = KeyGen.privateKeyFromPKCS8("RSA", new String(Files.readAllBytes(priPath)));
         // PublicKey publicKey = KeyGen.publicKeyFromPKCS8("RSA", new String(Files.readAllBytes(pubPath)));
-        PublicKey publicKey = RSA.publickKeyFromPrivateKey((RSAPrivateCrtKey) privateKey);
+        PublicKey publicKey = RSA.publicKeyFromPrivateKey((RSAPrivateCrtKey) privateKey);
 
         Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA-1AndMGF1Padding");
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);
