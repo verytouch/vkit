@@ -1,0 +1,81 @@
+资料	
+	https://yeasy.gitbook.io/docker_practice/
+	https://docs.docker.com/compose/compose-file/
+	
+命令
+	docker search registry
+	docker pull registry
+	docker run -d -v /app/data/reigistry:/ver/lib/registry -p 5000:5000 --name registry registry
+	docker ps -a
+	docker exec -it id bash
+	docker stop id
+	docker rm id
+	docker commit cid myregistry
+	docker images
+	docker tag myregistry 127.0.0.1:5000/myregistry
+	docker push 127.0.0.1:5000/myregistry
+	docker rmi id
+	docker pull 127.0.0.1:5000/myregistry
+	docker built -t app:1.0 .
+	docker cp id:file file
+	
+	docker rm -f $(docker ps -a -q --filter name=crm-*)
+	docker rmi $(docker images -q 192.168.30.102:5000/crm-*)
+	docker images | grep "crm" | awk '{print $3}'
+	for i in $(docker images | grep -e crm-.*1.7 | awk 'BEGIN{OFS=":"}{print $1,$2}'); do docker push $i; done
+	docker-compose up -d
+	
+
+安装
+	1、sudo yum remove docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine 
+	2、sudo yum install -y yum-utils device-mapper-persistent-data lvm2
+	3、sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+	4、sudo yum install docker-ce docker-ce-cli containerd.io
+	5、sudo systemctl start docker
+	## 	以下非必需
+	6、Requires: container-selinux >= 2:2.74
+		wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+		yum install epel-release
+		yum install container-selinux
+	7、加速：vim /etc/docker/daemon.json ===> {"registry-mirrors":["https://reg-mirror.qiniu.com/"]}
+	8、远程：vim /usr/lib/systemd/system/docker.service ==> ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock  （ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock）
+	9、docker-compose
+		sudo curl -L https://get.daocloud.io/docker/compose/releases/download/1.25.1/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+		chmod +x /usr/local/bin/docker-compose
+		docker-compose -version
+	10、私库: docker run -d -p 5000:5000 -v /app/docker-mnt/registry:/var/lib/registry --name docker-registry registry
+		"insecure-registries": [
+			"ip:port"
+		]
+
+编排
+	1、Dockerfile [单镜像]
+		FROM openjdk:8
+		COPY app-1.0.jar /app.jar
+		ENTRYPOINT ["java", "-jar", "/app.jar"]
+		
+		docker build -t myapp .
+		docker run -d -p 7001:7001 --name myapp myapp
+
+	2、docker-compose.yml [单机多镜像]
+		version: 3
+		services:
+			redis:
+				images: redis:latest
+				container-name: redis
+				ports:
+					- "6379:6379"
+				command: redis-server
+			crm-eureka:
+				build: ./myapp
+				ports: 
+					- "7001:7001"
+				volumes:
+					- "/app/logs:/logs"
+				depends_on:
+					- redis
+					
+		docker-compose up -d
+	3、docker-matchine
+	4、docker-swarm
+	5、k8s
