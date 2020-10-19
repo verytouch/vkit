@@ -42,6 +42,7 @@ public class HttpUtils {
     private boolean encodeParam = true;
 
     public HttpUtils(String url) {
+        Assert.nonNull(url, "url cannot be null or empty");
         this.url = url;
     }
 
@@ -69,7 +70,6 @@ public class HttpUtils {
     }
 
     public Response request() throws Exception {
-        Assert.nonNull(url, "url cannot be null or empty");
         if (params != null && params.size() > 0) {
             url += "?" + params.entrySet().stream().
                     map(entry -> entry.getKey() + "=" + entry.getValue())
@@ -202,7 +202,7 @@ public class HttpUtils {
             this.bytes = bytes;
             this.headers = headers.entrySet().stream()
                     .collect(Collectors.toMap(Map.Entry::getKey,
-                            entry -> entry.getValue() != null ? entry.getValue().get(0) : ""));
+                            entry -> entry.getValue() != null && !entry.getValue().isEmpty() ? entry.getValue().get(0) : ""));
         }
 
         public String getString() {
