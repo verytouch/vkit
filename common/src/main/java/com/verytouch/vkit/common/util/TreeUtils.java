@@ -84,7 +84,7 @@ public class TreeUtils {
 	 * 待分类实体需要实现的接口
 	 * 不以get/set开头以防干扰序列化/反序列化
 	 */
-	public static interface TreeAble {
+	public interface TreeAble {
 		Object id();
 		Object pid();
 		void children(List<? extends TreeAble> children);

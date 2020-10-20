@@ -4,7 +4,6 @@ import com.verytouch.vkit.common.base.Assert;
 import lombok.Data;
 import org.apache.commons.io.IOUtils;
 
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
@@ -14,8 +13,8 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -43,6 +42,7 @@ public class HttpUtils {
     private boolean encodeParam = true;
 
     public HttpUtils(String url) {
+        Assert.nonNull(url, "url cannot be null or empty");
         this.url = url;
     }
 
@@ -92,8 +92,11 @@ public class HttpUtils {
                 .post();
     }
 
-    public String request() throws Exception {
-        Assert.nonNull(url, "url cannot be null or empty");
+    public static byte[] download(String url) throws Exception {
+        return new HttpUtils(url).request().getBytes();
+    }
+
+    public Response request() throws Exception {
         if (params != null && params.size() > 0) {
             url += "?" + params.entrySet().stream().
                     map(entry -> entry.getKey() + "=" + entry.getValue())
@@ -122,9 +125,7 @@ public class HttpUtils {
             }
             Assert.require(connection.getResponseCode() == 200, String.format("request failed: code=%s, message=%s",
                     connection.getResponseCode(), connection.getResponseMessage()));
-            try (InputStream in = connection.getInputStream()) {
-                return IOUtils.toString(in, charset);
-            }
+            return new Response(IOUtils.toByteArray(connection.getInputStream()), connection.getHeaderFields());
         } finally {
             if (connection != null) {
                 connection.disconnect();
@@ -133,13 +134,11 @@ public class HttpUtils {
     }
 
     public String get() throws Exception {
-        method("GET");
-        return request();
+        return method("GET").request().getString();
     }
 
     public String post() throws Exception {
-        method("POST");
-        return request();
+        return method("POST").request().getString();
     }
 
     public HttpUtils method(String method) {
@@ -218,6 +217,23 @@ public class HttpUtils {
             return URLEncoder.encode(value, charset.name());
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @Data
+    public static class Response {
+        private final byte[] bytes;
+        private final Map<String, String> headers;
+
+        public Response(byte[] bytes, Map<String, List<String>> headers) {
+            this.bytes = bytes;
+            this.headers = headers.entrySet().stream()
+                    .collect(Collectors.toMap(Map.Entry::getKey,
+                            entry -> entry.getValue() != null && !entry.getValue().isEmpty() ? entry.getValue().get(0) : ""));
+        }
+
+        public String getString() {
+            return new String(bytes);
         }
     }
 }

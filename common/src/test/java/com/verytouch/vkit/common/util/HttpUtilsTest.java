@@ -1,40 +1,48 @@
 package com.verytouch.vkit.common.util;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
-import java.nio.charset.StandardCharsets;
+import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 public class HttpUtilsTest {
 
-    public static void main(String[] args) {
-        System.out.println(StandardCharsets.UTF_8);
-    }
-
     @Test
     public void test() throws Exception {
-        final String request = new HttpUtils("https://api.weixin.qq.com/sns/jscode2session")
+        final HttpUtils.Response response = new HttpUtils("https://api.weixin.qq.com/sns/jscode2session")
                 // .addHeader("appid", "APPID")
-                .addParam("appid", "wxe77d4de1fb91a65a")
-                .addParam("secret", "b57fffc70322664a5fb2a7a0e579ee15")
+                .addParam("appid", "123456")
+                .addParam("secret", "123456")
                 .addParam("js_code", "043bLi0w3IHq2V2tHP0w3E8JJL0bLi0E")
                 .addParam("grant_type", "authorization_code")
                 .request();
-        System.out.println(request);
+        System.out.println(response.getHeaders());
+        System.out.println(response.getString());
+    }
+
+    @Test
+    public void testGet() throws Exception {
+        System.out.println(HttpUtils.get("https://www.jsanai.com/api/selfnews/newslist?type=1"));
     }
 
     @Test
     public void testPost() throws Exception {
         Map<String, Object> params = new HashMap<>();
-        params.put("data", "白日依山尽，黄河入海流。欲穷千里目，更上一层楼。");
-        params.put("key", "b2483441a12c13f2420c0c864378b807");
-        final String post = HttpUtils.post("http://localhost:8080/hello/crypt", params);
+        params.put("id", "MzEwMDA3NA");
+        final String post = HttpUtils.post("https://www.jsanai.com/api/selfnews/newsd", params);
         System.out.println(post);
     }
 
     @Test
     public void testJson() throws Exception {
         System.out.println(HttpUtils.postJson("http://localhost:8080/hello/json", "{\"data\": \"白日依山尽，黄河入海流。欲穷千里目，更上一层楼。\", \"type\": 1}"));
+    }
+
+    @Test
+    public void testDownload() throws Exception {
+        IOUtils.write(HttpUtils.download("http://localhost:8080/hello/file"), new FileOutputStream(System.getProperty("user.home") + "\\DeskTop\\test.json"));
+
     }
 }
