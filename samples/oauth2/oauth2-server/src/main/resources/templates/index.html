@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎</title>
+    <link href="/css/index.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="top-btns">
+        <span onclick="location.href = '/'">重置</span>
+        <span onclick="location.href = '/logout'">注销</span>
+        <span onclick="getLoginInfo()">获取登录信息</span>
+    </div>
+    <div>
+        <h3>授权模式：</h3>
+        <ul id="grant-list">
+            <li>
+                <a onclick="toAuthorizePage('code')">authorization_code</a>
+            </li>
+            <li>
+                <a onclick="grantByPassword()">password</a>
+            </li>
+            <li>
+                <a onclick="toAuthorizePage('token')">implicit</a>
+            </li>
+            <li>
+                <a onclick="grantByRefreshToken()">refresh_token</a>
+            </li>
+            <li>
+                <a onclick="grantByClientCredentials()">client_credentials</a>
+            </li>
+            <li>
+                <a onclick="grantBySmsCode()">sms_code</a>
+            </li>
+        </ul>
+    </div>
+    <div>
+        <h3>access_token：</h3>
+        <div id="access-token"></div>
+    </div>
+    <div>
+        <h3>refresh_token：</h3>
+        <div id="refresh-token"></div>
+    </div>
+    <div>
+        <h3>jwt前端解码：</h3>
+        <div id="decrypted-jwt"></div>
+    </div>
+    <div>
+        <h3>登录信息：</h3>
+        <div id="login-info"></div>
+    </div>
+
+<script src="/js/Base64.js"></script>
+<script src="/js/index.js"></script>
+</body>
+</html>
