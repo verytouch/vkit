@@ -1,0 +1,13 @@
+server:
+  servlet:
+    context-path: /
+  port: 90
+
+spring:
+  thymeleaf:
+    cache: false
+  redis:
+    host: 192.168.30.103
+    port: 6379
+    password: vsxd@redis
+    database: 0

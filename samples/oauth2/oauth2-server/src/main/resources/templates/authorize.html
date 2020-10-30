@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>授权</title>
+</head>
+<body>
+    <h3 th:text="${clientId} + '请求授权获取您以下信息：'"></h3>
+    <ul>
+        <li th:each="scope : ${scopes}" th:text="${scope}"></li>
+    </ul>
+    <form action="/oauth/authorize" method="post">
+        <input type="hidden" name="user_oauth_approval" value="true" />
+        <input type="submit" value="同意" />
+    </form>
+</body>
+</html>

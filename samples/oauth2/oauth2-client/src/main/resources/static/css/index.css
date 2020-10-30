@@ -1,0 +1,51 @@
+* {
+   word-wrap: break-word;
+}
+
+#top-btns {
+    border-bottom: 1px solid #eeebeb;
+    text-indent: 2em;
+    height: 3em;
+    line-height: 3em;
+    color: #666;
+}
+
+#top-btns span {
+    padding-right: 1em;
+    cursor: pointer;
+}
+
+#top-btns span:hover {
+    text-decoration: underline;
+}
+
+
+#grant-list {
+
+}
+
+#grant-list li {
+    height: 1.5em;
+    line-height: 1.5em;
+}
+
+#grant-list a {
+    color: #d7831b;
+    text-decoration: none;
+    cursor: pointer;
+    margin-right: 2em;
+}
+
+#grant-list a:hover {
+    text-decoration: underline;
+}
+
+#decrypted-jwt {
+    text-indent: 2em;
+}
+
+#access-token, #refresh-token, #login-info {
+    margin-left: 2em;
+    width: 80%;
+    overflow: hidden;
+}
