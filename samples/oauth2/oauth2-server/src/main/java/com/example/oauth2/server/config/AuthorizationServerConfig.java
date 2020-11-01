@@ -49,7 +49,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-        super.configure(security);
+        security.allowFormAuthenticationForClients()
+                .checkTokenAccess("permitAll()")
+                .tokenKeyAccess("permitAll()");
     }
 
     @Override
@@ -57,10 +59,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         super.configure(clients);
         clients.inMemory()
                 .withClient("test1")
+                // 123456
                 .secret("$2a$10$piCRbkfQUTAHjsbgXcoFrOSkuHTb7K8lGrTclGZvgjr.LK1ZWmUJa")
                 .authorizedGrantTypes("password", "refresh_token", "authorization_code", "client_credentials", "implicit", "sms_code")
                 .scopes("all")
-                .redirectUris("http://localhost:90/index.html", "http://127.0.0.1:91/client/login/oauth2/code/test1")
+                .autoApprove(true)
+                .redirectUris("http://localhost:90/index.html", "http://localhost:91/client/login")
                 .accessTokenValiditySeconds(30 * 60)
                 .refreshTokenValiditySeconds(7 * 24 * 60 * 60);
 

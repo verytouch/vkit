@@ -1,10 +1,11 @@
+const redirectUri = 'http://localhost:90/index.html'
+
 window.onload = function () {
     grantByAuthorizationCode();
     grantByImplicit();
 }
 
 function toAuthorizePage(responseType) {
-    const redirectUri = 'http://localhost:90/index.html'
     location.href = `http://localhost:90/oauth/authorize?client_id=test1&client_secret=123456&response_type=${responseType}&redirect_uri=${redirectUri}`;
 }
 
@@ -15,6 +16,7 @@ function grantByAuthorizationCode() {
     }
     tokenReq({
         grant_type: 'authorization_code',
+        redirect_uri: redirectUri,
         code
     })
 }
@@ -40,7 +42,7 @@ function grantByPassword() {
 function grantByRefreshToken() {
     tokenReq({
         grant_type: 'refresh_token',
-        refresh_token: localStorage.refresh_token
+        refresh_token: document.querySelector("#refresh-token").textContent
     })
 }
 

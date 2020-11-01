@@ -7,7 +7,11 @@ spring:
   thymeleaf:
     cache: false
   redis:
-    host: 192.168.30.103
+    host: localhost
     port: 6379
-    password: vsxd@redis
+    password: 123456
     database: 0
+
+logging:
+  level:
+    org.springframework.security: debug

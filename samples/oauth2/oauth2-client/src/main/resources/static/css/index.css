@@ -1,51 +1,16 @@
-* {
-   word-wrap: break-word;
-}
-
-#top-btns {
-    border-bottom: 1px solid #eeebeb;
-    text-indent: 2em;
-    height: 3em;
-    line-height: 3em;
+.btn {
     color: #666;
-}
-
-#top-btns span {
-    padding-right: 1em;
+    padding: 2px;
     cursor: pointer;
+    font-weight: normal;
+    font-size: medium;
 }
 
-#top-btns span:hover {
+.btn:hover {
     text-decoration: underline;
 }
 
-
-#grant-list {
-
-}
-
-#grant-list li {
-    height: 1.5em;
-    line-height: 1.5em;
-}
-
-#grant-list a {
-    color: #d7831b;
-    text-decoration: none;
-    cursor: pointer;
-    margin-right: 2em;
-}
-
-#grant-list a:hover {
-    text-decoration: underline;
-}
-
-#decrypted-jwt {
-    text-indent: 2em;
-}
-
-#access-token, #refresh-token, #login-info {
-    margin-left: 2em;
-    width: 80%;
-    overflow: hidden;
+#access-token, #resource-info {
+    margin: 0 2em;
+    word-wrap: break-word;
 }

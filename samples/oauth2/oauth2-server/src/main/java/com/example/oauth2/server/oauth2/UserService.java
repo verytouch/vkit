@@ -13,6 +13,7 @@ public class UserService implements UserDetailsService {
     private final List<User> users;
 
     public UserService() {
+        // 123456
         String password = "$2a$10$piCRbkfQUTAHjsbgXcoFrOSkuHTb7K8lGrTclGZvgjr.LK1ZWmUJa";
         this.users = new ArrayList<>();
         users.add(User.build("admin", password, "18511112222", "ROLE_ADMIN"));
