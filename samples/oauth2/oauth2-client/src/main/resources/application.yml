@@ -7,6 +7,10 @@ spring:
   security:
     user:
       password: none
+  resources:
+    static-locations:
+      - classpath:/static/
+      - classpath:/templates/
   thymeleaf:
     cache: false
 

@@ -4,6 +4,10 @@ server:
   port: 90
 
 spring:
+  resources:
+    static-locations:
+      - classpath:/static/
+      - classpath:/templates/
   thymeleaf:
     cache: false
   redis:
