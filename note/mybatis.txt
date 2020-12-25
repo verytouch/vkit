@@ -1,0 +1,17 @@
+生命周期
+	SqlSessionFactoryBuilder：用于创建SqlSessionFactory，瞬时
+	SqlSessionFactory：相当于连接池，长存
+	Sqlsession ：相当于一个连接，非线程安全，请求处理完关掉
+	Mapper：由Sqlsession创建后跟随Sqlsession
+	
+缓存机制
+	一级缓存：默认开启，Sqlsession级别，执行更新语句被清空
+	二级缓存：默认不开启，SqlSessionFactory级别
+
+TypeHandler
+	自定义jdbcType和javaType的转换方式
+	@MappedJdbcTypes({JdbcType.VARCHAR})
+	@MappedTypes({Date.class})
+	extends BaseTypeHandler<Date>
+
+拦截器
