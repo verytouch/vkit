@@ -40,6 +40,9 @@ git diff --shortstat "@{0 day ago}"
 	git merge dev
 	git rebase dev
 	git cherry-pick cid
+	
+	git merge --squash dev
+	git commit -m "合并dev多次提交"
 
 ### 3. 回退
 
