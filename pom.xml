@@ -10,8 +10,9 @@
     <version>1.0</version>
     <modules>
         <module>common</module>
-        <!--<module>sms</module>-->
+        <module>samples</module>
     </modules>
+    <name>vkit</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -33,7 +34,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>RELEASE</version>
+            <version>4.10</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
