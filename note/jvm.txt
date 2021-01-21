@@ -1,0 +1,70 @@
+https://www.jianshu.com/p/76959115d486
+
+一、内存模型
+	1.每个CPU都有一套自己的缓存，对于内存中的同一变量，缓存可能不同
+	2.内存屏障：操作系统为了解决上述问题提供的硬件层机制
+	3.volatile：读写操作前后添加内存屏障，保证可见性，防止指令重排序
+
+二、内存结构
+	1.堆
+		Young 1
+			Eden 8
+			From 1 幸存区，GC后与TO交换
+			TO 1 永远为空
+			
+		Old 2
+		
+	2.方法区/元空间
+		存储已被虚拟机加载的类信息、常量、静态变量
+
+	3.虚拟机栈
+		栈帧
+			局部变量表
+			操作数栈
+			动态链接
+			方法出口
+
+	4.本地方法栈
+		与虚拟机栈作用相似，为native方法服务
+
+	5.程序计数器
+		当前线程的行号指示器，虚拟机规范中唯一没有OutOfMemoryError的区域
+
+三、对象的内存布局
+	1.对象头：synchronized的基础
+		存储内容：根据锁状态，存储内容不同，有对象的hashcode、分代年龄、锁指针等
+		偏向锁标志位：0无锁，1偏向锁
+		锁标志位：轻量级锁00，偏向锁或无锁01，重量级锁10，可GC11
+	
+	2.实例数据
+		存放对象程序中各种类型的字段
+	
+	3.对齐填充
+		HotSpot规定对象的大小必须是8的整数倍，对象头刚好是整数倍，如果实例数据不是的话，就需要占位符对齐填充
+
+四、对象的访问
+	1.句柄：引用指向句柄，句柄指向实例数据
+	2.直接引用：直接指向实例数据
+
+五、GC
+	1.新生代：Minor GC，复制算法
+		Serial：单线程，收集的时候必须得停掉其它线程，适用与client模式
+		ParNew：Serial升级版，多线程，支持和CMS使用
+		Parallel Scavenge：多线程，"吞吐量优先"收集器
+	2.老年代：Major GC，通常等价Full GC
+		Serial Old（PS-MarkSweep）：标记/整理算法，单线程，Serial的老年代版本
+		Parallel Old：标记/整理算法，多线程，Parallel Scavenge的老年版本
+		CMS：标记/清除算法，支持并发，最短回收停顿时间
+	3.G1：不分代，-XX:+UseG1GC
+	4.参数
+		UseSerialGC：client模式默认值，Serial + erial Old
+		UseParNewGC：ParNew + Serial Old
+		UseConcMarkSweepGC：ParNew + CMS（失败转为Serial Old）
+		UseParallelGC：server模式默认值，Parallel Scavenge + Serial Old
+		UseParallelOldGC：Parallel Scavenge + Parallel Old
+	5.新生代晋升老年代
+		老对象：阈值15
+		大对象
+		to survivor区满
+		动态年龄判定：survior区相同年龄对象总大小大于survior区空间的一半
+	5.GC ROOTS：从全局变量和本地变量表作可达性分析，不能到达的对象可被回收，分析时需要Stop the World
