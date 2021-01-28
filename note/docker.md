@@ -1,4 +1,4 @@
-### 1. 安装
+## 1. 安装
 
 ```shell
 # 安装docker
@@ -21,37 +21,45 @@ curl -L https://get.daocloud.io/docker/compose/releases/download/1.25.1/docker-c
 chmod +x /usr/local/bin/docker-compose
 ```
 
-### 2.命令
+## 2.命令
 
 ```shell
 docker search registry
 docker pull registry
 docker run -d -v /app/data/reigistry:/ver/lib/registry -p 5000:5000 --name registry registry
+docker update --restart=always myregistry
 docker ps -a
 docker exec -it id bash
 docker stop id
 docker rm id
-docker commit cid myregistry
+docker commit id myapp
 docker images
-docker tag myregistry 127.0.0.1:5000/myregistry
-docker push 127.0.0.1:5000/myregistry
+docker tag myapp 127.0.0.1:5000/myapp
+docker push 127.0.0.1:5000/myapp
 docker rmi id
-docker pull 127.0.0.1:5000/myregistry
-docker built -t app:1.0 .
+docker pull 127.0.0.1:5000/myapp
+docker built -t myapp:1.0 -f Dockerfile --build-arg arg=myarg ./target
 docker cp id:file file
+
+# 卷
+docker volume create app_data
+docker volume ls
+docker voume inspect app_data
+docker volume rm app_data
+docker volume prune
+
+# compose
 docker-compose up -d
 
 # 根据名称移除容器
-docker rm -f $(docker ps -a -q --filter name=crm-*)
+docker rm -f $(docker ps -a -q --filter name=myapp-*)
 # 根据名称移除镜像
-docker rmi $(docker images -q 192.168.30.102:5000/crm-*)
+docker rmi $(docker images -q 192.168.30.102:5000/myapp-*)
 docker images | grep "crm" | awk '{print $3}'
 for i in $(docker images | grep -e crm-.*1.7 | awk 'BEGIN{OFS=":"}{print $1,$2}'); do docker push $i; done
-docker volume ls
-docker volume prune
 ```
 
-### 3. 构建
+## 3. 构建
 
 * Dockerfile
 

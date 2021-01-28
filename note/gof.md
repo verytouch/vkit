@@ -1,4 +1,4 @@
-### 1. 原则
+## 一、原则
  * 开闭原则：扩展新的类来实现需求
      Software entities should be open for extension，but closed for modification
 
@@ -26,7 +26,7 @@
 
      
 
-### 2.GOF23
+## 二、GOF23
 
 * 单例模式
   * 一个类只有一个实例，且该类能自行创建这个实例的一种模式

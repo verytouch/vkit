@@ -1,129 +1,59 @@
-# gitlab
+> CI文档：http://localhost/help/ci/yaml/README.md
 
-## 一、gitlab安装
+## 一. gitlab
 ```shell
-docker volume create gitlab_log
-docker volume create gitlab_data
-docker volume create gitlab_config
+# 安装，不用ssh克隆可以去掉22端口映射
+# 停止后需要删掉容器重新跑一下这个命令，注意不要清理volume
 docker run -d --name gitlab --privileged=true \
-  -v gitlab_config:/etc/gitlab \
-  -v gitlab_log:/var/log/gitlab \
-  -v gitlab_data:/var/opt/gitlab \
-  -p 2080:2080 \
-  -p 22:22 \
-  gitlab/gitlab-ce
-
+	  -v gitlab_config:/etc/gitlab \
+	  -v gitlab_log:/var/log/gitlab \
+	  -v gitlab_data:/var/opt/gitlab \
+	  -p 2080:2080 \
+	  -p 22:22 \
+	  gitlab/gitlab-ce
+	  
+# 配置
 vi /var/lib/docker/volumes/gitlab_config/_data/gitlab.rb
 # 添加这行 external_url 'http://192.168.30.102:2080'
 docker restart gitlab
 ```
 
-## 二、gitlab-runner安装
-1. docker-runner
+## 二. runner
 ```shell
-docker volume create gitlab-runner-config
-docker run -it --name gitlab-runner \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  -v gitlab_runner_config:/etc/gitlab-runner \
-  gitlab/gitlab-runner register
-# 此时要求输入gitlab的url和token等信息
-# url从gitlab页面找
-# token从gitlab页面找
-# executor: docker
-# image: docker:stable
-docker start gitlab-runner
-
-# 配置文件在 /var/lib/docker/volumes/gitlab_runner_config/_data
-# 如果ci失败，gitlab页面看不到什么错误信息，下面可以帮助调试
-docker exec -it gitlab-runner bash
-gitlab-runner --debu run
-# 此时push一下，看是否接受到jobs，或者打印错误信息
-```
-
-2. shell-runner
-```shell
-wget --content-disposition https://packages.gitlab.com/runner/gitlab-runner/packages/ol/7/gitlab-runner-13.6.0-1.x86_64.rpm/download.rpm
-rpm -ivh gitlab-runner-13.6.0-1.x86_64.rpm
+# 1.rpm安装
+rpm -ivh gitlab-runner-13.6.0-1.x86_64.rpm --nodeps --force
+# 注册，executor选择shell
 /usr/bin/gitlab-runner register
-# 此时要求输入gitlab的url和token等信息
-# url从gitlab页面找
-# token从gitlab页面找
-# executor: shell
-
-# 默认用户为gitlab-runner，如果runner没权限执行脚本，可以重新安装指定用户
+# 切换root用户
 /usr/bin/gitlab-runner uninstall
 /usr/bin/gitlab-runner install --working-directory /home/gitlab-runner --user root
 /usr/bin/gitlab-runner restart
+# 非root用户添加权限
+chmod -R 777 /app/bin
+chmod -R 888 /app/log
+vi /etc/sudoers
+# gitlab-runner ALL=(ALL)   NOPASSWD:/usr/bin/netstat,/usr/bin/xargs,/usr/bin/kill
+
+# 2.docker安装，注册的时候executor选择docker
+docker run -it --name gitlab-runner \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -v gitlab_runner_config:/etc/gitlab-runner \
+    -v /var/lib/.m2/reposiotry:/var/lib/.m2/repository \
+    gitlab/gitlab-runner:latest register
 ```
 
-### 三、.gitlab-ci.yml编写
-```yaml
-variables:
-  DOCKER_HOST: tcp://192.168.30.102:2375/
-
-# 缓存maven本地仓库，不然每次都要下载依赖
-cache:
-  key: m2repo
-  paths:
-    - .m2
-
-# 构建、发布
-stages:
-  - build
-  - deploy
-
-# 打jar包
-build-jar:
-  image: maven:3-jdk-8
-  stage: build
-  only:
-    - master
-  tags:
-    - 102-runner
-  script:
-    - mvn clean package -Dmaven.repo.local=.m2 -Dmaven.test.skip=true
-  artifacts:
-    paths:
-      - ./target/hello-1.0.jar
-    expire_in: 1 hour
-
-# 发布到102，构建docker镜像再运行
-deploy-102:
-  stage: deploy
-  variables:
-    GIT_STRATEGY: none
-  dependencies:
-    - build-job
-  only:
-    - master
-  tags:
-    - 102-runner
-  script:
-    - ls ./target
-    - docker build -t hello .
-    - if [ $(docker ps -aq --filter name=hello) ]; then docker rm -f hello && docker rmi $(docker images -f "dangling=true" -q); fi
-    - docker run -d -p 3080:8080 --name hello hello
-
-# 发布到104，使用jar包
-deploy-104:
-  stage: deploy
-  variables:
-    GIT_STRATEGY: none
-  dependencies:
-    - build-job
-  only:
-    - master
-  tags:
-    - 104-runner
-  script:
-    - pwd
-    - ls
-    - if [ "$(netstat -nlp | grep 3080)" ]; then netstat -nlp | grep 3080 | awk '{print $7}' | awk -F"/" '{ print $1 }' | xargs kill -9; fi
-    - cp ./target/hello-1.0.jar /app/hello.jar
-    - java -jar /app/hello.jar --server.port=3080 > /app/hello.out &
+## 三. git
+```shell
+# 卸载老版本
+yum remove git
+# 安装依赖
+yum -y install curl-devel expat-devel gettext-devel openssl-devel zlib-devel gcc perl-ExtUtils-MakeMaker
+# vi /etc/yum.repos.d/CentOS-Media.repo，将里面的enabled=1改成enabled=0，然后保存退出
+tar zxf git-2.25.1.tar.gz cd git-2.25.1
+make prefix=/usr/local/git all
+make prefix=/usr/local/git install
+# 添加环境变量: /usr/local/git/bin
+vi /etc/bashrc 
+source /etc/bashrc
+git --version
 ```
-
-## 四、坑点
-1. gitlab、gitlab-runner及git的版本尽量保持一致，不然runner可能无法拉代码或不执行script等
-2. gitlab使用docker安装时，如果自定义宿主机挂载卷，可能出现权限问题导致无法启动、访问时502或无法重启等
-3. gitlab修改配置gitlab.rb后可能重启失败，此时可以删掉容器，重新执行docker run
