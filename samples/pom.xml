@@ -13,6 +13,6 @@
 
     <modules>
         <module>oauth2</module>
-        <module>leetcode</module>
+        <module>rabbitmq</module>
     </modules>
 </project>
