@@ -18,10 +18,12 @@ tar -zxvf git-2.19.0.tar.gz
 
 # cpu、内存
 top
+top -Hp pid
 
 # 磁盘
 free
 df -h
 du -sh /app
+du -xh --max-depth=1 /app
 ```
 
