@@ -24,20 +24,11 @@ FILES.chooseDirectoryAndSave("Choose directory", "Choose where to store generate
     SELECTION.filter { it instanceof DasTable }.each { generate(it, dir) }
 }
 
-// 固定entity目录可以使用下面的函数，需要注释上面的选择目录的语句
-// generateEntity()
-
-def generateEntity() {
-    // 配置entity目录
-    def dir = System.getProperty("user.dir") + "\\src\\main\\java\\com\\verytouch\\vkit\\entity"
-    SELECTION.filter { it instanceof DasTable }.each { generate(it, dir) }
-}
-
 def generate(table, dir) {
     packageName = dir.toString().replaceAll("[/\\\\]", ".").replaceAll("^.*src(\\.main\\.java\\.)?", "") + ";"
     def className = javaName(table.getName(), true)
     def fields = calcFields(table)
-    new File(dir, className + ".java").withPrintWriter { out -> generate(out, className, fields) }
+    new File(dir, className + ".java").withPrintWriter("utf-8") { out -> generate(out, className, fields) }
 }
 
 def generate(out, className, fields) {
