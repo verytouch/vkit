@@ -74,6 +74,15 @@ public class APIResult<T> {
     }
 
     /**
+     * 构造接口返回对象
+     *
+     * @return APIResult
+     */
+    public static <T> APIResult<T> ok() {
+        return of(APICode.OK.getCode(), null, APICode.OK.getDesc(), null);
+    }
+
+    /**
      * 构造接口返回对象 - 失败
      * @param code 错误代码
      * @param msg 提示
