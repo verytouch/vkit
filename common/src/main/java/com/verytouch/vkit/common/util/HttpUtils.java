@@ -4,8 +4,8 @@ import com.verytouch.vkit.common.base.Assert;
 import lombok.Data;
 import org.apache.commons.io.IOUtils;
 
+import java.io.ByteArrayInputStream;
 import java.io.OutputStream;
-import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -33,7 +33,7 @@ public class HttpUtils {
     private String method = "GET";
     private Map<String, String> headers;
     private Map<String, Object> params;
-    private String body;
+    private byte[] body;
     private Charset charset = StandardCharsets.UTF_8;
     private int connectTimeout = 3000;
     private int readTimeout = 10000;
@@ -88,7 +88,7 @@ public class HttpUtils {
     public static String postJson(String url, String json) throws Exception {
         return new HttpUtils(url)
                 .addHeader("Content-Type", APPLICATION_JSON)
-                .body(json)
+                .body(json.getBytes(StandardCharsets.UTF_8))
                 .post();
     }
 
@@ -120,7 +120,7 @@ public class HttpUtils {
             connection.connect();
             if (body != null) {
                 try (OutputStream out = connection.getOutputStream()) {
-                    IOUtils.copy(new StringReader(body), out, charset);
+                    IOUtils.copy(new ByteArrayInputStream(body), out);
                 }
             }
             Assert.require(connection.getResponseCode() == 200, String.format("request failed: code=%s, message=%s",
@@ -187,7 +187,7 @@ public class HttpUtils {
         return this;
     }
 
-    public HttpUtils body(String body) {
+    public HttpUtils body(byte[] body) {
         this.body = body;
         return this;
     }
