@@ -1,0 +1,14 @@
+server:
+  port: 92
+  servlet:
+    context-path: /two
+
+spring:
+  profiles:
+    include: oauth2-client
+security:
+  oauth2:
+    client:
+      client-id: test2
+
+info: 我是客户端2

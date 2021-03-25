@@ -1,3 +1,14 @@
+```mysql
+-- 连接相关
+show processlist;
+show variables like '%max_connections%';
+set global max_connections=1000;
+
+select concat('kill', id) from information_schema.processlist where host like '%192.168.0.1%';
+```
+
+
+
 ## 一、执行顺序
 
 * FROM
@@ -103,7 +114,3 @@
 | YEAR      | 1字节  | 1901 ~ 2155                                       |
 | DATETIME  | 8字节  | 1000-01-01 00:00:00 ~ 9999-12-31 23:59:59         |
 | TIMESTAMP | 4 字节 | 1970-01-01 00:00:00 UTC ~ 2038-01-19 03:14:07 UTC |
-
-
-
-* 

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>client欢迎您</title>
+    <link href="css/index.css" rel="stylesheet" />
+</head>
+<body>
+    <h4>看到本页面说明单点登录成功，可以通过cookie或token访问client</h4>
+    <h3>access_token：<span class="btn" onclick="getToken()">getToken</span></h3>
+    <div id="access-token"></div>
+    <h3>resource_info：<span class="btn" onclick="getResourceInfo()">getResourceInfo</span></h3>
+    <div id="resource-info"></div>
+    <div id="project-wrapper">
+        <a href="logout">退出</a>
+        <a target="_blank" href="http://localhost:91/one">client1</a>
+        <a target="_blank" href="http://localhost:92/two">client2</a>
+    </div>
+<script src="js/index.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+spring:
+  security:
+    user:
+      password: none
+  resources:
+    static-locations:
+      - classpath:/static/
+      - classpath:/templates/
+  thymeleaf:
+    cache: false
+    mode: HTML
+
+security:
+  oauth2:
+    client:
+      client-secret: 123456
+      access-token-uri: http://localhost:90/oauth/token
+      user-authorization-uri: http://localhost:90/oauth/authorize
+      logout-uri: http://localhost:90/logout
+    resource:
+      jwt:
+        key-value: 123456
+
+#logging:
+#  level:
+#    org.springframework.security: debug

@@ -62,16 +62,15 @@ Accept: application/json
 ######################
 
 ### websecurity
-GET http://localhost:91/client/token
-Cookie: JSESSIONID=C914140B684843976DD2C668B9338070; JSESSIONID=2CD1E9B14EB28614991E491A6182779A
-Host: localhost:91
-Referer: http://localhost:91/client/
-Sec-Fetch-Dest: empty
-Sec-Fetch-Mode: cors
-Sec-Fetch-Site: same-origin
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36
+GET http://localhost:91/one/token
+
 
 ### resource-server
-GET http://localhost:91/client/resource/info
-Authorization: Bearer {{access_token}}
+GET http://localhost:91/one/resource/info
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTWVzc2FnZSI6IuS9oOWmiOWmiOWWiuS9oOWbnuWutuWQg-mlrSIsInVzZXJfbmFtZSI6ImFkbWluIiwic2NvcGUiOlsiYWxsIl0sImV4cCI6MTYxNjY1NjA5NSwidXNlcklkIjoxMDA4NiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiIxZGIwN2NhNi0zMDFlLTRmM2ItYjA5ZS0yZDE3ODgxMjE5YWUiLCJjbGllbnRfaWQiOiJ0ZXN0MSJ9.LKn3K76oXe3iPIneuHoo9nv2maoBhKJDDlLtmM3AeOw
+Accept: application/json
+
+### resource-server
+GET http://localhost:92/two/resource/info
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTWVzc2FnZSI6IuS9oOWmiOWmiOWWiuS9oOWbnuWutuWQg-mlrSIsInNjb3BlIjpbImFsbCJdLCJleHAiOjE2MTY2NTY2NjEsInVzZXJJZCI6MTAwODYsImp0aSI6ImNmNDMyNmE5LTJlMjgtNDNlOS1hMjlhLTliZmU4YWMxYjYyNiIsImNsaWVudF9pZCI6InRlc3QxIn0.bH8lPx4YgqzIQBjoa0o0r1G8wS1No5fCq_jVeYDtkzA
 Accept: application/json
