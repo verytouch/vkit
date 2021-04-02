@@ -153,6 +153,8 @@ rpm -ivh gitlab-runner-13.6.0-1.x86_64.rpm --nodeps --force
 # 默认为gitlab-runner用户，测试环境可以切换到root用户
 /usr/bin/gitlab-runner uninstall
 /usr/bin/gitlab-runner install --working-directory /home/gitlab-runner --user root
+# vi /etc/gitlab-runner/config.toml 修改并发job数 concurrent = 10
+# 重启
 /usr/bin/gitlab-runner restart
 ```
 
