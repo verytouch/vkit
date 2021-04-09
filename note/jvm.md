@@ -99,7 +99,7 @@
   * -Xms：初始堆空间内存，默认为物理内存的1/64
   * -Xmx：最大堆空间内存，默认为物理内存的1/4
   * -Xmn：新生代大小 
-  * -XX:NewRatio：新生代和来年代比例，默认为2，即：New:Old=1:2
+  * -XX:NewRatio：新生代和老年代比例，默认为2，即：New:Old=1:2
   * -XX:SurvivorRatio：Eden和Survivor比例，默认为8，即：Eden:From:To=8:1:1
 
   * -XX:+UseSerialGC：client模式默认值，Serial + Serial Old，适合小型应用
@@ -120,4 +120,4 @@
 
 * 工具
   * JConsole
-  * VisualVM
+  * JVisualVM 打开dump文件

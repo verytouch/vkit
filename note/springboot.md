@@ -42,13 +42,12 @@
 * **prepareContext**
   
   * setEnvironment：关联环境
-* postProcessApplicationContext：配置Bean生成器以及资源加载器
+  * postProcessApplicationContext：配置Bean生成器以及资源加载器
   
   * applyInitializers：使用Initializers初始化ApplicationContext，*listeners.contextPrepared*
   * registerSingleton：注册springApplicationArguments和springBootBanner
   * getAllSources：获取要加载的资源，一般为主类的class对象
-* load：注册启动类BeanDefinition，*listeners.contextLoaded*
-  
+  * load：注册启动类BeanDefinition，*listeners.contextLoaded*
 * **refreshContext：加载bean，启动web容器**
   
   * prepareRefresh，一些准备工作
