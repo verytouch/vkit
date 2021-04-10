@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.verytouch.vkit.captcha.tencent.TencentCaptchaAutoConfiguration,\
+  com.verytouch.vkit.captcha.image.ImageCaptchaAutoConfiguration
