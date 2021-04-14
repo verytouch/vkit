@@ -8,7 +8,6 @@ import com.intellij.database.util.DasUtil
  *   PROJECT     project
  *   FILES       files helper
  */
-
 packageName = ""
 typeMapping = [
         (~/(?i)int/)                      : "Integer",
@@ -20,9 +19,16 @@ typeMapping = [
         (~/(?i)/)                         : "String"
 ]
 
-FILES.chooseDirectoryAndSave("Choose directory", "Choose where to store generated files") { dir ->
-    SELECTION.filter { it instanceof DasTable }.each { generate(it, dir) }
+// 不指定时手动选择目录
+entityDir = ""
+if (entityDir != null && entityDir != '') {
+    SELECTION.filter { it instanceof DasTable }.each { generate(it, entityDir) }
+} else {
+    FILES.chooseDirectoryAndSave("Choose directory", "Choose where to store generated files") { dir ->
+        SELECTION.filter { it instanceof DasTable }.each { generate(it, dir) }
+    }
 }
+
 
 def generate(table, dir) {
     packageName = dir.toString().replaceAll("[/\\\\]", ".").replaceAll("^.*src(\\.main\\.java\\.)?", "") + ";"

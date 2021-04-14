@@ -5,7 +5,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.verytouch.vkit</groupId>
-    <artifactId>vkit-parent</artifactId>
+    <artifactId>vkit</artifactId>
     <packaging>pom</packaging>
     <version>2.0.0</version>
     <modules>

@@ -19,9 +19,16 @@ typeMapping = [
         (~/(?i)/)                         : "VARCHAR"
 ]
 
+static def entityPackage() {
+    // 为空时：本目录设为所选目录的兄弟目录entity
+    // 如所选目录为com.mapper，则本目录为com.entity
+    return ""
+}
+
 FILES.chooseDirectoryAndSave("Choose directory", "Choose where to store generated files") { dir ->
     SELECTION.filter { it instanceof DasTable }.each { generate(it, dir) }
 }
+
 def generate(table, dir) {
     def baseName = javaName(table.getName(), true)
     def basePackage = dir.toString().split("java.")[1]
@@ -34,9 +41,16 @@ def generate(table, dir) {
 
 static def generateInterface(out, basePackage, baseName) {
     def date = String.format("%tF %<tT", new Date())
-    out.println "package ${basePackage}.dao;"
+    def entityPackage = entityPackage()
+    def entity
+    if (entityPackage != null && entityPackage != '') {
+        entity = "${entityPackage}.${baseName}"
+    } else {
+        entity = "${basePackage}.entity.${baseName}"
+    }
+    out.println "package ${basePackage}.mapper;"
     out.println ""
-    out.println "import ${basePackage}.entity.${baseName};"
+    out.println "import ${entity};"
     out.println "import org.apache.ibatis.annotations.Param;"
     out.println "import java.util.List;"
     out.println ""
@@ -76,18 +90,23 @@ def generateXml(table, out, basePackage, baseName) {
     def tableName = table.getName()
     def fields = calcFields(table)
 
-    def dao = basePackage + ".dao." + baseName + "Mapper"
-    def to = basePackage + ".entity.${baseName}"
+    def dao = basePackage + ".mapper." + baseName + "Mapper"
+    def entity = entityPackage()
+    if (entity != null && entity != '') {
+        entity = "${entity}.${baseName}"
+    } else {
+        entity = "${entity}.entity.${baseName}"
+    }
 
     out.println mappingsStart(dao)
-    out.println resultMap(baseResultMap, to, fields)
+    out.println resultMap(baseResultMap, entity, fields)
     out.println sql(fields, base_Column_List)
-    out.println insert(tableName, fields, to)
-    out.println insertBatch(tableName, fields, to)
+    out.println insert(tableName, fields, entity)
+    out.println insertBatch(tableName, fields, entity)
     out.println selectById(tableName, fields, baseResultMap, base_Column_List)
     out.println deleteById(tableName, fields)
-    out.println updateById(tableName, fields, to)
-    out.println selectList(tableName, fields, to, base_Column_List, baseResultMap)
+    out.println updateById(tableName, fields, entity)
+    out.println selectList(tableName, fields, entity, base_Column_List, baseResultMap)
     out.println mappingsEnd()
 
 }
