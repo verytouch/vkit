@@ -1,6 +1,7 @@
 package com.verytouch.vkit.common.util;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -14,6 +15,7 @@ public class MapUtils {
 
     /**
      * 返回一个元素的Map
+     *
      * @param k 键
      * @param v 值
      * @return HashMap
@@ -69,6 +71,35 @@ public class MapUtils {
 
         public Map<K, V> build() {
             return this.map;
+        }
+    }
+
+    /**
+     * Map读取
+     */
+    public static class Reader {
+
+        private Map map;
+
+        private Reader(Map map) {
+            this.map = map;
+        }
+
+        public static Reader map(Map map) {
+            return new Reader(map);
+        }
+
+        public Reader skin(Object key) {
+            this.map = (Map) this.map.get(key);
+            return this;
+        }
+
+        public Map getMap(Object key) {
+            return (Map) this.map.get(key);
+        }
+
+        public List<Map> getList(Object key) {
+            return (List<Map>) this.map.get(key);
         }
     }
 }

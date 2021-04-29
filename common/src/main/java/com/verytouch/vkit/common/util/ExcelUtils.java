@@ -1,8 +1,8 @@
 package com.verytouch.vkit.common.util;
 
+import com.google.gson.JsonObject;
 import com.verytouch.vkit.common.base.Assert;
 import com.verytouch.vkit.common.exception.BusinessException;
-import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
@@ -12,19 +12,19 @@ import org.apache.poi.xssf.usermodel.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * excel工具类
  *
  * @author verytouch
- * @date 2021/3/7 20:41
+ * @since 2021/3/7 20:41
  */
 public class ExcelUtils {
 
-    public static Writer writer() {
-        return new Writer();
+    public static Writer writer(List<?> data) {
+        return new Writer(data);
     }
 
     public Reader reader(InputStream inputStream) {
@@ -35,7 +35,7 @@ public class ExcelUtils {
      * 读取excel
      *
      * @author verytouch
-     * @date 2021/3/7 20:41
+     * @since 2021/3/7 20:41
      */
     public static class Reader {
 
@@ -64,49 +64,80 @@ public class ExcelUtils {
             }
             return data;
         }
+
+        public List<Map<String, String>> readAsMap(int sheetIndex, List<String> keys) {
+            return read(sheetIndex).stream().map(values -> {
+                Map<String, String> map = new HashMap<>();
+                if (keys.size() != values.size()) {
+                    return map;
+                }
+                for (int i = 0; i < keys.size(); i++) {
+                    map.put(keys.get(i), values.get(i));
+                }
+                return map;
+            }).collect(Collectors.toList());
+        }
     }
 
     /**
      * 写入excel
      *
      * @author verytouch
-     * @date 2021/3/7 20:41
+     * @since 2021/3/7 20:41
      */
     public static class Writer {
+        /**
+         * key对应标题，value对应data中对象的字段名
+         */
+        private final LinkedHashMap<String, String> alias;
+        /**
+         * 数据
+         */
+        private final List<?> data;
+        /**
+         * 是否写标题
+         */
+        private final boolean writeTitle;
 
-        private final Map<String, String> title;
-        private List<?> data;
-
-        private Writer() {
-            this.title = new LinkedHashMap();
-        }
-
-        public Writer addTitle(String name, String field) {
-            title.put(name, field);
-            return this;
-        }
-
-        public Writer setData(List<?> data) {
+        private Writer(List<?> data, LinkedHashMap<String, String> alias, boolean writeTitle) {
             this.data = data;
+            this.alias = alias;
+            this.writeTitle = writeTitle;
+        }
+
+        private Writer(List<?> data) {
+            this.data = data;
+            this.alias = new LinkedHashMap<>();
+            this.writeTitle = true;
+        }
+
+        public Writer addAlias(String name, String field) {
+            this.alias.put(name, field);
             return this;
         }
 
-        public XSSFWorkbook write() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-            Assert.nonEmpty(title, "标题不能为空");
-            Assert.nonNull(data, "数据不能为空");
+        public XSSFWorkbook write() {
+            Assert.nonEmpty(alias, "alias不能为空");
+            Assert.nonNull(data, "data不能为空");
             XSSFWorkbook workbook = new XSSFWorkbook();
 
             XSSFSheet sheet = workbook.createSheet();
             // 标题
-            Map<Integer, String> maxLengthCol = writeTitle(workbook, sheet);
-            Set<Map.Entry<String, String>> titleEntries = title.entrySet();
+            Map<Integer, String> maxLengthCol;
+            if (writeTitle) {
+                maxLengthCol = writeTitle(workbook, sheet);
+            } else {
+                maxLengthCol = new HashMap<>();
+            }
+
+            Set<Map.Entry<String, String>> titleEntries = alias.entrySet();
             // 正文
             for (int i = 0; i < data.size(); i++) {
                 XSSFRow row = sheet.createRow(i + 1);
+                JsonObject json = JsonUtils.toJsonObject(data.get(i));
                 int j = 0;
                 for (Map.Entry<String, String> titleEntry : titleEntries) {
-                    Object value = PropertyUtils.getProperty(data.get(i), titleEntry.getValue());
-                    String valueStr = Objects.toString(value, "");
+                    String valueStr = json.get(titleEntry.getValue()).getAsString();
                     maxLengthCol.merge(j, valueStr, (a, b) -> a.length() > b.length() ? a : b);
                     XSSFCell cell = row.createCell(j, Cell.CELL_TYPE_STRING);
                     cell.setCellValue(valueStr);
@@ -114,7 +145,7 @@ public class ExcelUtils {
                 }
             }
             // 列宽
-            for (int i = 0; i < title.size(); i++) {
+            for (int i = 0; i < alias.size(); i++) {
                 sheet.setColumnWidth(i, (maxLengthCol.get(i) + "占位").getBytes().length * 256);
             }
             return workbook;
@@ -151,7 +182,7 @@ public class ExcelUtils {
             Map<Integer, String> maxLengthCol = new HashMap<>();
             XSSFRow row = sheet.createRow(0);
             int colNum = 0;
-            for (Map.Entry<String, String> entry : title.entrySet()) {
+            for (Map.Entry<String, String> entry : alias.entrySet()) {
                 XSSFCell cell = row.createCell(colNum);
                 maxLengthCol.put(colNum, entry.getKey());
                 cell.setCellValue(entry.getKey());

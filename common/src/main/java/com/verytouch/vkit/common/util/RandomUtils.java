@@ -13,7 +13,7 @@ import java.util.UUID;
  * 随机工具类
  *
  * @author verytouch
- * @date 2021/3/7 20:41
+ * @since 2021/3/7 20:41
  */
 public class RandomUtils {
 
@@ -21,8 +21,7 @@ public class RandomUtils {
     public static final String BASE_CHAR_NUM = "1234567890";
 
     /**
-     * uuid不带-
-     * @return
+     * uuid不带杠
      */
     public static String uuid() {
         return UUID.randomUUID().toString().replace("-", "");
@@ -30,7 +29,6 @@ public class RandomUtils {
 
     /**
      * 从base中随机生成length位字符
-     * @return
      */
     public static String character(String base, int length) {
         Objects.requireNonNull(base, "base can not be null");
@@ -44,7 +42,6 @@ public class RandomUtils {
 
     /**
      * 随机生成length位数字
-     * @return
      */
     public static String number(int length) {
         return character(BASE_CHAR_NUM, length);
@@ -52,9 +49,9 @@ public class RandomUtils {
 
     /**
      * 随机生成4位图片验证码
+     *
      * @param os 输出流
      * @return 验证码
-     * @throws IOException
      */
     public static String captcha(OutputStream os) throws IOException {
         BufferedImage image = new BufferedImage(200, 70, BufferedImage.TYPE_INT_RGB);
@@ -76,7 +73,7 @@ public class RandomUtils {
         graphics.fillRect(0, 0, width, height);
         graphics.setFont(new Font("微软雅黑", Font.BOLD, 40));
         //数字和字母的组合
-        StringBuffer sBuffer = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         int x = 10;  //旋转原点的 x 坐标
         String ch = "";
         Random random = new Random();
@@ -86,7 +83,7 @@ public class RandomUtils {
             //设置字体旋转角度
             int degree = random.nextInt() % 30;  //角度小于30度
             ch = String.valueOf(aChar);
-            sBuffer.append(ch);
+            sb.append(ch);
             //正向旋转
             graphics.rotate(degree * Math.PI / 180, x, 45);
             graphics.drawString(ch, x, 45);
@@ -110,7 +107,7 @@ public class RandomUtils {
             graphics.setColor(color());
             graphics.fillRect(x1, y1, 2, 2);
         }
-        return sBuffer.toString();
+        return sb.toString();
 
     }
 

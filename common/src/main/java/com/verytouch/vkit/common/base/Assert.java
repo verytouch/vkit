@@ -15,6 +15,7 @@ public final class Assert {
 
     /**
      * 满足条件condition
+     *
      * @param condition 条件
      * @param message 错误信息
      */
@@ -26,6 +27,7 @@ public final class Assert {
 
     /**
      * 满足条件condition
+     *
      * @param condition 条件
      * @param apiCode 错误码
      */
@@ -37,6 +39,7 @@ public final class Assert {
 
     /**
      * 满足正则regex
+     *
      * @param target 校验对象
      * @param regex 正则
      * @param message 错误信息
@@ -49,6 +52,7 @@ public final class Assert {
 
     /**
      * 非null
+     *
      * @param target 校验对象
      * @param message 错误信息
      * @return target
@@ -67,6 +71,7 @@ public final class Assert {
      * <li>Map: size() > 0</li>
      * <li>Object: toString() != ""</li>
      * </ol>
+     *
      * @param target 校验对象
      * @param message 错误信息
      * @return target
@@ -88,6 +93,7 @@ public final class Assert {
 
     /**
      * 非空（包括trim后）
+     *
      * @param string 校验对象
      * @param message 错误信息
      * @return string
@@ -101,6 +107,7 @@ public final class Assert {
 
     /**
      * 长度处于区间[min, max]
+     *
      * @param string 校验对象
      * @param min 最小长度
      * @param max 最大长度
@@ -116,4 +123,38 @@ public final class Assert {
         return string;
     }
 
+    /**
+     * 对象equals且非null
+     *
+     * @param o1 对象1
+     * @param o2 对象2
+     * @param message 错误信息
+     */
+    public static void equals(Object o1, Object o2, String message) {
+        require(o1 != null && o1.equals(o2), message);
+    }
+
+    /**
+     * 字符串equals且非null，忽略大小写
+     *
+     * @param s1 字符串1
+     * @param s2 字符串2
+     * @param message 错误信息
+     */
+    public static void equalsIgnoreCase(String s1, String s2, String message) {
+        require(s1 != null && s1.equalsIgnoreCase(s2), message);
+    }
+
+    /**
+     * 类型转换
+     *
+     * @param target 目标对象
+     * @param clazz 目标Class
+     * @param message 错误信息
+     * @param <T> 目标类型
+     */
+    public static <T> T instanceOf(Object target, Class<T> clazz, String message) {
+        require(target != null && clazz.isAssignableFrom(target.getClass()), message);
+        return (T) target;
+    }
 }

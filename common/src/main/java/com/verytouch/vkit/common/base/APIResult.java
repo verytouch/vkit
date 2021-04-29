@@ -1,6 +1,7 @@
 package com.verytouch.vkit.common.base;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import java.util.Map;
  * @since 2020/9/17 10:36
  */
 @Data
+@Accessors(chain = true)
 public class APIResult<T> {
 
     private int code;
@@ -20,6 +22,7 @@ public class APIResult<T> {
 
     /**
      * 构造接口返回对象
+     *
      * @param code 状态代码
      * @param data 数据
      * @param msg 提示
@@ -37,6 +40,7 @@ public class APIResult<T> {
 
     /**
      * 构造接口返回对象
+     *
      * @param apiCode 接口代码
      * @return APIResult
      */
@@ -46,6 +50,7 @@ public class APIResult<T> {
 
     /**
      * 构造接口返回对象 - 成功
+     *
      * @param data 业务数据
      * @return APIResult
      */
@@ -55,6 +60,7 @@ public class APIResult<T> {
 
     /**
      * 构造接口返回对象 - 成功
+     *
      * @param data 业务数据
      * @param extra 其他数据
      * @return APIResult
@@ -65,6 +71,7 @@ public class APIResult<T> {
 
     /**
      * 构造接口返回对象 - 成功
+     *
      * @param data 业务数据
      * @param msg 提示
      * @return APIResult
@@ -84,6 +91,7 @@ public class APIResult<T> {
 
     /**
      * 构造接口返回对象 - 失败
+     *
      * @param code 错误代码
      * @param msg 提示
      * @return APIResult
@@ -94,6 +102,7 @@ public class APIResult<T> {
 
     /**
      * 构造接口返回对象 - 失败
+     *
      * @param msg 提示
      * @return APIResult
      */

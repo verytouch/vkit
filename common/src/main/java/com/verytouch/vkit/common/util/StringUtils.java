@@ -16,6 +16,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
     /**
      * 邮箱校验
+     *
      * @param mail 邮箱
      * @return 格式是否正确
      */
@@ -25,6 +26,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
     /**
      * 国内手机号校验
+     *
      * @param tel 手机号
      * @return 格式是否正确
      */
@@ -34,6 +36,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
     /**
      * 身份证号码校验
+     *
      * @param idNo 身份证号码
      * @return 格式是否正确
      */
@@ -43,6 +46,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
     /**
      * 从身份证号码获取性别
+     *
      * @param idNo 身份证号码
      * @return 男：M，女：F
      */

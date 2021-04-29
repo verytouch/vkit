@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>vkit</artifactId>
+        <groupId>com.verytouch.vkit</groupId>
+        <version>2.1.0</version>
+    </parent>
+    <packaging>pom</packaging>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>starter</artifactId>
+    <modules>
+        <module>vkit-springboot-starter-autoconfigure</module>
+        <module>vkit-ocr-springboot-starter</module>
+        <module>vkit-oss-springboot-starter</module>
+        <module>vkit-captcha-springboot-starter</module>
+    </modules>
+
+    <properties>
+        <tencent.api.version>4.0.11</tencent.api.version>
+        <jsonpath.version>2.5.0</jsonpath.version>
+        <minio.version>7.1.4</minio.version>
+        <ali.oss.version>3.12.0</ali.oss.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.verytouch.vkit</groupId>
+                <artifactId>common</artifactId>
+                <version>2.1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.verytouch.vkit</groupId>
+                <artifactId>vkit-springboot-starter-autoconfigure</artifactId>
+                <version>2.1.0</version>
+            </dependency>
+            <!-- 腾讯行为验证码 -->
+            <dependency>
+                <groupId>com.tencentcloudapi</groupId>
+                <artifactId>tencentcloud-sdk-java</artifactId>
+                <optional>true</optional>
+                <version>${tencent.api.version}</version>
+            </dependency>
+            <!-- 阿里ocr，依赖vkit-common包发http请求，jsonpath用来解析结果 -->
+            <dependency>
+                <groupId>com.jayway.jsonpath</groupId>
+                <artifactId>json-path</artifactId>
+                <optional>true</optional>
+                <version>${jsonpath.version}</version>
+            </dependency>
+            <!-- OSS，minio和阿里 -->
+            <dependency>
+                <groupId>io.minio</groupId>
+                <artifactId>minio</artifactId>
+                <optional>true</optional>
+                <version>${minio.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aliyun.oss</groupId>
+                <artifactId>aliyun-sdk-oss</artifactId>
+                <optional>true</optional>
+                <version>${ali.oss.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>

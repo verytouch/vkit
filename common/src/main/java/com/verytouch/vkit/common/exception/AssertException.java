@@ -5,6 +5,9 @@ import lombok.Getter;
 
 /**
  * 断言失败抛出的异常
+ *
+ * @author verytouch
+ * @since 2021/3/7 21:18
  */
 public class AssertException extends BusinessException {
 

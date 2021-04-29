@@ -48,6 +48,7 @@ public class HttpUtils {
 
     /**
      * 发送get请求
+     *
      * @param url 请求地址
      * @return 接口返回的字符串
      * @throws Exception 失败抛出异常
@@ -58,6 +59,7 @@ public class HttpUtils {
 
     /**
      * 发送get请求
+     *
      * @param url 请求地址，不带参数
      * @param params 请求参数，拼接在url后面
      * @return 接口返回的字符串
@@ -69,6 +71,7 @@ public class HttpUtils {
 
     /**
      * 发送post请求
+     *
      * @param url 请求地址，不带参数
      * @param params 请求参数，拼接在url后面
      * @return 接口返回的字符串
@@ -80,6 +83,7 @@ public class HttpUtils {
 
     /**
      * 发送post请求
+     *
      * @param url 请求地址
      * @param json json格式的参数，contentType=application/json
      * @return 接口返回的字符串

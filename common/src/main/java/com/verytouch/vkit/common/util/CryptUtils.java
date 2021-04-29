@@ -46,6 +46,7 @@ public final class CryptUtils {
 
     /**
      * 通用加密算法
+     *
      * @param data 待加密数据
      * @param algorithm 算法[/模式][/填充]
      * @param key 密钥
@@ -71,6 +72,7 @@ public final class CryptUtils {
 
     /**
      * 通用加密算法，使用默认参数
+     *
      * @param data 待加密数据
      * @param key 密钥
      * @return 加密后的byte数组
@@ -82,6 +84,7 @@ public final class CryptUtils {
 
     /**
      * 通用解密方法
+     *
      * @param data 待解密数据
      * @param algorithm 算法[/模式][/填充]
      * @param key 密钥
@@ -112,6 +115,7 @@ public final class CryptUtils {
 
     /**
      * 通用解密方法，使用默认参数
+     *
      * @param data 待解密数据
      * @param key 密钥
      * @return 数据原文
@@ -123,6 +127,7 @@ public final class CryptUtils {
 
     /**
      * 分段加解密
+     *
      * @param cipher Cipher对象
      * @param data 所有数据
      * @param blockSize 分段大小
@@ -147,6 +152,7 @@ public final class CryptUtils {
 
     /**
      * 通用签名方法，私钥签名
+     *
      * @param data 待签名数据
      * @param algorithm 算法[/模式][/填充]
      * @param privateKey 私钥
@@ -162,6 +168,7 @@ public final class CryptUtils {
 
     /**
      * 通用验证方法，公钥验证
+     *
      * @param data 待验证数据
      * @param algorithm 算法[/模式][/填充]
      * @param publicKey 公钥
@@ -178,6 +185,7 @@ public final class CryptUtils {
 
     /**
      * 通用摘要方法
+     *
      * @param data 待摘要信息
      * @param algorithm 摘要算法
      * @return 摘要
@@ -191,6 +199,7 @@ public final class CryptUtils {
 
     /**
      * 16进制编码
+     *
      * @param data 数据
      * @return 16进制字符串
      */
@@ -209,6 +218,7 @@ public final class CryptUtils {
 
     /**
      * 16进制解码
+     *
      * @param hexStr 16进制字符串
      * @return 原数据
      */
@@ -240,6 +250,7 @@ public final class CryptUtils {
 
         /**
          * 对称算法密钥生成
+         *
          * @param algorithm 算法
          * @param keySize key长度，按位算
          * @return 密钥对象
@@ -253,6 +264,7 @@ public final class CryptUtils {
 
         /**
          * 对称算法密钥还原
+         *
          * @param algorithm 算法
          * @param key 密钥字节数组
          * @return 密钥对象
@@ -263,6 +275,7 @@ public final class CryptUtils {
 
         /**
          * 非对称算法密钥对生成
+         *
          * @param algorithm 算法
          * @param keySize 密钥长度，按位算
          * @return 密钥对
@@ -276,6 +289,7 @@ public final class CryptUtils {
 
         /**
          * 非对称算法密钥对生成并保存pkcs8格式到指定文件
+         *
          * @param algorithm 算法
          * @param keySize 密钥长度，按位算
          * @param pub 公钥保存路径
@@ -298,6 +312,7 @@ public final class CryptUtils {
 
         /**
          * 非对称算法公钥还原
+         *
          * @param algorithm 算法
          * @param key 公钥二进制数组
          * @return 公钥对象
@@ -311,6 +326,7 @@ public final class CryptUtils {
 
         /**
          * 非对称算法私钥还原
+         *
          * @param algorithm 算法
          * @param key 私钥二进制数组
          * @return 私钥对象
@@ -324,6 +340,7 @@ public final class CryptUtils {
 
         /**
          * pkcs8公钥还原
+         *
          * @param algorithm 算法
          * @param pkcs8 pkcs8公钥字符串
          * @return 公钥对象
@@ -338,6 +355,7 @@ public final class CryptUtils {
 
         /**
          * pkcs8私钥还原
+         *
          * @param algorithm 算法
          * @param pkcs8 pkcs8私钥字符串
          * @return 私钥对象
@@ -364,6 +382,7 @@ public final class CryptUtils {
 
         /**
          * 生成128位密钥
+         *
          * @return 密钥字节数组
          * @throws Exception 失败抛出异常
          */
@@ -373,6 +392,7 @@ public final class CryptUtils {
 
         /**
          * 加密并作16进制编码
+         *
          * @param data 原文
          * @param key 密钥字节数组
          * @return 16进制密文
@@ -385,6 +405,7 @@ public final class CryptUtils {
 
         /**
          * 解密
+         *
          * @param data 16进制密文
          * @param key 密钥字节数组
          * @return 原文
@@ -409,7 +430,8 @@ public final class CryptUtils {
 
         /**
          * 生成1024位密钥对
-         * @return 密钥第
+         *
+         * @return 密钥对
          * @throws Exception 失败抛出异常
          */
         public static KeyPair keyPair() throws Exception {
@@ -418,6 +440,7 @@ public final class CryptUtils {
 
         /**
          * 从私钥中获取公钥
+         *
          * @param privateKey 私钥对象
          * @return 公钥对象
          * @throws Exception 失败抛出异常
@@ -430,6 +453,7 @@ public final class CryptUtils {
 
         /**
          * 公钥加密
+         *
          * @param data 原文
          * @param key 公钥字节数组
          * @return 16进制密文
@@ -442,6 +466,7 @@ public final class CryptUtils {
 
         /**
          * 私钥解密
+         *
          * @param data 16进制密文
          * @param key 私钥二进制数组
          * @return 原文
@@ -464,6 +489,7 @@ public final class CryptUtils {
 
         /**
          * 生成1024位密钥对
+         *
          * @return 密钥对
          * @throws Exception 失败抛出异常
          */
@@ -473,6 +499,7 @@ public final class CryptUtils {
 
         /**
          * 私钥签名
+         *
          * @param data 原文
          * @param key 私钥二进制数组
          * @return 16进制签名
@@ -485,6 +512,7 @@ public final class CryptUtils {
 
         /**
          * 公钥认证
+         *
          * @param data 原文
          * @param key 公钥二进制数组
          * @param sign 16进制签名
@@ -500,20 +528,28 @@ public final class CryptUtils {
     /**
      * 一些算法
      */
-    public static enum Algorithm {
-        // 对称加密算法
+    public enum Algorithm {
+        /*
+         * 对称加密算法
+         */
         DES(1, "DES", "密钥长度56，加8校验位"),
-        TRIPPLE_DES(1, "DESede", "密钥长度112, 168，加密方式：DES加密一次，解密一次，再加密一次"),
+        TRIPLE_DES(1, "DESede", "密钥长度112, 168，加密方式：DES加密一次，解密一次，再加密一次"),
         AES(1, "AES", "密钥长度128, 192, 256"),
         RC4(1, "RC4", "密钥长度40-1024"),
         BLOWFISH(1, "Blowfish", "密钥长度32-448，且必须是8的倍数"),
-        // 非对称加密算法
+        /*
+         * 非对称加密算法
+         */
         RSA(2, "RSA", "密钥长度512, 1024, 2048, 3072，4096....应该公钥加密私钥解密"),
-        // 摘要算法
+        /*
+         * 摘要算法
+         */
         MD5(3, "MD5", ""),
         SHA1(3, "SHA-1", ""),
         SHA256(3, "SHA-256", ""),
-        // 签名算法
+        /*
+         * 签名算法
+         */
         DSA(4, "DSA", "密钥长度参考RSA，只用作签名，应该私钥签名公钥验证"),
         MD5_RSA(4, "SHA1withRSA", ""),
         SHA1_RSA(4, "MD5withRSA", "");
