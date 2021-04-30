@@ -10,12 +10,13 @@
     <packaging>pom</packaging>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>starter</artifactId>
+    <artifactId>starters</artifactId>
     <modules>
-        <module>vkit-springboot-starter-autoconfigure</module>
-        <module>vkit-ocr-springboot-starter</module>
-        <module>vkit-oss-springboot-starter</module>
-        <module>vkit-captcha-springboot-starter</module>
+        <module>vkit-spring-boot-autoconfigure</module>
+        <module>ocr-spring-boot-starter</module>
+        <module>oss-spring-boot-starter</module>
+        <module>captcha-spring-boot-starter</module>
+        <module>alipay-spring-boot-starter</module>
     </modules>
 
     <properties>
@@ -23,6 +24,7 @@
         <jsonpath.version>2.5.0</jsonpath.version>
         <minio.version>7.1.4</minio.version>
         <ali.oss.version>3.12.0</ali.oss.version>
+        <ali.pay.version>4.13.45.ALL</ali.pay.version>
     </properties>
 
     <dependencyManagement>
@@ -34,7 +36,7 @@
             </dependency>
             <dependency>
                 <groupId>com.verytouch.vkit</groupId>
-                <artifactId>vkit-springboot-starter-autoconfigure</artifactId>
+                <artifactId>vkit-spring-boot-autoconfigure</artifactId>
                 <version>2.1.0</version>
             </dependency>
             <!-- 腾讯行为验证码 -->
@@ -63,6 +65,12 @@
                 <artifactId>aliyun-sdk-oss</artifactId>
                 <optional>true</optional>
                 <version>${ali.oss.version}</version>
+            </dependency>
+            <!-- alipay -->
+            <dependency>
+                <groupId>com.alipay.sdk</groupId>
+                <artifactId>alipay-sdk-java</artifactId>
+                <version>${ali.pay.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

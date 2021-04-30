@@ -3,22 +3,22 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>starter</artifactId>
+        <artifactId>starters</artifactId>
         <groupId>com.verytouch.vkit</groupId>
         <version>2.1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>vkit-ocr-springboot-starter</artifactId>
+    <artifactId>captcha-spring-boot-starter</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>com.verytouch.vkit</groupId>
-            <artifactId>vkit-springboot-starter-autoconfigure</artifactId>
+            <artifactId>vkit-spring-boot-autoconfigure</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.jayway.jsonpath</groupId>
-            <artifactId>json-path</artifactId>
+            <groupId>com.tencentcloudapi</groupId>
+            <artifactId>tencentcloud-sdk-java</artifactId>
         </dependency>
     </dependencies>
 

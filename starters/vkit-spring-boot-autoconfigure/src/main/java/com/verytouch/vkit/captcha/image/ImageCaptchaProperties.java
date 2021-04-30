@@ -58,7 +58,7 @@ public class ImageCaptchaProperties {
     private String chars = "123456789abcdefghijkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ";
 
     /**
-     * 缓存过期时间，单位秒
+     * 缓存默认过期时间，单位秒
      */
-    private long expireSeconds = 600;
+    private long defaultExpireSeconds = 600;
 }

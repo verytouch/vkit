@@ -61,7 +61,19 @@ public class ImageCaptchaService implements CaptchaService {
      */
     public String drawAndStore(OutputStream outputStream) {
         String value = draw(outputStream);
-        return codeStore.store(value, properties.getExpireSeconds());
+        return codeStore.store(value, properties.getDefaultExpireSeconds());
+    }
+
+    /**
+     * 生成并缓存验证码
+     *
+     * @param outputStream 输出流
+     * @param expireSeconds 过期时间，单位秒
+     * @return 验证码key
+     */
+    public String drawAndStore(OutputStream outputStream, long expireSeconds) {
+        String value = draw(outputStream);
+        return codeStore.store(value, expireSeconds);
     }
 
     /**
