@@ -3,6 +3,7 @@ import com.intellij.database.util.Case
 import com.intellij.database.util.DasUtil
 
 /*
+ * 生成实体类
  * Available context bindings:
  *   SELECTION   Iterable<DasObject>
  *   PROJECT     project
@@ -19,7 +20,7 @@ typeMapping = [
         (~/(?i)/)                         : "String"
 ]
 
-// 不指定时手动选择目录
+// 1.配置实体目录，为空时需要在生成的时候手动选择
 entityDir = ""
 if (entityDir != null && entityDir != '') {
     SELECTION.filter { it instanceof DasTable }.each { generate(it, entityDir) }
@@ -28,7 +29,6 @@ if (entityDir != null && entityDir != '') {
         SELECTION.filter { it instanceof DasTable }.each { generate(it, dir) }
     }
 }
-
 
 def generate(table, dir) {
     packageName = dir.toString().replaceAll("[/\\\\]", ".").replaceAll("^.*src(\\.main\\.java\\.)?", "") + ";"
@@ -44,8 +44,8 @@ def generate(out, className, fields) {
     out.println "import lombok.Data;"
     out.println ""
     out.println "/**"
-    out.println " * @author generator"
-    out.println " * @date $date"
+    out.println " * @author groovy"
+    out.println " * @since $date"
     out.println " */"
     out.println "@Data"
     out.println "public class $className {"

@@ -3,6 +3,7 @@ import com.intellij.database.util.Case
 import com.intellij.database.util.DasUtil
 
 /*
+ * 生成Mapper接口和xml
  * Available context bindings:
  *   SELECTION   Iterable<DasObject>
  *   PROJECT     project
@@ -19,46 +20,54 @@ typeMapping = [
         (~/(?i)/)                         : "VARCHAR"
 ]
 
-static def entityPackage() {
-    // 为空时：本目录设为所选目录的兄弟目录entity
-    // 如所选目录为com.mapper，则本目录为com.entity
-    return ""
+// 1.配置实体目录，basePackage为mapper目录（mapper目录以mapper后缀结尾时，为mapper目录的父目录）
+static def entityPackage(basePackage) {
+    return "${basePackage}.entity"
 }
 
-FILES.chooseDirectoryAndSave("Choose directory", "Choose where to store generated files") { dir ->
-    SELECTION.filter { it instanceof DasTable }.each { generate(it, dir) }
+// 2.配置mapper后缀
+static def mapper(suffix) {
+    def name = "Mapper"
+    return suffix ? name : name.toLowerCase()
+}
+
+// 3.配置mapper目录，为空时需要在生成的时候手动选择
+mapperDir = ""
+if (mapperDir != null && mapperDir != '') {
+    SELECTION.filter { it instanceof DasTable }.each { generate(it, mapperDir) }
+} else {
+    FILES.chooseDirectoryAndSave("Choose directory", "Choose where to store generated files") { dir ->
+        SELECTION.filter { it instanceof DasTable }.each { generate(it, dir) }
+    }
 }
 
 def generate(table, dir) {
     def baseName = javaName(table.getName(), true)
     def basePackage = dir.toString().split("java.")[1]
-            .split(".(dao|mapper)")[0]
+            .split("." + mapper())[0]
             .replaceAll("\\\\", ".")
-    new File(dir, baseName + "Mapper.java").withPrintWriter("utf-8") { out -> generateInterface(out, basePackage, baseName) }
+    new File(dir, baseName + "${mapper(true)}.java").withPrintWriter("utf-8") { out -> generateInterface(out, basePackage, baseName) }
 
-    new File(dir, baseName + "Mapper.xml").withPrintWriter("utf-8") { out -> generateXml(table, out, basePackage, baseName) }
+    new File(dir, baseName + "${mapper(true)}.xml").withPrintWriter("utf-8") { out -> generateXml(table, out, basePackage, baseName) }
 }
 
-static def generateInterface(out, basePackage, baseName) {
+def generateInterface(out, basePackage, baseName) {
     def date = String.format("%tF %<tT", new Date())
-    def entityPackage = entityPackage()
-    def entity
-    if (entityPackage != null && entityPackage != '') {
-        entity = "${entityPackage}.${baseName}"
-    } else {
-        entity = "${basePackage}.entity.${baseName}"
-    }
-    out.println "package ${basePackage}.mapper;"
+    def entity = entityPackage(basePackage) + ".${baseName}"
+
+    out.println "package ${basePackage}.${mapper()};"
     out.println ""
     out.println "import ${entity};"
     out.println "import org.apache.ibatis.annotations.Param;"
+    out.println "import org.springframework.stereotype.Repository;"
     out.println "import java.util.List;"
     out.println ""
     out.println "/**"
-    out.println " * @author generator"
-    out.println " * @date $date"
+    out.println " * @author groovy"
+    out.println " * @since $date"
     out.println " */"
-    out.println "public interface ${baseName}Mapper {" // 可自定义
+    out.println "@Repository"
+    out.println "public interface ${baseName}${mapper(true)} {"
     out.println ""
     out.println "    int insert(${baseName} entity);"
     out.println ""
@@ -90,13 +99,8 @@ def generateXml(table, out, basePackage, baseName) {
     def tableName = table.getName()
     def fields = calcFields(table)
 
-    def dao = basePackage + ".mapper." + baseName + "Mapper"
-    def entity = entityPackage()
-    if (entity != null && entity != '') {
-        entity = "${entity}.${baseName}"
-    } else {
-        entity = "${entity}.entity.${baseName}"
-    }
+    def dao = "${basePackage}.${mapper()}.${baseName}${mapper(true)}"
+    def entity = entityPackage(basePackage) + ".${baseName}"
 
     out.println mappingsStart(dao)
     out.println resultMap(baseResultMap, entity, fields)
@@ -111,11 +115,11 @@ def generateXml(table, out, basePackage, baseName) {
 
 }
 
-static def notExcluded(name) {
+def notExcluded(name) {
     return !["id", "ID"].contains(name)
 }
 
-static def resultMap(baseResultMap, to, fields) {
+def resultMap(baseResultMap, to, fields) {
     def inner = ''
     fields.each() {
         if (notExcluded(it.name)) {
@@ -145,7 +149,7 @@ def calcFields(table) {
 }
 
 // ------------------------------------------------------------------------ mappings
-static def mappingsStart(mapper) {
+def mappingsStart(mapper) {
     return '''<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="''' + mapper + '''">
@@ -153,12 +157,12 @@ static def mappingsStart(mapper) {
 }
 
 // ------------------------------------------------------------------------ mappings
-static def mappingsEnd() {
+def mappingsEnd() {
     return '''</mapper>'''
 }
 
 // ------------------------------------------------------------------------ selectById
-static def selectById(tableName, fields, baseResultMap, base_Column_List) {
+def selectById(tableName, fields, baseResultMap, base_Column_List) {
     return '''
     <select id="getById" parameterType="java.lang.Integer" resultMap="''' + baseResultMap + '''">
         select <include refid="''' + base_Column_List + '''" />
@@ -168,7 +172,7 @@ static def selectById(tableName, fields, baseResultMap, base_Column_List) {
 }
 
 // ------------------------------------------------------------------------ insert
-static def insert(tableName, fields, parameterType) {
+def insert(tableName, fields, parameterType) {
     return '''
     <insert id="insert" parameterType="''' + parameterType + '''" useGeneratedKeys="true" keyProperty="id">
         insert into `''' + tableName + '''` (''' + insertColumnList(fields) + '''
@@ -179,7 +183,7 @@ static def insert(tableName, fields, parameterType) {
 }
 
 // ------------------------------------------------------------------------ insertBatch
-static def insertBatch(tableName, fields, parameterType) {
+def insertBatch(tableName, fields, parameterType) {
     return '''
     <insert id="insertBatch" parameterType="''' + parameterType + '''" useGeneratedKeys="true" keyProperty="id">
         insert into `''' + tableName + '''` (''' + insertColumnList(fields) + '''
@@ -193,7 +197,7 @@ static def insertBatch(tableName, fields, parameterType) {
 }
 
 // ------------------------------------------------------------------------ updateById
-static def updateById(tableName, fields, parameterType) {
+def updateById(tableName, fields, parameterType) {
     return '''
     <update id="updateById" parameterType="''' + parameterType + '''">
         update `''' + tableName + '''` set ''' + updateColumnList(fields) + '''
@@ -202,7 +206,7 @@ static def updateById(tableName, fields, parameterType) {
 }
 
 // ------------------------------------------------------------------------ deleteById
-static def deleteById(tableName, fields) {
+def deleteById(tableName, fields) {
     return '''
     <delete id="deleteById" parameterType="java.lang.Integer">
         delete from `''' + tableName + '''`
@@ -211,7 +215,7 @@ static def deleteById(tableName, fields) {
 }
 
 // ------------------------------------------------------------------------ selectList
-static def selectList(tableName, fields, parameterType, base_Column_List, baseResultMap) {
+def selectList(tableName, fields, parameterType, base_Column_List, baseResultMap) {
     return '''
     <select id="getList" parameterType="''' + parameterType + '''" resultMap="''' + baseResultMap + '''">
         select <include refid="''' + base_Column_List + '''" />
@@ -223,7 +227,7 @@ static def selectList(tableName, fields, parameterType, base_Column_List, baseRe
 }
 
 // ------------------------------------------------------------------------ sql
-static def sql(fields, base_Column_List) {
+def sql(fields, base_Column_List) {
     def str = '''\t<sql id="''' + base_Column_List + '''">
 @inner@
     </sql> '''
@@ -237,7 +241,7 @@ static def sql(fields, base_Column_List) {
 
 }
 
-static def andEqIfNotNull(fields) {
+def andEqIfNotNull(fields) {
     def inner = ''
     fields.each {
         if (notExcluded(it.name)) {
@@ -251,7 +255,7 @@ static def andEqIfNotNull(fields) {
     return inner
 }
 
-static def insertColumnList(fields) {
+def insertColumnList(fields) {
     def inner = ''
     fields.each {
         if (notExcluded(it.name)) {
@@ -262,7 +266,7 @@ static def insertColumnList(fields) {
     return inner.replaceAll(/(.*),$/, "\$1")
 }
 
-static def insertColumnValue(fields, prefix) {
+def insertColumnValue(fields, prefix) {
     def inner = ''
     fields.each {
         if (notExcluded(it.name)) {
@@ -274,7 +278,7 @@ static def insertColumnValue(fields, prefix) {
     return inner.replaceAll(/(.*),$/, "\$1")
 }
 
-static def updateColumnList(fields) {
+def updateColumnList(fields) {
     def inner = ''
     fields.each {
         if (notExcluded(it.name)) {
