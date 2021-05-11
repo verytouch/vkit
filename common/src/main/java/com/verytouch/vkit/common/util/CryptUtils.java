@@ -47,10 +47,10 @@ public final class CryptUtils {
     /**
      * 通用加密算法
      *
-     * @param data 待加密数据
+     * @param data      待加密数据
      * @param algorithm 算法[/模式][/填充]
-     * @param key 密钥
-     * @param iv 偏移向量，对称加密ECB模式和非对称加密传null
+     * @param key       密钥
+     * @param iv        偏移向量，对称加密ECB模式和非对称加密传null
      * @param blockSize 分段加密数据块大小，传-1不分段
      * @return 加密后的byte数组
      * @throws Exception 失败抛出异常
@@ -74,7 +74,7 @@ public final class CryptUtils {
      * 通用加密算法，使用默认参数
      *
      * @param data 待加密数据
-     * @param key 密钥
+     * @param key  密钥
      * @return 加密后的byte数组
      * @throws Exception 失败抛出异常
      */
@@ -85,10 +85,10 @@ public final class CryptUtils {
     /**
      * 通用解密方法
      *
-     * @param data 待解密数据
+     * @param data      待解密数据
      * @param algorithm 算法[/模式][/填充]
-     * @param key 密钥
-     * @param iv 偏移向量，对称加密ECB模式和非对称加密传null
+     * @param key       密钥
+     * @param iv        偏移向量，对称加密ECB模式和非对称加密传null
      * @param blockSize 分段加密数据块大小，传-1不分段
      * @return 数据原文
      * @throws Exception 失败抛出异常
@@ -117,7 +117,7 @@ public final class CryptUtils {
      * 通用解密方法，使用默认参数
      *
      * @param data 待解密数据
-     * @param key 密钥
+     * @param key  密钥
      * @return 数据原文
      * @throws Exception 失败抛出异常
      */
@@ -128,8 +128,8 @@ public final class CryptUtils {
     /**
      * 分段加解密
      *
-     * @param cipher Cipher对象
-     * @param data 所有数据
+     * @param cipher    Cipher对象
+     * @param data      所有数据
      * @param blockSize 分段大小
      * @return 加解密完的数据
      * @throws Exception 失败抛出异常
@@ -139,22 +139,22 @@ public final class CryptUtils {
         int blockCount = (int) Math.ceil(dataLen * 1.0 / blockSize);
         byte[] cache;
         int offset, len;
-        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             for (int i = 0; i < blockCount; i++) {
                 offset = i * blockSize;
                 len = Math.min(dataLen - offset, blockSize);
                 cache = cipher.doFinal(data, offset, len);
-                baos.write(cache, 0, cache.length);
+                out.write(cache, 0, cache.length);
             }
-            return baos.toByteArray();
+            return out.toByteArray();
         }
     }
 
     /**
      * 通用签名方法，私钥签名
      *
-     * @param data 待签名数据
-     * @param algorithm 算法[/模式][/填充]
+     * @param data       待签名数据
+     * @param algorithm  算法[/模式][/填充]
      * @param privateKey 私钥
      * @return 签名
      * @throws Exception 失败抛出异常
@@ -169,10 +169,10 @@ public final class CryptUtils {
     /**
      * 通用验证方法，公钥验证
      *
-     * @param data 待验证数据
+     * @param data      待验证数据
      * @param algorithm 算法[/模式][/填充]
      * @param publicKey 公钥
-     * @param sign 签名
+     * @param sign      签名
      * @return 是否验签成功
      * @throws Exception 失败抛出异常
      */
@@ -186,7 +186,7 @@ public final class CryptUtils {
     /**
      * 通用摘要方法
      *
-     * @param data 待摘要信息
+     * @param data      待摘要信息
      * @param algorithm 摘要算法
      * @return 摘要
      * @throws Exception 失败抛出异常
@@ -243,16 +243,17 @@ public final class CryptUtils {
      */
     public static final class KeyGen {
 
-        private KeyGen() {}
+        private KeyGen() {
+        }
 
-        public static final String[] PKCS8_PUBLIC = new String[] {"-----BEGIN PUBLIC KEY-----", "-----END PUBLIC KEY-----"};
-        public static final String[] PKCS8_PRIVATE = new String[] {"-----BEGIN PRIVATE KEY-----", "-----END PRIVATE KEY-----"};
+        public static final String[] PKCS8_PUBLIC = new String[]{"-----BEGIN PUBLIC KEY-----", "-----END PUBLIC KEY-----"};
+        public static final String[] PKCS8_PRIVATE = new String[]{"-----BEGIN PRIVATE KEY-----", "-----END PRIVATE KEY-----"};
 
         /**
          * 对称算法密钥生成
          *
          * @param algorithm 算法
-         * @param keySize key长度，按位算
+         * @param keySize   key长度，按位算
          * @return 密钥对象
          * @throws Exception 失败抛出异常
          */
@@ -266,7 +267,7 @@ public final class CryptUtils {
          * 对称算法密钥还原
          *
          * @param algorithm 算法
-         * @param key 密钥字节数组
+         * @param key       密钥字节数组
          * @return 密钥对象
          */
         public static SecretKey secretKey(String algorithm, byte[] key) {
@@ -277,7 +278,7 @@ public final class CryptUtils {
          * 非对称算法密钥对生成
          *
          * @param algorithm 算法
-         * @param keySize 密钥长度，按位算
+         * @param keySize   密钥长度，按位算
          * @return 密钥对
          * @throws Exception 失败抛出异常
          */
@@ -291,9 +292,9 @@ public final class CryptUtils {
          * 非对称算法密钥对生成并保存pkcs8格式到指定文件
          *
          * @param algorithm 算法
-         * @param keySize 密钥长度，按位算
-         * @param pub 公钥保存路径
-         * @param pri 私钥保存路径
+         * @param keySize   密钥长度，按位算
+         * @param pub       公钥保存路径
+         * @param pri       私钥保存路径
          * @throws Exception 失败抛出异常
          */
         public static void keyPairPKCS8(String algorithm, int keySize, Path pub, Path pri) throws Exception {
@@ -314,7 +315,7 @@ public final class CryptUtils {
          * 非对称算法公钥还原
          *
          * @param algorithm 算法
-         * @param key 公钥二进制数组
+         * @param key       公钥二进制数组
          * @return 公钥对象
          * @throws Exception 失败抛出异常
          */
@@ -328,7 +329,7 @@ public final class CryptUtils {
          * 非对称算法私钥还原
          *
          * @param algorithm 算法
-         * @param key 私钥二进制数组
+         * @param key       私钥二进制数组
          * @return 私钥对象
          * @throws Exception 失败抛出异常
          */
@@ -342,7 +343,7 @@ public final class CryptUtils {
          * pkcs8公钥还原
          *
          * @param algorithm 算法
-         * @param pkcs8 pkcs8公钥字符串
+         * @param pkcs8     pkcs8公钥字符串
          * @return 公钥对象
          * @throws Exception 失败抛出异常
          */
@@ -357,7 +358,7 @@ public final class CryptUtils {
          * pkcs8私钥还原
          *
          * @param algorithm 算法
-         * @param pkcs8 pkcs8私钥字符串
+         * @param pkcs8     pkcs8私钥字符串
          * @return 私钥对象
          * @throws Exception 失败抛出异常
          */
@@ -374,7 +375,8 @@ public final class CryptUtils {
      */
     public static final class AES {
 
-        private AES() {}
+        private AES() {
+        }
 
         private static final String ALG = "AES/CBC/PKCS5Padding";
         private static final byte[] IV = new byte[16];
@@ -394,7 +396,7 @@ public final class CryptUtils {
          * 加密并作16进制编码
          *
          * @param data 原文
-         * @param key 密钥字节数组
+         * @param key  密钥字节数组
          * @return 16进制密文
          * @throws Exception 失败抛出异常
          */
@@ -407,7 +409,7 @@ public final class CryptUtils {
          * 解密
          *
          * @param data 16进制密文
-         * @param key 密钥字节数组
+         * @param key  密钥字节数组
          * @return 原文
          * @throws Exception 失败抛出异常
          */
@@ -422,7 +424,8 @@ public final class CryptUtils {
      */
     public static final class RSA {
 
-        private RSA() {}
+        private RSA() {
+        }
 
         private static final int ENCRYPT_BLOCK_SIZE = 117;
         private static final int DECRYPT_BLOCK_SIZE = 128;
@@ -455,7 +458,7 @@ public final class CryptUtils {
          * 公钥加密
          *
          * @param data 原文
-         * @param key 公钥字节数组
+         * @param key  公钥字节数组
          * @return 16进制密文
          * @throws Exception 失败抛出异常
          */
@@ -468,7 +471,7 @@ public final class CryptUtils {
          * 私钥解密
          *
          * @param data 16进制密文
-         * @param key 私钥二进制数组
+         * @param key  私钥二进制数组
          * @return 原文
          * @throws Exception 失败抛出异常
          */
@@ -483,7 +486,8 @@ public final class CryptUtils {
      */
     public static final class DSA {
 
-        private DSA() {}
+        private DSA() {
+        }
 
         private static final int KEY_SIZE = 1024;
 
@@ -501,7 +505,7 @@ public final class CryptUtils {
          * 私钥签名
          *
          * @param data 原文
-         * @param key 私钥二进制数组
+         * @param key  私钥二进制数组
          * @return 16进制签名
          * @throws Exception 失败抛出异常
          */
@@ -514,7 +518,7 @@ public final class CryptUtils {
          * 公钥认证
          *
          * @param data 原文
-         * @param key 公钥二进制数组
+         * @param key  公钥二进制数组
          * @param sign 16进制签名
          * @return 是否认证成功
          * @throws Exception 失败抛出异常

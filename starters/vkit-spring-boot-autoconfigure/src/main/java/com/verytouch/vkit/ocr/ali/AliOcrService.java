@@ -43,10 +43,10 @@ public class AliOcrService {
                 .build();
         try {
             return new HttpUtils(properties.getHost() + "/ocr_general")
-                .addHeader("Authorization", String.format("APPCODE %s", properties.getAppCode()))
-                .addHeader("Content-Type", "application/json; charset=UTF-8")
-                .body(JsonUtils.toJson(body).getBytes(StandardCharsets.UTF_8))
-                .post();
+                    .addHeader("Authorization", String.format("APPCODE %s", properties.getAppCode()))
+                    .addHeader("Content-Type", "application/json; charset=UTF-8")
+                    .body(JsonUtils.toJson(body).getBytes(StandardCharsets.UTF_8))
+                    .post();
         } catch (Exception e) {
             log.error(String.format("通用OCR请求失败，img=%s", img), e);
             throw new BusinessException("OCR请求失败");

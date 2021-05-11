@@ -16,7 +16,7 @@ public interface OssService {
      *
      * @param bucket bucket名称
      * @param object 对象名称，如：avatar/a.jpg
-     * @param file 上传的文件
+     * @param file   上传的文件
      * @return 文件地址
      */
     String upload(String bucket, String object, File file);
@@ -24,10 +24,10 @@ public interface OssService {
     /**
      * 文件上传
      *
-     * @param bucket bucket名称
-     * @param object 对象名称，如：avatar/a.jpg
-     * @param stream 上传文件的流
-     * @param length 上传文件的大小
+     * @param bucket      bucket名称
+     * @param object      对象名称，如：avatar/a.jpg
+     * @param stream      上传文件的流
+     * @param length      上传文件的大小
      * @param contentType 上传文件的contentType
      * @return 文件地址
      */
@@ -73,7 +73,8 @@ public interface OssService {
      *
      * @param bucket bucket名称
      */
-    default void checkBucket(String bucket) {}
+    default void checkBucket(String bucket) {
+    }
 
     default boolean isImage(String contentType) {
         return contentType != null && contentType.startsWith("image/");

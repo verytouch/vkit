@@ -7,6 +7,12 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * 支付宝自动配置类
+ *
+ * @author verytouch
+ * @since 2021/4/30 10:32
+ */
 @Configuration
 @EnableConfigurationProperties(AlipayProperties.class)
 @ConditionalOnClass(AlipayClient.class)

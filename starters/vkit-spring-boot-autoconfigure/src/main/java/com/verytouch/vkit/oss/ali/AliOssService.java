@@ -112,7 +112,7 @@ public class AliOssService implements OssService {
     public void delete(String bucket, String object) {
         checkBucket(bucket);
         try {
-           oss.deleteObject(bucket, object);
+            oss.deleteObject(bucket, object);
         } catch (Exception e) {
             log.error(String.format("删除文件失败，bucket=%s，object=%s", bucket, object), e);
             throw new BusinessException("删除文件失败");

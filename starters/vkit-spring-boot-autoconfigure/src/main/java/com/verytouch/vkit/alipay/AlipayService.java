@@ -23,13 +23,13 @@ public class AlipayService {
     public AlipayService(AlipayProperties properties) {
         this.properties = properties;
         this.alipayClient = new DefaultAlipayClient(
-            properties.getGatewayUrl(),
-            properties.getAppId(),
-            properties.getPrivateKey(),
-            properties.getFormat(),
-            properties.getCharset(),
-            properties.getAlipayPublicKey(),
-            properties.getSignType()
+                properties.getGatewayUrl(),
+                properties.getAppId(),
+                properties.getPrivateKey(),
+                properties.getFormat(),
+                properties.getCharset(),
+                properties.getAlipayPublicKey(),
+                properties.getSignType()
         );
     }
 
@@ -44,11 +44,11 @@ public class AlipayService {
      */
     public String getAuthorizeUrl(String state) {
         return String.format(
-            "%s?app_id=%s&redirect_uri=%s&scope=auth_user&state=%s",
-            properties.getAuthorizeUrl(),
-            properties.getAppId(),
-            properties.getRedirectUri(),
-            state
+                "%s?app_id=%s&redirect_uri=%s&scope=auth_user&state=%s",
+                properties.getAuthorizeUrl(),
+                properties.getAppId(),
+                properties.getRedirectUri(),
+                state
         );
     }
 

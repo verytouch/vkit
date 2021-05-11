@@ -31,8 +31,8 @@ public class CaptchaContext {
     /**
      * 校验验证码
      *
-     * @param type    验证码类型
-     * @param params  验证码参数
+     * @param type   验证码类型
+     * @param params 验证码参数
      */
     public static void verify(CaptchaEnum type, Map<String, String> params) {
         Assert.nonNull(type, "验证码类型不能为空");
@@ -45,8 +45,8 @@ public class CaptchaContext {
     /**
      * 校验验证码，根据参数captcha获取CaptchaEnum，再判断由哪个具体的类校验
      *
-     * @see CaptchaEnum
      * @param params 验证码参数
+     * @see CaptchaEnum
      */
     public static void verify(Map<String, String> params) {
         CaptchaEnum type = CaptchaEnum.valueOf(params.get("captcha"));

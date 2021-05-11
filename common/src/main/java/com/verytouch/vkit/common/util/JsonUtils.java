@@ -64,9 +64,9 @@ public final class JsonUtils {
     /**
      * 反序列化
      *
-     * @param json json字符串
+     * @param json  json字符串
      * @param clazz 对象的class
-     * @param <T> 对象类型
+     * @param <T>   对象类型
      * @return 对象
      */
     public static <T> T fromJson(String json, Class<T> clazz) {
@@ -76,16 +76,16 @@ public final class JsonUtils {
     /**
      * 反序列化为List
      *
-     * @param json json字符串
+     * @param json  json字符串
      * @param clazz 对象的class
-     * @param <T> 对象类型
+     * @param <T>   对象类型
      * @return 对象的List
      */
     public static <T> List<T> listFromJson(String json, Class<T> clazz) {
         return GSON.fromJson(json, new ParameterizedType() {
             @Override
             public Type[] getActualTypeArguments() {
-                return new Type[] {clazz};
+                return new Type[]{clazz};
             }
 
             @Override

@@ -10,7 +10,7 @@ import java.util.stream.Stream;
  * 字符串工具类
  *
  * @author verytouch
- * @since  2021/3/7 16:32
+ * @since 2021/3/7 16:32
  */
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
 

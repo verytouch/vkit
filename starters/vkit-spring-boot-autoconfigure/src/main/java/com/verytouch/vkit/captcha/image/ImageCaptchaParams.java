@@ -2,6 +2,7 @@ package com.verytouch.vkit.captcha.image;
 
 import com.verytouch.vkit.captcha.CaptchaParams;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * 图形验证码参数
@@ -10,6 +11,7 @@ import lombok.Data;
  * @since 2021/4/29 10:15
  */
 @Data
+@Accessors(chain = true)
 public class ImageCaptchaParams implements CaptchaParams {
 
     private String key;

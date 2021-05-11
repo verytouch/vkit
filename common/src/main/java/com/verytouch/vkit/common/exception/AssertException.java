@@ -1,6 +1,6 @@
 package com.verytouch.vkit.common.exception;
 
-import com.verytouch.vkit.common.base.APICode;
+import com.verytouch.vkit.common.base.ApiCode;
 import lombok.Getter;
 
 /**
@@ -12,30 +12,30 @@ import lombok.Getter;
 public class AssertException extends BusinessException {
 
     @Getter
-    private final APICode apiCode;
+    private final ApiCode apiCode;
 
-    public AssertException(APICode apiCode, Throwable cause) {
+    public AssertException(ApiCode apiCode, Throwable cause) {
         super(apiCode.getDesc(), cause);
         this.apiCode = apiCode;
     }
 
-    public AssertException(APICode apiCode) {
+    public AssertException(ApiCode apiCode) {
         super(apiCode.getDesc());
         this.apiCode = apiCode;
     }
 
     public AssertException(String message, Throwable cause) {
         super(message, cause);
-        this.apiCode = APICode.ERROR;
+        this.apiCode = ApiCode.ERROR;
     }
 
     public AssertException(String message) {
         super(message);
-        this.apiCode = APICode.ERROR;
+        this.apiCode = ApiCode.ERROR;
     }
 
     public AssertException(Throwable cause) {
         super(cause);
-        this.apiCode = APICode.ERROR;
+        this.apiCode = ApiCode.ERROR;
     }
 }

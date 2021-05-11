@@ -11,7 +11,7 @@ import lombok.Getter;
  * @author verytouch
  * @since 2020/9/17 16:30
  */
-public enum APICode {
+public enum ApiCode {
 
     OK(200, "请求成功"),
     ERROR(500, "请求失败"),
@@ -31,7 +31,7 @@ public enum APICode {
     @Getter
     private final String desc;
 
-    APICode(int code, String desc) {
+    ApiCode(int code, String desc) {
         this.code = code;
         this.desc = desc;
     }

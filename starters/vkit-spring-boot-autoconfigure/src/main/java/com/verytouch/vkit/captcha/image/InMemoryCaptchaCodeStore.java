@@ -40,7 +40,8 @@ public class InMemoryCaptchaCodeStore implements CaptchaCodeStore {
         }
     }
 
-    private void clearExpiredKey() {
+    @Override
+    public void clearExpiredKey() {
         store.entrySet().removeIf(next -> next.getValue().isExpired());
     }
 
