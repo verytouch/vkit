@@ -24,9 +24,4 @@ public interface CaptchaCodeStore {
      * @return 验证码value，取不到返回null
      */
     String remove(String key);
-
-    /**
-     * 清除过期的验证码
-     */
-    void clearExpiredKey();
 }

@@ -49,6 +49,7 @@ public class CaptchaContext {
      * @see CaptchaEnum
      */
     public static void verify(Map<String, String> params) {
+        Assert.nonBlank(params.get("captcha"), "验证码类型不能为空");
         CaptchaEnum type = CaptchaEnum.valueOf(params.get("captcha"));
         Assert.nonNull(type, "验证码类型" + params.get("captcha") + "不正确");
         verify(type, params);

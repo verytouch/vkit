@@ -15,6 +15,10 @@ import org.springframework.validation.annotation.Validated;
 @ConfigurationProperties(prefix = "vkit.ocr.ali")
 public class AliOcrProperties {
     /**
+     * 启用阿里OCR
+     */
+    private boolean enabled = false;
+    /**
      * 服务器地址
      */
     private String host = "https://tysbgpu.market.alicloudapi.com/api/predict";
