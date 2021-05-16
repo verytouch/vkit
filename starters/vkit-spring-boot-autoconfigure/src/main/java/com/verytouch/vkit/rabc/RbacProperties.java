@@ -18,6 +18,11 @@ import javax.validation.constraints.NotEmpty;
 public class RbacProperties {
 
     /**
+     * 是否启用自动配置
+     */
+    private boolean enabled = true;
+
+    /**
      * 登录时加密传输密码的秘钥，16位
      */
     @NotEmpty(message = "parameterAesKey不能为空")
@@ -40,7 +45,7 @@ public class RbacProperties {
     private String passwordParameter = "password";
 
     /**
-     * 认证时是否校验验证码
+     * 认证时是否校验验证码，仅authorization_type=captcha时生效
      */
     private boolean captchaEnabled = true;
 

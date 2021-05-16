@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -30,6 +31,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 授权服务配置
@@ -62,6 +64,9 @@ public class AuthorizationSererConfig extends AuthorizationServerConfigurerAdapt
     @Autowired
     private RbacProperties rbacProperties;
 
+    @Autowired
+    private JwtUserDetailsTokenEnhancer jwtUserDetailsTokenEnhancer;
+
     @Override
     public void configure(AuthorizationServerSecurityConfigurer serverSecurityConfigurer) {
         serverSecurityConfigurer.allowFormAuthenticationForClients()
@@ -93,7 +98,6 @@ public class AuthorizationSererConfig extends AuthorizationServerConfigurerAdapt
     @Bean
     public TokenStore tokenStore() {
         return new JwtTokenStore(jwtAccessTokenConverter());
-        // return new JdbcTokenStore(dataSource);
     }
 
     @Bean
@@ -104,8 +108,11 @@ public class AuthorizationSererConfig extends AuthorizationServerConfigurerAdapt
     }
 
     @Bean
-    public TokenEnhancer myTokenEnhancer() {
+    public TokenEnhancer tokenEnhancer() {
         return (accessToken, authentication) -> {
+            if (jwtUserDetailsTokenEnhancer == null) {
+                return accessToken;
+            }
             UserDetails details = null;
             if (authentication.getDetails() instanceof UserDetails) {
                 details = (UserDetails) authentication.getDetails();
@@ -122,23 +129,8 @@ public class AuthorizationSererConfig extends AuthorizationServerConfigurerAdapt
             }
 
             if (details != null) {
-                /*Map<String, Object> additionalInfo = new HashMap<>();
-                additionalInfo.put("id", details.getUserInfo().getId());
-                additionalInfo.put("name", details.getUserInfo().getName());
-                additionalInfo.put("avatar", details.getUserInfo().getAvatar());
-                additionalInfo.put("roles", details.getRoles().stream().map(SysRole::getName).collect(Collectors.toList()));
-                additionalInfo.put("resources", details.getRoles().stream().flatMap(
-                        r -> r.getResourceList().stream()
-                ).map(SysResource::getResKey).collect(Collectors.toSet()));
+                Map<String, Object> additionalInfo = jwtUserDetailsTokenEnhancer.enhance(details);
                 ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
-
-                // 更新登录信息
-                SysLoginLog loginLog = new SysLoginLog();
-                loginLog.setUserId(details.getUserInfo().getId());
-                loginLog.setUserName(details.getUserInfo().getName());
-                loginLog.setSuccessful("Y");
-                loginLog.setRemark("登录成功");
-                myUserDetailService.saveLoginInfo(loginLog);*/
             }
             return accessToken;
         };
@@ -146,7 +138,7 @@ public class AuthorizationSererConfig extends AuthorizationServerConfigurerAdapt
 
     private TokenEnhancerChain tokenEnhancerChain() {
         TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
-        tokenEnhancerChain.setTokenEnhancers(Arrays.asList(myTokenEnhancer(), jwtAccessTokenConverter()));
+        tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), jwtAccessTokenConverter()));
         return tokenEnhancerChain;
     }
 
