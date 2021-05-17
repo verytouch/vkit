@@ -1,34 +1,32 @@
 package com.verytouch.vkit.common.util;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.verytouch.vkit.common.exception.BusinessException;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * json工具类，基于gson
+ * json工具类
  *
  * @author verytouch
  * @since 2021/04/27 14:25
  */
 public final class JsonUtils {
 
-    /*
-     * 实例化gson对象，单例可以更快
-     */
-    private static final Gson GSON = new GsonBuilder()
-            .setDateFormat("yyyy-MM-dd HH:mm:ss")
-            .create();
+    private static final ObjectMapper mapper = new ObjectMapper();
 
-    /**
-     * 获取gson对象
-     */
-    public static Gson getGson() {
-        return GSON;
+    static {
+        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     }
 
     /**
@@ -38,27 +36,21 @@ public final class JsonUtils {
      * @return json字符串
      */
     public static String toJson(Object bean) {
-        return GSON.toJson(bean);
+        try {
+            return mapper.writeValueAsString(bean);
+        } catch (JsonProcessingException e) {
+            throw new BusinessException("json序列化失败", e);
+        }
     }
 
     /**
-     * 转换为JsonObject对象
+     * 转换为JsonNode
      *
-     * @param src json字符串或对象
-     * @return JsonObject对象
+     * @param value 对象
+     * @return JsonNode
      */
-    public static JsonObject toJsonObject(Object src) {
-        return GSON.toJsonTree(src).getAsJsonObject();
-    }
-
-    /**
-     * 转换为JsonArray对象
-     *
-     * @param src json字符串或数组
-     * @return JsonArray对象
-     */
-    public static JsonArray toJsonArray(Object src) {
-        return GSON.toJsonTree(src).getAsJsonArray();
+    public static JsonNode toTree(Object value) {
+        return mapper.valueToTree(value);
     }
 
     /**
@@ -70,7 +62,26 @@ public final class JsonUtils {
      * @return 对象
      */
     public static <T> T fromJson(String json, Class<T> clazz) {
-        return GSON.fromJson(json, clazz);
+        try {
+            return mapper.readValue(json, clazz);
+        } catch (IOException e) {
+            throw new BusinessException("json反序列化失败", e);
+        }
+    }
+
+    /**
+     * 反序列化
+     *
+     * @param json json字符串
+     * @return HashMap
+     */
+    public static Map<String, Object> mapFromJson(String json) {
+        try {
+            return mapper.readValue(json, new TypeReference<HashMap<String, Object>>() {
+            });
+        } catch (IOException e) {
+            throw new BusinessException("json反序列化失败", e);
+        }
     }
 
     /**
@@ -82,21 +93,11 @@ public final class JsonUtils {
      * @return 对象的List
      */
     public static <T> List<T> listFromJson(String json, Class<T> clazz) {
-        return GSON.fromJson(json, new ParameterizedType() {
-            @Override
-            public Type[] getActualTypeArguments() {
-                return new Type[]{clazz};
-            }
-
-            @Override
-            public Type getRawType() {
-                return List.class;
-            }
-
-            @Override
-            public Type getOwnerType() {
-                return null;
-            }
-        });
+        try {
+            return mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, clazz));
+        } catch (IOException e) {
+            throw new BusinessException("json反序列化失败", e);
+        }
     }
+
 }

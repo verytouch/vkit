@@ -7,13 +7,18 @@ import com.verytouch.vkit.rabc.oauth2.AesPasswordEncoder;
 import com.verytouch.vkit.rabc.oauth2.InMemoryAuthorizationCodeService;
 import com.verytouch.vkit.rabc.oauth2.JwtUserDetailsTokenEnhancer;
 import com.verytouch.vkit.rabc.oauth2.ParameterPasswordEncoder;
+import com.verytouch.vkit.rabc.web.RestControllerAdvice;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
 
 import java.time.Duration;
@@ -29,6 +34,7 @@ import java.time.Duration;
  */
 @Configuration
 @EnableConfigurationProperties(RbacProperties.class)
+@ConditionalOnClass({WebSecurityConfigurerAdapter.class, AuthorizationServerConfigurerAdapter.class, ResourceServerConfigurerAdapter.class})
 @ConditionalOnProperty(prefix = "vkit.rbac", name = "enabled", havingValue = "true", matchIfMissing = true)
 @Import({WebSecurityConfig.class, AuthorizationSererConfig.class, ResourceServerConfig.class})
 public class RbacAutoConfiguration {
@@ -39,7 +45,7 @@ public class RbacAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(ParameterPasswordEncoder.class)
     public ParameterPasswordEncoder parameterPasswordEncoder() {
-       return new AesPasswordEncoder(rbacProperties.getParameterAesKey(), null);
+        return new AesPasswordEncoder(rbacProperties.getParameterAesKey(), null);
     }
 
     @Bean
@@ -52,6 +58,12 @@ public class RbacAutoConfiguration {
     @ConditionalOnMissingBean(JwtUserDetailsTokenEnhancer.class)
     public JwtUserDetailsTokenEnhancer jwtUserDetailsTokenEnhancer() {
         return userDetails -> null;
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "vkit.rbac", name = "exceptionHandlerEnabled", havingValue = "true", matchIfMissing = true)
+    public RestControllerAdvice restControllerAdvice() {
+        return new RestControllerAdvice();
     }
 
 }

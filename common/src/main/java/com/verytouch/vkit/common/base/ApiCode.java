@@ -15,7 +15,7 @@ public enum ApiCode {
 
     OK(200, "请求成功"),
     ERROR(500, "请求失败"),
-    SYS_UNAUTHORIZED(10001, "需要登录"),
+    SYS_UNAUTHORIZED(10001, "请登录"),
     SYS_FORBIDDEN(10002, "权限不足"),
     SYS_LIMIT_ACCOUNT(10101, "账号请求超过限制"),
     SYS_LIMIT_IP(10102, "IP请求超过限制"),
@@ -23,6 +23,7 @@ public enum ApiCode {
     SYS_DISABLE_IP(10202, "IP被禁用"),
     SYS_UPGRADE(10301, "接口维护"),
     SYS_ABANDON(10302, "接口停用"),
+    SYS_NO_HANDLER(10303, "接口不存在"),
     PARAM_ABSENT(20001, "缺少参数"),
     PARAM_ERROR(20002, "参数错误");
 

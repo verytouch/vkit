@@ -54,4 +54,9 @@ public class RbacProperties {
      */
     private String[] openPath = new String[] {"/open/**"};
 
+    /**
+     * 注入默认的异常处理器
+     */
+    private boolean exceptionHandlerEnabled = true;
+
 }

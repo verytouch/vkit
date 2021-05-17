@@ -1,6 +1,6 @@
 package com.verytouch.vkit.common.util;
 
-import com.google.gson.JsonObject;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.verytouch.vkit.common.base.Assert;
 import com.verytouch.vkit.common.exception.BusinessException;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -134,10 +134,10 @@ public class ExcelUtils {
             // 正文
             for (int i = 0; i < data.size(); i++) {
                 XSSFRow row = sheet.createRow(i + 1);
-                JsonObject json = JsonUtils.toJsonObject(data.get(i));
+                JsonNode json = JsonUtils.toTree(data.get(i));
                 int j = 0;
                 for (Map.Entry<String, String> titleEntry : titleEntries) {
-                    String valueStr = json.get(titleEntry.getValue()).getAsString();
+                    String valueStr = json.get(titleEntry.getValue()).asText("");
                     maxLengthCol.merge(j, valueStr, (a, b) -> a.length() > b.length() ? a : b);
                     XSSFCell cell = row.createCell(j, Cell.CELL_TYPE_STRING);
                     cell.setCellValue(valueStr);

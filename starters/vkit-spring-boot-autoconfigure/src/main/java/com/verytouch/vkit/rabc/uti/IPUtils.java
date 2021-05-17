@@ -1,4 +1,4 @@
-package com.verytouch.vkit.rabc.web;
+package com.verytouch.vkit.rabc.uti;
 
 import com.verytouch.vkit.common.util.HttpUtils;
 import com.verytouch.vkit.common.util.JsonUtils;

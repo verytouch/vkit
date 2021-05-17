@@ -143,7 +143,8 @@ public class AuthorizationSererConfig extends AuthorizationServerConfigurerAdapt
     }
 
     private TokenGranter tokenGranter(final AuthorizationServerEndpointsConfigurer endpoints) {
-        CaptchaTokenGranter captchaTokenGranter = new CaptchaTokenGranter(
+        List<TokenGranter> granters = new ArrayList<>(Arrays.asList(endpoints.getTokenGranter()));
+        granters.add(new CaptchaTokenGranter(
                 endpoints.getTokenServices(),
                 endpoints.getClientDetailsService(),
                 endpoints.getOAuth2RequestFactory(),
@@ -151,9 +152,7 @@ public class AuthorizationSererConfig extends AuthorizationServerConfigurerAdapt
                 passwordEncoder,
                 parameterPasswordEncoder,
                 rbacProperties
-        );
-        List<TokenGranter> granters = new ArrayList<>(Arrays.asList(endpoints.getTokenGranter()));
-        granters.add(captchaTokenGranter);
+        ));
         return new CompositeTokenGranter(granters);
     }
 }

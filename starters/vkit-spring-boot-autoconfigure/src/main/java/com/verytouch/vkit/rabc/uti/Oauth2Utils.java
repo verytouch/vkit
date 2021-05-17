@@ -1,4 +1,4 @@
-package com.verytouch.vkit.rabc.oauth2;
+package com.verytouch.vkit.rabc.uti;
 
 import com.verytouch.vkit.common.util.JsonUtils;
 import org.springframework.security.core.Authentication;
