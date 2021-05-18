@@ -1,8 +1,8 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.verytouch.vkit.captcha.tencent.TencentCaptchaAutoConfiguration,\
-  com.verytouch.vkit.captcha.image.ImageCaptchaAutoConfiguration,\
-  com.verytouch.vkit.ocr.ali.AliOcrAutoConfiguration,\
-  com.verytouch.vkit.oss.ali.AliOssAutoConfiguration,\
-  com.verytouch.vkit.oss.minio.MinIoAutoConfiguration,\
-  com.verytouch.vkit.alipay.AlipayAutoConfiguration,\
-  com.verytouch.vkit.rabc.RbacAutoConfiguration
+  top.verytouch.vkit.captcha.tencent.TencentCaptchaAutoConfiguration,\
+  top.verytouch.vkit.captcha.image.ImageCaptchaAutoConfiguration,\
+  top.verytouch.vkit.ocr.ali.AliOcrAutoConfiguration,\
+  top.verytouch.vkit.oss.ali.AliOssAutoConfiguration,\
+  top.verytouch.vkit.oss.minio.MinIoAutoConfiguration,\
+  top.verytouch.vkit.alipay.AlipayAutoConfiguration,\
+  top.verytouch.vkit.rabc.RbacAutoConfiguration

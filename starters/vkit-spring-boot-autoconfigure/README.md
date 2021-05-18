@@ -3,7 +3,7 @@
 ```xml
 
 <dependency>
-    <groupId>com.verytouch.vkit</groupId>
+    <groupId>top.verytouch.vkit</groupId>
     <artifactId>rbac-spring-boot-starter</artifactId>
     <version>2.2.0</version>
 </dependency>
@@ -81,8 +81,15 @@ public class BeanConfig {
     }
 
     /**
-     * 其他一些默认的可覆盖的bean，参考com.verytouch.vkit.rabc.RbacAutoConfiguration
+     * 其他一些默认的可覆盖的bean，参考top.verytouch.vkit.rabc.RbacAutoConfiguration
      */
 
 }
 ```
+
+### 4.权限控制
+* PreAuthorize和PostAuthorize实现操作权限
+  * UserDetails.getAuthorities返回当前用户的权限信息，ROLE_开头表示角色，否则表示权限
+  * hasRole('admin') -> ROLE_admin
+  * hasAuthority('admin') -> admin
+* PreFilter和PostFilter实现数据权限

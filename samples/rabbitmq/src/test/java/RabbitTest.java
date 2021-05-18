@@ -1,7 +1,7 @@
-import com.verytouch.vkit.samples.rabbitmq.common.RabbitQueue;
-import com.verytouch.vkit.samples.rabbitmq.common.RabbitQueueBind;
-import com.verytouch.vkit.samples.rabbitmq.consumer.RabbitConsumer;
-import com.verytouch.vkit.samples.rabbitmq.producer.RabbitProducer;
+import top.verytouch.vkit.samples.rabbitmq.common.RabbitQueue;
+import top.verytouch.vkit.samples.rabbitmq.common.RabbitQueueBind;
+import top.verytouch.vkit.samples.rabbitmq.consumer.RabbitConsumer;
+import top.verytouch.vkit.samples.rabbitmq.producer.RabbitProducer;
 import org.junit.Test;
 
 public class RabbitTest {

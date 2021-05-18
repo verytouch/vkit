@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>starters</artifactId>
-        <groupId>com.verytouch.vkit</groupId>
+        <groupId>top.verytouch.vkit</groupId>
         <version>2.2.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -13,7 +13,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.verytouch.vkit</groupId>
+            <groupId>top.verytouch.vkit</groupId>
             <artifactId>vkit-spring-boot-autoconfigure</artifactId>
         </dependency>
         <!-- 默认使用minio -->

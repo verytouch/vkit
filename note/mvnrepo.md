@@ -8,7 +8,7 @@
 
    > https://issues.sonatype.org/browse/OSSRH-61054?filter=-2
    >
-   > verytouch     Sonatype_607579848
+   > verytouch     Sonatype_123456
 
 3. 安装gpg，生成密钥对，公钥发布到密钥服务器
 
