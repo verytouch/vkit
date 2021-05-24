@@ -1,5 +1,8 @@
 package top.verytouch.vkit.rabc;
 
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import top.verytouch.vkit.rabc.config.AuthorizationSererConfig;
 import top.verytouch.vkit.rabc.config.ResourceServerConfig;
 import top.verytouch.vkit.rabc.config.WebSecurityConfig;
@@ -64,6 +67,19 @@ public class RbacAutoConfiguration {
     @ConditionalOnProperty(prefix = "vkit.rbac", name = "exceptionHandlerEnabled", havingValue = "true", matchIfMissing = true)
     public RestControllerAdvice restControllerAdvice() {
         return new RestControllerAdvice();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(CorsFilter.class)
+    public CorsFilter corsFilter() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.addAllowedOrigin("*");
+        corsConfiguration.addAllowedHeader("*");
+        corsConfiguration.addAllowedMethod("*");
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfiguration);
+        return new CorsFilter(source);
     }
 
 }

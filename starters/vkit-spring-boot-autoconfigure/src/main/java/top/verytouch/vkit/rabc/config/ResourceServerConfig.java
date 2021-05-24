@@ -40,7 +40,11 @@ public class ResourceServerConfig  extends ResourceServerConfigurerAdapter {
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(OauthExceptionSerializer::exceptionHandler)
-                .accessDeniedHandler(OauthExceptionSerializer::exceptionHandler);
+                .accessDeniedHandler(OauthExceptionSerializer::exceptionHandler)
+                .and()
+                .cors()
+                .and()
+                .csrf().disable();
 
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry = http.authorizeRequests();
         if (rbacProperties.getOpenPath() != null && rbacProperties.getOpenPath().length > 0) {
