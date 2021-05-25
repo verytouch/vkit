@@ -1,5 +1,6 @@
 package top.verytouch.vkit.rabc.oauth2;
 
+import top.verytouch.vkit.common.exception.BusinessException;
 import top.verytouch.vkit.common.util.CryptUtils;
 
 import javax.crypto.SecretKey;
@@ -27,7 +28,7 @@ public class AesPasswordEncoder implements ParameterPasswordEncoder {
         try {
             return CryptUtils.toHex(CryptUtils.encrypt(password, algorithm, key, iv, -1));
         } catch (Exception e) {
-            throw new OauthException("加密失败");
+            throw new BusinessException("加密失败");
         }
     }
 
@@ -36,7 +37,7 @@ public class AesPasswordEncoder implements ParameterPasswordEncoder {
         try {
             return CryptUtils.decrypt(CryptUtils.fromHex(encodedPassword), algorithm, key, iv, -1);
         } catch (Exception e) {
-            throw new OauthException("密码格式错误");
+            throw new BusinessException("密码格式错误");
         }
     }
 }

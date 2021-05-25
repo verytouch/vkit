@@ -28,7 +28,7 @@ public class RestControllerAdvice {
      */
     @ExceptionHandler(AssertException.class)
     public Response<String> assertException(Exception e) {
-        return error(ApiCode.PARAM_ERROR, e, false);
+        return Response.error(ApiCode.PARAM_ERROR.getCode(), e.getMessage());
     }
 
     /**
@@ -36,7 +36,7 @@ public class RestControllerAdvice {
      */
     @ExceptionHandler(BusinessException.class)
     public Response<String> businessException(Exception e) {
-        return error(ApiCode.PARAM_ERROR, e, false);
+        return Response.error(ApiCode.PARAM_ERROR.getCode(), e.getMessage());
     }
 
     /**
@@ -44,7 +44,7 @@ public class RestControllerAdvice {
      */
     @ExceptionHandler(NullPointerException.class)
     public Response<String> nullPointerException(Exception e) {
-        return error(ApiCode.PARAM_ABSENT, e, true);
+        return logError(ApiCode.PARAM_ABSENT, e);
     }
 
     /**
@@ -78,15 +78,12 @@ public class RestControllerAdvice {
      */
     @ExceptionHandler({Exception.class})
     public Response<String> exception(Exception e) {
-        return error(ApiCode.ERROR, e, true);
+        return logError(ApiCode.ERROR, e);
     }
 
-    private Response<String> error(ApiCode code, Exception e, boolean printLog) {
-        if (printLog) {
-            log.error(code.getDesc(), e);
-        }
-        String msg = e instanceof AssertException ? e.getMessage() : code.getDesc();
-        return Response.error(code.getCode(), msg);
+    private Response<String> logError(ApiCode code, Exception e) {
+        log.error(code.getDesc(), e);
+        return Response.error(code.getCode(), code.getDesc());
     }
 
     private Response<String> error(ApiCode code) {
