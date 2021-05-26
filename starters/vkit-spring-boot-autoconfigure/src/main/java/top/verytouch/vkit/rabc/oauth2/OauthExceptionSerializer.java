@@ -10,6 +10,7 @@ import top.verytouch.vkit.common.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
+import top.verytouch.vkit.rabc.util.ApplicationContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,6 +33,7 @@ public class OauthExceptionSerializer extends StdSerializer<OauthException> {
     @Override
     public void serialize(OauthException value, JsonGenerator gen, SerializerProvider provider) throws IOException {
         log.error("认证失败", value);
+        ApplicationContextUtils.publishEvent(new LoginEvent(false, null, value));
         gen.writeObject(Response.error(StringUtils.substring(value.getMessage(), 0, 50)));
     }
 

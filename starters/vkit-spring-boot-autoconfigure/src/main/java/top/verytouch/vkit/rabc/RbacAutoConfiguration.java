@@ -1,21 +1,13 @@
 package top.verytouch.vkit.rabc;
 
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
-import top.verytouch.vkit.rabc.config.AuthorizationSererConfig;
-import top.verytouch.vkit.rabc.config.ResourceServerConfig;
-import top.verytouch.vkit.rabc.config.WebSecurityConfig;
-import top.verytouch.vkit.rabc.oauth2.AesPasswordEncoder;
-import top.verytouch.vkit.rabc.oauth2.InMemoryAuthorizationCodeService;
-import top.verytouch.vkit.rabc.oauth2.JwtUserDetailsTokenEnhancer;
-import top.verytouch.vkit.rabc.oauth2.ParameterPasswordEncoder;
-import top.verytouch.vkit.rabc.web.RestControllerAdvice;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -23,6 +15,15 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+import top.verytouch.vkit.rabc.config.AuthorizationSererConfig;
+import top.verytouch.vkit.rabc.config.ResourceServerConfig;
+import top.verytouch.vkit.rabc.config.WebSecurityConfig;
+import top.verytouch.vkit.rabc.oauth2.*;
+import top.verytouch.vkit.rabc.util.ApplicationContextUtils;
+import top.verytouch.vkit.rabc.web.RestControllerAdvice;
 
 import java.time.Duration;
 
@@ -40,10 +41,15 @@ import java.time.Duration;
 @ConditionalOnClass({WebSecurityConfigurerAdapter.class, AuthorizationServerConfigurerAdapter.class, ResourceServerConfigurerAdapter.class})
 @ConditionalOnProperty(prefix = "vkit.rbac", name = "enabled", havingValue = "true", matchIfMissing = true)
 @Import({WebSecurityConfig.class, AuthorizationSererConfig.class, ResourceServerConfig.class})
-public class RbacAutoConfiguration {
+public class RbacAutoConfiguration implements ApplicationContextAware {
 
     @Autowired
     private RbacProperties rbacProperties;
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        ApplicationContextUtils.init(applicationContext);
+    }
 
     @Bean
     @ConditionalOnMissingBean(ParameterPasswordEncoder.class)
@@ -60,7 +66,10 @@ public class RbacAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(JwtUserDetailsTokenEnhancer.class)
     public JwtUserDetailsTokenEnhancer jwtUserDetailsTokenEnhancer() {
-        return userDetails -> null;
+        return userDetails -> {
+            ApplicationContextUtils.publishEvent(new LoginEvent(true, userDetails, null));
+            return null;
+        };
     }
 
     @Bean
