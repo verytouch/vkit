@@ -1,8 +1,9 @@
 package top.verytouch.vkit.common.util;
 
-import top.verytouch.vkit.common.base.Assert;
 import lombok.Data;
 import org.apache.commons.io.IOUtils;
+import top.verytouch.vkit.common.base.Assert;
+import top.verytouch.vkit.common.exception.BusinessException;
 
 import java.io.ByteArrayInputStream;
 import java.io.OutputStream;
@@ -12,6 +13,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,9 +53,8 @@ public class HttpUtils {
      *
      * @param url 请求地址
      * @return 接口返回的字符串
-     * @throws Exception 失败抛出异常
      */
-    public static String get(String url) throws Exception {
+    public static String get(String url) {
         return new HttpUtils(url).get();
     }
 
@@ -63,9 +64,8 @@ public class HttpUtils {
      * @param url    请求地址，不带参数
      * @param params 请求参数，拼接在url后面
      * @return 接口返回的字符串
-     * @throws Exception 失败抛出异常
      */
-    public static String get(String url, Map<String, Object> params) throws Exception {
+    public static String get(String url, Map<String, Object> params) {
         return new HttpUtils(url).params(params).get();
     }
 
@@ -75,9 +75,8 @@ public class HttpUtils {
      * @param url    请求地址，不带参数
      * @param params 请求参数，拼接在url后面
      * @return 接口返回的字符串
-     * @throws Exception 失败抛出异常
      */
-    public static String post(String url, Map<String, Object> params) throws Exception {
+    public static String post(String url, Map<String, Object> params) {
         return new HttpUtils(url).params(params).post();
     }
 
@@ -87,20 +86,36 @@ public class HttpUtils {
      * @param url  请求地址
      * @param json json格式的参数，contentType=application/json
      * @return 接口返回的字符串
-     * @throws Exception 失败抛出异常
      */
-    public static String postJson(String url, String json) throws Exception {
+    public static String postJson(String url, String json) {
         return new HttpUtils(url)
                 .addHeader("Content-Type", APPLICATION_JSON)
                 .body(json.getBytes(StandardCharsets.UTF_8))
                 .post();
     }
 
-    public static byte[] download(String url) throws Exception {
-        return new HttpUtils(url).request().getBytes();
+    /**
+     * 下载
+     */
+    public static byte[] download(String url) {
+        return new HttpUtils(url).caughtRequest().getBytes();
     }
 
-    public Response request() throws Exception {
+    /**
+     * 执行请求，失败抛出BusinessException
+     */
+    public HttpResponse caughtRequest() {
+        try {
+            return request();
+        } catch (Exception e) {
+           throw new BusinessException("Http请求失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 执行请求
+     */
+    public HttpResponse request() throws Exception {
         if (params != null && params.size() > 0) {
             url += "?" + params.entrySet().stream().
                     map(entry -> entry.getKey() + "=" + entry.getValue())
@@ -129,7 +144,7 @@ public class HttpUtils {
             }
             Assert.require(connection.getResponseCode() == 200, String.format("request failed: code=%s, message=%s",
                     connection.getResponseCode(), connection.getResponseMessage()));
-            return new Response(IOUtils.toByteArray(connection.getInputStream()), connection.getHeaderFields());
+            return new HttpResponse(IOUtils.toByteArray(connection.getInputStream()), connection.getHeaderFields());
         } finally {
             if (connection != null) {
                 connection.disconnect();
@@ -137,12 +152,12 @@ public class HttpUtils {
         }
     }
 
-    public String get() throws Exception {
-        return method("GET").request().getString();
+    public String get() {
+        return method("GET").caughtRequest().getString();
     }
 
-    public String post() throws Exception {
-        return method("POST").request().getString();
+    public String post() {
+        return method("POST").caughtRequest().getString();
     }
 
     public HttpUtils method(String method) {
@@ -150,11 +165,17 @@ public class HttpUtils {
         return this;
     }
 
+    /**
+     * 设置header
+     */
     public HttpUtils headers(Map<String, String> headers) {
         this.headers = headers;
         return this;
     }
 
+    /**
+     * 添加一个header
+     */
     public HttpUtils addHeader(String key, String value) {
         if (this.headers == null) {
             this.headers = new HashMap<>();
@@ -163,6 +184,9 @@ public class HttpUtils {
         return this;
     }
 
+    /**
+     * 设置参数
+     */
     public HttpUtils params(Map<String, Object> params) {
         this.params = params;
         if (encodeParam && this.params != null) {
@@ -173,6 +197,9 @@ public class HttpUtils {
         return this;
     }
 
+    /**
+     * 添加一个参数
+     */
     public HttpUtils addParam(String key, String value) {
         if (this.params == null) {
             this.params = new HashMap<>();
@@ -181,36 +208,57 @@ public class HttpUtils {
         return this;
     }
 
+    /**
+     * 设置编码
+     */
     public HttpUtils charset(Charset charset) {
         this.charset = charset;
         return this;
     }
 
+    /**
+     * 参数是否url编码
+     */
     public HttpUtils encodeParam(boolean encodeParam) {
         this.encodeParam = encodeParam;
         return this;
     }
 
+    /**
+     * 设置请求体
+     */
     public HttpUtils body(byte[] body) {
         this.body = body;
         return this;
     }
 
-    public HttpUtils readTimeout(int readTimeout) {
-        this.readTimeout = readTimeout;
+    /**
+     * 读超时，默认10秒
+     */
+    public HttpUtils readTimeout(Duration duration) {
+        this.readTimeout = (int) duration.toMillis();
         return this;
     }
 
-    public HttpUtils connectTimeout(int connectTimeout) {
-        this.connectTimeout = connectTimeout;
+    /**
+     * 连接超时，默认30秒
+     */
+    public HttpUtils connectTimeout(Duration duration) {
+        this.connectTimeout = (int) duration.toMillis();
         return this;
     }
 
+    /**
+     * 是否缓存，默认false
+     */
     public HttpUtils useCaches(boolean useCaches) {
         this.useCaches = useCaches;
         return this;
     }
 
+    /**
+     * 是否自动重定向，默认false
+     */
     public HttpUtils followRedirects(boolean followRedirects) {
         this.followRedirects = followRedirects;
         return this;
@@ -224,12 +272,15 @@ public class HttpUtils {
         }
     }
 
+    /**
+     * 返回值
+     */
     @Data
-    public static class Response {
+    public static class HttpResponse {
         private final byte[] bytes;
         private final Map<String, String> headers;
 
-        public Response(byte[] bytes, Map<String, List<String>> headers) {
+        public HttpResponse(byte[] bytes, Map<String, List<String>> headers) {
             this.bytes = bytes;
             this.headers = headers.entrySet().stream()
                     .collect(Collectors.toMap(Map.Entry::getKey,

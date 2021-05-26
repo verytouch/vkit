@@ -1,5 +1,7 @@
 package top.verytouch.vkit.common.util;
 
+import top.verytouch.vkit.common.exception.BusinessException;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -53,12 +55,16 @@ public class RandomUtils {
      * @param os 输出流
      * @return 验证码
      */
-    public static String captcha(OutputStream os) throws IOException {
+    public static String captcha(OutputStream os) {
         BufferedImage image = new BufferedImage(200, 70, BufferedImage.TYPE_INT_RGB);
         String str = captcha(200, 70, image, BASE_CHAR_CODE, 4);
-        ImageIO.write(image, "png", os);
-        os.flush();
-        os.close();
+        try {
+            ImageIO.write(image, "png", os);
+            os.flush();
+            os.close();
+        } catch (IOException e) {
+            throw new BusinessException("生成验证码失败：" + e.getMessage());
+        }
         return str;
     }
 

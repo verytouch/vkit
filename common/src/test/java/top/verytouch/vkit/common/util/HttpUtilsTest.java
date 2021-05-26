@@ -11,7 +11,7 @@ public class HttpUtilsTest {
 
     @Test
     public void test() throws Exception {
-        final HttpUtils.Response response = new HttpUtils("https://api.weixin.qq.com/sns/jscode2session")
+        final HttpUtils.HttpResponse response = new HttpUtils("https://api.weixin.qq.com/sns/jscode2session")
                 // .addHeader("appid", "APPID")
                 .addParam("appid", "123456")
                 .addParam("secret", "123456")
@@ -23,12 +23,12 @@ public class HttpUtilsTest {
     }
 
     @Test
-    public void testGet() throws Exception {
+    public void testGet() {
         System.out.println(HttpUtils.get("https://www.jsanai.com/api/selfnews/newslist?type=1"));
     }
 
     @Test
-    public void testPost() throws Exception {
+    public void testPost() {
         Map<String, Object> params = new HashMap<>();
         params.put("id", "MzEwMDA3NA");
         final String post = HttpUtils.post("https://www.jsanai.com/api/selfnews/newsd", params);
@@ -36,7 +36,7 @@ public class HttpUtilsTest {
     }
 
     @Test
-    public void testJson() throws Exception {
+    public void testJson() {
         System.out.println(HttpUtils.postJson("http://localhost:8080/hello/json", "{\"data\": \"白日依山尽，黄河入海流。欲穷千里目，更上一层楼。\", \"type\": 1}"));
     }
 
