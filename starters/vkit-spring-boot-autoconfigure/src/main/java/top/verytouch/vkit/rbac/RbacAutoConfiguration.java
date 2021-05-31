@@ -1,4 +1,4 @@
-package top.verytouch.vkit.rabc;
+package top.verytouch.vkit.rbac;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +18,12 @@ import org.springframework.security.oauth2.provider.code.AuthorizationCodeServic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import top.verytouch.vkit.rabc.config.AuthorizationSererConfig;
-import top.verytouch.vkit.rabc.config.ResourceServerConfig;
-import top.verytouch.vkit.rabc.config.WebSecurityConfig;
-import top.verytouch.vkit.rabc.oauth2.*;
-import top.verytouch.vkit.rabc.util.ApplicationContextUtils;
-import top.verytouch.vkit.rabc.web.RestControllerAdvice;
+import top.verytouch.vkit.rbac.config.AuthorizationSererConfig;
+import top.verytouch.vkit.rbac.config.ResourceServerConfig;
+import top.verytouch.vkit.rbac.config.WebSecurityConfig;
+import top.verytouch.vkit.rbac.oauth2.*;
+import top.verytouch.vkit.rbac.util.ApplicationContextUtils;
+import top.verytouch.vkit.rbac.web.RestControllerAdvice;
 
 import java.time.Duration;
 

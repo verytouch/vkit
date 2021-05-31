@@ -1,4 +1,4 @@
-package top.verytouch.vkit.rabc.oauth2;
+package top.verytouch.vkit.rbac.oauth2;
 
 import top.verytouch.vkit.common.exception.BusinessException;
 import top.verytouch.vkit.common.util.CryptUtils;

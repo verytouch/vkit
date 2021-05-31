@@ -1,7 +1,7 @@
-package top.verytouch.vkit.rabc.oauth2;
+package top.verytouch.vkit.rbac.oauth2;
 
 import top.verytouch.vkit.captcha.CaptchaContext;
-import top.verytouch.vkit.rabc.RbacProperties;
+import top.verytouch.vkit.rbac.RbacProperties;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;

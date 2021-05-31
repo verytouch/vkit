@@ -1,4 +1,4 @@
-package top.verytouch.vkit.rabc.util;
+package top.verytouch.vkit.rbac.util;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;

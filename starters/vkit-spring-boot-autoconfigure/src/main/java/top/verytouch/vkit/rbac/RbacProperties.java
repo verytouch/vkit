@@ -1,4 +1,4 @@
-package top.verytouch.vkit.rabc;
+package top.verytouch.vkit.rbac;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

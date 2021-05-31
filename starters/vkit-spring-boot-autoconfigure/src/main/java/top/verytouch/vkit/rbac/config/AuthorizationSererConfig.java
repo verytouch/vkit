@@ -1,4 +1,4 @@
-package top.verytouch.vkit.rabc.config;
+package top.verytouch.vkit.rbac.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -24,8 +24,8 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
-import top.verytouch.vkit.rabc.RbacProperties;
-import top.verytouch.vkit.rabc.oauth2.*;
+import top.verytouch.vkit.rbac.RbacProperties;
+import top.verytouch.vkit.rbac.oauth2.*;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -85,10 +85,12 @@ public class AuthorizationSererConfig extends AuthorizationServerConfigurerAdapt
     public void configure(AuthorizationServerEndpointsConfigurer endpointsConfigurer) {
         endpointsConfigurer.userDetailsService(userDetailsService)
                 .authenticationManager(authenticationManager)
+                // 自定义模式
                 .tokenGranter(tokenGranter(endpointsConfigurer))
                 .accessTokenConverter(jwtAccessTokenConverter())
                 .tokenStore(tokenStore())
                 .reuseRefreshTokens(false)
+                // authorization_code模式自定义code有效期
                 .authorizationCodeServices(new InMemoryAuthorizationCodeService(Duration.ofMinutes(3)))
                 .tokenEnhancer(tokenEnhancerChain())
                 .authorizationCodeServices(authorizationCodeServices)
@@ -110,7 +112,7 @@ public class AuthorizationSererConfig extends AuthorizationServerConfigurerAdapt
     @Bean
     public TokenEnhancer tokenEnhancer() {
         return (accessToken, authentication) -> {
-            if (jwtUserDetailsTokenEnhancer == null) {
+            if (jwtUserDetailsTokenEnhancer == null || authentication.getUserAuthentication() == null) {
                 return accessToken;
             }
             UserDetails details = null;

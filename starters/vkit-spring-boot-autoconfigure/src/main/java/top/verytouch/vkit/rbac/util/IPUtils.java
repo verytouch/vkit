@@ -1,4 +1,4 @@
-package top.verytouch.vkit.rabc.util;
+package top.verytouch.vkit.rbac.util;
 
 import top.verytouch.vkit.common.util.HttpUtils;
 import top.verytouch.vkit.common.util.JsonUtils;

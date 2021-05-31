@@ -1,4 +1,4 @@
-package top.verytouch.vkit.rabc.web;
+package top.verytouch.vkit.rbac.web;
 
 import top.verytouch.vkit.common.base.ApiCode;
 import top.verytouch.vkit.common.base.Response;

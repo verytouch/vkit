@@ -62,7 +62,7 @@
             <artifactId>alipay-sdk-java</artifactId>
             <optional>true</optional>
         </dependency>
-        <!-- rabc -->
+        <!-- rbac -->
         <dependency>
             <groupId>org.springframework.security.oauth.boot</groupId>
             <artifactId>spring-security-oauth2-autoconfigure</artifactId>

@@ -1,4 +1,4 @@
-package top.verytouch.vkit.rabc.oauth2;
+package top.verytouch.vkit.rbac.oauth2;
 
 /**
  * 用于传输过程中对密码加解密

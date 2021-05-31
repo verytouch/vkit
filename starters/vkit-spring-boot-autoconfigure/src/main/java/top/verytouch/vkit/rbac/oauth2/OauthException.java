@@ -1,4 +1,4 @@
-package top.verytouch.vkit.rabc.oauth2;
+package top.verytouch.vkit.rbac.oauth2;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;

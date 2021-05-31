@@ -1,4 +1,4 @@
-package top.verytouch.vkit.rabc.config;
+package top.verytouch.vkit.rbac.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

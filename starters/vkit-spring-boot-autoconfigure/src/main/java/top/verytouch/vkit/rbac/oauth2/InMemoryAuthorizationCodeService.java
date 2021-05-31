@@ -1,4 +1,4 @@
-package top.verytouch.vkit.rabc.oauth2;
+package top.verytouch.vkit.rbac.oauth2;
 
 import top.verytouch.vkit.common.base.Cache;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;

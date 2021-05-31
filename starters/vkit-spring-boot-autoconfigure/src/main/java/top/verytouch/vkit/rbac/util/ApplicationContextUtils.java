@@ -1,4 +1,4 @@
-package top.verytouch.vkit.rabc.util;
+package top.verytouch.vkit.rbac.util;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
