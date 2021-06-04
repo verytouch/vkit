@@ -18,6 +18,7 @@ public class Response<T> {
     private int code;
     private T data;
     private String msg;
+    private String traceId;
     private Map<String, Object> extra;
 
     /**

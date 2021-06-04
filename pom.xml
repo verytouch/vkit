@@ -160,4 +160,11 @@
             </distributionManagement>
         </profile>
     </profiles>
+
+    <repositories>
+        <repository>
+            <id>ali</id>
+            <url>https://maven.aliyun.com/nexus/content/groups/public/</url>
+        </repository>
+    </repositories>
 </project>

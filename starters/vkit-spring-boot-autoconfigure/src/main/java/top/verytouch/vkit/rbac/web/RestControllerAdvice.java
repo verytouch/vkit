@@ -1,6 +1,7 @@
 package top.verytouch.vkit.rbac.web;
 
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -83,10 +84,10 @@ public class RestControllerAdvice {
 
     private Response<String> logError(ApiCode code, Exception e) {
         log.error(code.getDesc(), e);
-        return Response.error(code.getCode(), code.getDesc());
+        return Response.error(code.getCode(), code.getDesc()).setTraceId(MDC.get(MDCInterceptor.traceId));
     }
 
     private Response<String> error(ApiCode code) {
-        return Response.error(code.getCode(), code.getDesc());
+        return Response.error(code.getCode(), code.getDesc()).setTraceId(MDC.get(MDCInterceptor.traceId));
     }
 }

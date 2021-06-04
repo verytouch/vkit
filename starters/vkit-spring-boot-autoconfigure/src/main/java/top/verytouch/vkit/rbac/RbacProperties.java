@@ -46,6 +46,11 @@ public class RbacProperties {
     private String passwordParameter = "password";
 
     /**
+     * 资源服务器ID
+     */
+    private String resourceId;
+
+    /**
      * 认证时是否校验验证码，仅authorization_type=captcha时生效
      */
     private boolean captchaEnabled = true;

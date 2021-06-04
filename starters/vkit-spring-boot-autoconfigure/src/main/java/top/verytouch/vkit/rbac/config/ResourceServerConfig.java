@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.configurers.Expression
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import top.verytouch.vkit.common.util.StringUtils;
 import top.verytouch.vkit.rbac.RbacProperties;
 import top.verytouch.vkit.rbac.oauth2.OauthExceptionSerializer;
 
@@ -28,9 +29,11 @@ public class ResourceServerConfig  extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) {
-        resources
-                .authenticationEntryPoint(OauthExceptionSerializer::exceptionHandler)
+        resources.authenticationEntryPoint(OauthExceptionSerializer::exceptionHandler)
                 .accessDeniedHandler(OauthExceptionSerializer::exceptionHandler);
+        if (!StringUtils.isBlank(rbacProperties.getResourceId())) {
+            resources.resourceId(rbacProperties.getResourceId());
+        }
     }
 
     /**
