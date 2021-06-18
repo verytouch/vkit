@@ -1,11 +1,11 @@
 package top.verytouch.vkit.captcha.image;
 
+import lombok.extern.slf4j.Slf4j;
 import top.verytouch.vkit.captcha.CaptchaEnum;
 import top.verytouch.vkit.captcha.CaptchaParams;
 import top.verytouch.vkit.captcha.CaptchaService;
 import top.verytouch.vkit.common.base.Assert;
 import top.verytouch.vkit.common.exception.BusinessException;
-import lombok.extern.slf4j.Slf4j;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -21,6 +21,7 @@ import java.util.Random;
  * @since 2021/4/29 10:15
  */
 @Slf4j
+@SuppressWarnings("unused")
 public class ImageCaptchaService implements CaptchaService {
 
     private final CaptchaCodeStore codeStore;
@@ -91,7 +92,7 @@ public class ImageCaptchaService implements CaptchaService {
         graphics.setColor(Color.WHITE);
         //填充背景
         graphics.fillRect(0, 0, properties.getWidth(), properties.getHeight());
-        graphics.setFont(new Font(properties.getFontName(), properties.getFontStyle(), properties.getFontSize()));
+        graphics.setFont(new Font(properties.getFontName(), Font.BOLD, properties.getFontSize()));
 
         // 画验证码，x为旋转原点的横坐标
         int x = 10;

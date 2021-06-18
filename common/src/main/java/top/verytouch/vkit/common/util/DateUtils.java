@@ -10,6 +10,7 @@ import java.util.Date;
  * @author verytouch
  * @since 2021/5/13 21:13
  */
+@SuppressWarnings("unused")
 public class DateUtils {
 
     public static final DateTimeFormatter FORMATTER_DATE_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");

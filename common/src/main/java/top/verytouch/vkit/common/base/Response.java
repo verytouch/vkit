@@ -13,6 +13,7 @@ import java.util.Map;
  */
 @Data
 @Accessors(chain = true)
+@SuppressWarnings("unused")
 public class Response<T> {
 
     private int code;

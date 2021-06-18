@@ -11,6 +11,7 @@ import java.util.function.Supplier;
  * @author verytouch
  * @since 2020/9/29 16:35
  */
+@SuppressWarnings("unused")
 public class MapUtils {
 
     /**
@@ -46,12 +47,12 @@ public class MapUtils {
         }
 
         public static Builder<String, Object> hashMap(int initialCapacity) {
-            return new Builder<>(new HashMap<String, Object>(initialCapacity));
+            return new Builder<>(new HashMap<>(initialCapacity));
         }
 
 
         public static Builder<String, Object> hashMap() {
-            return new Builder<>(new HashMap<String, Object>());
+            return new Builder<>(new HashMap<>());
         }
 
         public Builder<K, V> put(K k, V v) {
@@ -77,6 +78,7 @@ public class MapUtils {
     /**
      * Map读取
      */
+    @SuppressWarnings("rawtypes")
     public static class Reader {
 
         private Map map;
@@ -89,15 +91,25 @@ public class MapUtils {
             return new Reader(map);
         }
 
+        /**
+         * 让reader进入key对应的map
+         */
         public Reader skin(Object key) {
             this.map = (Map) this.map.get(key);
             return this;
         }
 
+        /**
+         * 返回map
+         */
         public Map getMap(Object key) {
             return (Map) this.map.get(key);
         }
 
+        /**
+         * 返回list
+         */
+        @SuppressWarnings("unchecked")
         public List<Map> getList(Object key) {
             return (List<Map>) this.map.get(key);
         }

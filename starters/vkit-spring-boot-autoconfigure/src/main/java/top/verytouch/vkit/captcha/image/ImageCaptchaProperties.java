@@ -43,11 +43,6 @@ public class ImageCaptchaProperties {
     private String fontName = "微软雅黑";
 
     /**
-     * 字体样式
-     */
-    private int fontStyle = Font.BOLD;
-
-    /**
      * 字体大小
      */
     private int fontSize = 40;
@@ -55,6 +50,7 @@ public class ImageCaptchaProperties {
     /**
      * 基础字符
      */
+    @SuppressWarnings("all")
     private String chars = "123456789abcdefghijkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ";
 
     /**

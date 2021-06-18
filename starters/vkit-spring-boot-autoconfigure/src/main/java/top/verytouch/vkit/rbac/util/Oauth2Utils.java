@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
  * @author verytouch
  * @since 2021/5/16 21:45
  */
+@SuppressWarnings("unused")
 public class Oauth2Utils {
 
     /**
@@ -55,6 +56,7 @@ public class Oauth2Utils {
     /**
      * 获取jwt中自定义的信息
      */
+    @SuppressWarnings("unchecked")
     public static Map<String, Object> getJwtClaims() {
         String claims = JwtHelper.decode(getAccessToken()).getClaims();
         return JsonUtils.fromJson(claims, HashMap.class);

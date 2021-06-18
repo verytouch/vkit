@@ -15,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public class TencentCaptchaProperties {
 
+    @SuppressWarnings("all")
     private String endpoint = "captcha.tencentcloudapi.com";
 
     private Long captchaType = 9L;

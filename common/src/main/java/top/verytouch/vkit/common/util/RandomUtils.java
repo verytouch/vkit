@@ -17,6 +17,7 @@ import java.util.UUID;
  * @author verytouch
  * @since 2021/3/7 20:41
  */
+@SuppressWarnings("unused")
 public class RandomUtils {
 
     public static final String BASE_CHAR_CODE = "123456789abcdefghijklmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ";
@@ -81,7 +82,7 @@ public class RandomUtils {
         //数字和字母的组合
         StringBuilder sb = new StringBuilder();
         int x = 10;  //旋转原点的 x 坐标
-        String ch = "";
+        String ch;
         Random random = new Random();
         char[] chars = character(base, length).toCharArray();
         for (char aChar : chars) {

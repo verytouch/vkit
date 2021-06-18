@@ -9,10 +9,11 @@ import org.springframework.context.ApplicationEvent;
  * @author verytouch
  * @since 2021/5/26 14:07
  */
+@SuppressWarnings("unused")
 public class ApplicationContextUtils {
 
     /**
-     * 在top.verytouch.vkit.rabc.RbacAutoConfiguration中赋值
+     * 在RbacAutoConfiguration中赋值
      */
     private static ApplicationContext context;
 

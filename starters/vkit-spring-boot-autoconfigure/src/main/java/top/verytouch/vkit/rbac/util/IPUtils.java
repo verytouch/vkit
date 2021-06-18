@@ -14,6 +14,7 @@ import java.util.Objects;
  * @author verytouch
  * @since 2021/5/13 15:17
  */
+@SuppressWarnings("unused")
 public class IPUtils {
 
     /**
@@ -41,10 +42,10 @@ public class IPUtils {
          */
         String sIP = null;
         if (clientIp != null && !clientIp.contains("unknown") && clientIp.indexOf(",") > 0) {
-            String[] ipsz = clientIp.split(",");
-            for (String anIpsz : ipsz) {
-                if (!isInnerIP(anIpsz.trim())) {
-                    sIP = anIpsz.trim();
+            String[] ipArr = clientIp.split(",");
+            for (String ip : ipArr) {
+                if (!isInnerIP(ip.trim())) {
+                    sIP = ip.trim();
                     break;
                 }
             }
@@ -52,7 +53,7 @@ public class IPUtils {
              * 如果多ip都是内网ip，则取第一个ip.
              */
             if (null == sIP) {
-                sIP = ipsz[0].trim();
+                sIP = ipArr[0].trim();
             }
             clientIp = sIP;
         }
@@ -101,9 +102,10 @@ public class IPUtils {
      *
      * @param ip ip地址
      */
+    @SuppressWarnings("rawtypes")
     public static String getAddress(String ip) {
         try {
-            String res = new HttpUtils("http://ip.taobao.com/outGetIpInfo")
+            String res = new HttpUtils("https://ip.taobao.com/outGetIpInfo")
                     .addParam("ip", ip)
                     .addParam("accessKey", "alibaba-inc")
                     .post();

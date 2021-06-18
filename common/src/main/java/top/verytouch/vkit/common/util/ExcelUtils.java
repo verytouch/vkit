@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
  * @author verytouch
  * @since 2021/3/7 20:41
  */
+@SuppressWarnings("unused")
 public class ExcelUtils {
 
     public static Writer writer(List<?> data) {

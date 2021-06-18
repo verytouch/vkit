@@ -52,7 +52,7 @@ public class RestControllerAdvice {
      * 认证异常
      */
     @ExceptionHandler(AuthenticationException.class)
-    public Response<String> authenticationException(AuthenticationException e) {
+    public Response<String> authenticationException() {
         return error(ApiCode.SYS_UNAUTHENTICATED);
     }
 
@@ -60,7 +60,7 @@ public class RestControllerAdvice {
      * 权限异常
      */
     @ExceptionHandler(AccessDeniedException.class)
-    public Response<String> accessDeniedException(AccessDeniedException e) {
+    public Response<String> accessDeniedException() {
         return error(ApiCode.SYS_FORBIDDEN);
     }
 
@@ -70,7 +70,7 @@ public class RestControllerAdvice {
      * spring.resources.add-mappings=false
      */
     @ExceptionHandler(NoHandlerFoundException.class)
-    public Response<String> noHandlerFoundException(NoHandlerFoundException e) {
+    public Response<String> noHandlerFoundException() {
         return error(ApiCode.SYS_NO_HANDLER);
     }
 

@@ -9,6 +9,7 @@ import lombok.Getter;
  * @author verytouch
  * @since 2021/3/7 21:18
  */
+@SuppressWarnings("unused")
 public class AssertException extends BusinessException {
 
     @Getter

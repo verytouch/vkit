@@ -29,6 +29,7 @@ import top.verytouch.vkit.rbac.web.MDCInterceptor;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
 
     @Autowired
+    @SuppressWarnings("all")
     private UserDetailsService userDetailsService;
 
     @Override

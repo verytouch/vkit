@@ -9,6 +9,7 @@ import java.io.InputStream;
  * @author verytouch
  * @since 2021/4/29 10:15
  */
+@SuppressWarnings("unused")
 public interface OssService {
 
     /**

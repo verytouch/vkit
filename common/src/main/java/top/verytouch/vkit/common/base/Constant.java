@@ -6,6 +6,7 @@ package top.verytouch.vkit.common.base;
  * @author verytouch
  * @since 2021/5/24 17:28
  */
+@SuppressWarnings("unused")
 public class Constant {
 
     public static final String POSITIVE = "Y";

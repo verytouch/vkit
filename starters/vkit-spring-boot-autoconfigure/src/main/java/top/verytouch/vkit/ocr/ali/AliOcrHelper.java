@@ -18,6 +18,7 @@ import java.util.List;
  * @since 2021/4/29 10:15
  */
 @Slf4j
+@SuppressWarnings("unused")
 public class AliOcrHelper {
 
     /**
@@ -51,6 +52,7 @@ public class AliOcrHelper {
      * @param json      识别结果json
      * @param delimiter word之间的分隔符
      */
+    @SuppressWarnings("unchecked")
     public static String getGeneralWords(String json, String delimiter) {
         return String.join(delimiter, JsonPath.parse(json).read("$.ret[*].word", List.class));
     }

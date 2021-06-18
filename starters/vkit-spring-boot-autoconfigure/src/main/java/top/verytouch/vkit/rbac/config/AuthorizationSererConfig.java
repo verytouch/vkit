@@ -28,10 +28,7 @@ import top.verytouch.vkit.rbac.RbacProperties;
 import top.verytouch.vkit.rbac.oauth2.*;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 授权服务配置
@@ -41,12 +38,15 @@ import java.util.Map;
  */
 @Configuration
 @EnableAuthorizationServer
+
 public class AuthorizationSererConfig extends AuthorizationServerConfigurerAdapter {
 
     @Autowired
+    @SuppressWarnings("all")
     private UserDetailsService userDetailsService;
 
     @Autowired
+    @SuppressWarnings("all")
     private AnotherClientDetailsService anotherClientDetailsService;
 
     @Autowired
@@ -56,15 +56,19 @@ public class AuthorizationSererConfig extends AuthorizationServerConfigurerAdapt
     private PasswordEncoder passwordEncoder;
 
     @Autowired
+    @SuppressWarnings("all")
     private ParameterPasswordEncoder parameterPasswordEncoder;
 
     @Autowired
+    @SuppressWarnings("all")
     private AuthorizationCodeServices authorizationCodeServices;
 
     @Autowired
+    @SuppressWarnings("all")
     private RbacProperties rbacProperties;
 
     @Autowired
+    @SuppressWarnings("all")
     private JwtUserDetailsTokenEnhancer jwtUserDetailsTokenEnhancer;
 
     @Override
@@ -145,7 +149,7 @@ public class AuthorizationSererConfig extends AuthorizationServerConfigurerAdapt
     }
 
     private TokenGranter tokenGranter(final AuthorizationServerEndpointsConfigurer endpoints) {
-        List<TokenGranter> granters = new ArrayList<>(Arrays.asList(endpoints.getTokenGranter()));
+        List<TokenGranter> granters = new ArrayList<>(Collections.singletonList(endpoints.getTokenGranter()));
         granters.add(new CaptchaTokenGranter(
                 endpoints.getTokenServices(),
                 endpoints.getClientDetailsService(),

@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  * @author verytouch
  * @since 2020/9/17 16:32
  */
-@Data
+@SuppressWarnings("unused")
 public class HttpUtils {
 
     public static final String APPLICATION_JSON = "application/json";
@@ -84,13 +84,13 @@ public class HttpUtils {
      * 发送post请求
      *
      * @param url  请求地址
-     * @param json json格式的参数，contentType=application/json
+     * @param body 参数，内部转换为json字符串，contentType=application/json
      * @return 接口返回的字符串
      */
-    public static String postJson(String url, String json) {
+    public static String postJson(String url, Object body) {
         return new HttpUtils(url)
                 .addHeader("Content-Type", APPLICATION_JSON)
-                .body(json.getBytes(StandardCharsets.UTF_8))
+                .body(JsonUtils.toJson(body).getBytes(StandardCharsets.UTF_8))
                 .post();
     }
 
@@ -287,8 +287,25 @@ public class HttpUtils {
                             entry -> entry.getValue() != null && !entry.getValue().isEmpty() ? entry.getValue().get(0) : ""));
         }
 
+        /**
+         * 返回字符串
+         */
         public String getString() {
             return new String(bytes);
+        }
+
+        /**
+         * 返回javaBean，格式必须为json
+         */
+        public <T> T toBean(Class<T> beanType) {
+            return JsonUtils.fromJson(new String(bytes), beanType);
+        }
+
+        /**
+         * 返回List，格式必须为json
+         */
+        public <T> List<T> toList(Class<T> itemType) {
+            return JsonUtils.listFromJson(new String(bytes), itemType);
         }
     }
 }

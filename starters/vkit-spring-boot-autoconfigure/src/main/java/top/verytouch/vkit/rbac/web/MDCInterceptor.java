@@ -1,6 +1,7 @@
 package top.verytouch.vkit.rbac.web;
 
 import org.slf4j.MDC;
+import org.springframework.lang.NonNull;
 import org.springframework.web.servlet.HandlerInterceptor;
 import top.verytouch.vkit.common.util.RandomUtils;
 
@@ -12,13 +13,13 @@ public class MDCInterceptor implements HandlerInterceptor {
     public static final String traceId = "traceId";
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+    public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) {
         MDC.put(traceId, RandomUtils.uuid());
         return true;
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+    public void afterCompletion(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler, Exception ex) {
         MDC.remove(traceId);
     }
 }

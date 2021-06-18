@@ -12,6 +12,7 @@ import java.util.stream.Stream;
  * @author verytouch
  * @since 2021/3/7 16:32
  */
+@SuppressWarnings("unused")
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
     /**

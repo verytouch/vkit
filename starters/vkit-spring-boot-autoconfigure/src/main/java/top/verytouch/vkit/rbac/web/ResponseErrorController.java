@@ -1,14 +1,14 @@
 package top.verytouch.vkit.rbac.web;
 
-import top.verytouch.vkit.common.base.ApiCode;
-import top.verytouch.vkit.common.base.Response;
-import top.verytouch.vkit.common.util.JsonUtils;
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
 import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import top.verytouch.vkit.common.base.ApiCode;
+import top.verytouch.vkit.common.base.Response;
+import top.verytouch.vkit.common.util.JsonUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -19,6 +19,7 @@ import java.util.Map;
  * @author verytouch
  * @since 2021/5/17 17:06
  */
+@SuppressWarnings("unused")
 public class ResponseErrorController extends BasicErrorController {
 
     public ResponseErrorController(ErrorAttributes errorAttributes, ErrorProperties errorProperties) {
@@ -26,6 +27,7 @@ public class ResponseErrorController extends BasicErrorController {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public ResponseEntity<Map<String, Object>> error(HttpServletRequest request) {
         Map<String, Object> info = getErrorAttributes(request, isIncludeStackTrace(request, MediaType.ALL));
         HttpStatus status = getStatus(request);

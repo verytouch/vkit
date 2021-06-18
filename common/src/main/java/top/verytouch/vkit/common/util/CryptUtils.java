@@ -27,6 +27,7 @@ import java.util.function.BiFunction;
  * @author verytouch
  * @since 2020/9/17 16:34
  */
+@SuppressWarnings("unused")
 public final class CryptUtils {
 
     private CryptUtils() {

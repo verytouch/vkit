@@ -11,6 +11,7 @@ import java.io.File;
  * @author verytouch
  * @since 2021/4/29 10:15
  */
+@SuppressWarnings("unused")
 public class OssHelper {
 
     private static final MimetypesFileTypeMap fileTypeMap = new MimetypesFileTypeMap();

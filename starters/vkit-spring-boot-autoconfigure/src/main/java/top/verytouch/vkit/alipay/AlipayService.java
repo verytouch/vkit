@@ -15,6 +15,7 @@ import com.alipay.api.response.AlipayUserInfoShareResponse;
  * @author verytouch
  * @since 2021/4/30 10:32
  */
+@SuppressWarnings("unused")
 public class AlipayService {
 
     private final AlipayProperties properties;

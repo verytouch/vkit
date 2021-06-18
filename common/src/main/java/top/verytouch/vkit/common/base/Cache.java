@@ -15,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author verytouch
  * @since 2021/5/14 15:00
  */
+@SuppressWarnings("unused")
 public class Cache<T> {
 
     private final Map<String, CacheValue<T>> store;

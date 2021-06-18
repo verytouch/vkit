@@ -25,6 +25,7 @@ import java.util.Set;
 public class ResourceServerConfig  extends ResourceServerConfigurerAdapter {
 
     @Autowired
+    @SuppressWarnings("all")
     private RbacProperties rbacProperties;
 
     @Override

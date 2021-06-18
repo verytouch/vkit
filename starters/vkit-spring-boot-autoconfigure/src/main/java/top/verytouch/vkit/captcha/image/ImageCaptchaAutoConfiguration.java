@@ -29,6 +29,7 @@ public class ImageCaptchaAutoConfiguration {
      * }
      */
 
+    @SuppressWarnings("all")
     @Bean
     public ImageCaptchaService imageCaptchaService(CaptchaCodeStore captchaCodeStore, ImageCaptchaProperties properties) {
         log.info("已启用ImageCaptcha自动配置");

@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
  * @author verytouch
  * @since 2020/9/30 9:10
  */
+@SuppressWarnings("unused")
 public final class Assert {
 
     /**
@@ -88,6 +89,7 @@ public final class Assert {
      * @param target  校验对象
      * @param message 错误信息
      */
+    @SuppressWarnings("rawtypes")
     public static void nonEmpty(Object target, String message) {
         require(target != null, message);
         if (target instanceof Iterable) {
@@ -182,6 +184,7 @@ public final class Assert {
      * @param message 错误信息
      * @param <T>     目标类型
      */
+    @SuppressWarnings("unchecked")
     public static <T> T instanceOf(Object target, Class<T> clazz, String message) {
         require(target != null && clazz.isAssignableFrom(target.getClass()), message);
         return (T) target;

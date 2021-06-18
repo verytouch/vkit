@@ -11,6 +11,7 @@ import java.time.Duration;
  * @author verytouch
  * @since 2021/4/29 10:15
  */
+@SuppressWarnings("unused")
 public class InMemoryCaptchaCodeStore implements CaptchaCodeStore {
 
     private final Cache<String> cache;
