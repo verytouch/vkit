@@ -5,15 +5,18 @@ import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.common.utils.BinaryUtil;
 import com.aliyun.oss.model.MatchMode;
 import com.aliyun.oss.model.PolicyConditions;
+import lombok.extern.slf4j.Slf4j;
 import top.verytouch.vkit.common.exception.BusinessException;
+import top.verytouch.vkit.common.util.DateUtils;
 import top.verytouch.vkit.oss.OssProperties;
 import top.verytouch.vkit.oss.OssService;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -95,6 +98,11 @@ public class AliOssService implements OssService {
     @Override
     public String getPreviewUrl(String bucket, String object) {
         return String.format("https://%s.%s/%s", bucket, properties.getEndpoint(), object);
+    }
+
+    @Override
+    public String getPreviewUrl(String bucket, String object, Duration duration) {
+        return oss.generatePresignedUrl(bucket, object, DateUtils.localDateTimeToDate(LocalDateTime.now().plus(duration))).toString();
     }
 
     @Override

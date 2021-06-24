@@ -2,6 +2,7 @@ package top.verytouch.vkit.oss;
 
 import java.io.File;
 import java.io.InputStream;
+import java.time.Duration;
 
 /**
  * OSS接口
@@ -44,13 +45,23 @@ public interface OssService {
     String getUploadUrl(String bucket, String object);
 
     /**
-     * 获取文件地址
+     * 获取文件地址，无超时，要求该文件有公开的读权限
      *
      * @param bucket bucket名称
      * @param object 对象名称，如：avatar/a.jpg
      * @return 文件地址
      */
     String getPreviewUrl(String bucket, String object);
+
+    /**
+     * 获取文件预览地址，有超时时间
+     *
+     * @param bucket   bucket名称
+     * @param object   对象名称，如：avatar/a.jpg
+     * @param duration 过期时间
+     * @return 文件地址
+     */
+    String getPreviewUrl(String bucket, String object, Duration duration);
 
     /**
      * 下载文件

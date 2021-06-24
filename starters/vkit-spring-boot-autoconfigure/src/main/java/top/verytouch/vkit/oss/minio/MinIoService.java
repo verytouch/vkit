@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -76,7 +77,7 @@ public class MinIoService implements OssService {
         GetPresignedObjectUrlArgs args = GetPresignedObjectUrlArgs.builder()
                 .bucket(bucket)
                 .object(object)
-                .method(Method.POST)
+                .method(Method.PUT)
                 .expiry(properties.getUploadUrlExpireMinutes(), TimeUnit.MINUTES)
                 .build();
         try {
@@ -90,6 +91,23 @@ public class MinIoService implements OssService {
     @Override
     public String getPreviewUrl(String bucket, String object) {
         return String.format("%s/%s/%s", properties.getEndpoint(), bucket, object);
+    }
+
+    @Override
+    public String getPreviewUrl(String bucket, String object, Duration duration) {
+        checkBucket(bucket);
+        GetPresignedObjectUrlArgs args = GetPresignedObjectUrlArgs.builder()
+                .bucket(bucket)
+                .object(object)
+                .method(Method.GET)
+                .expiry((int) duration.toMinutes(), TimeUnit.MINUTES)
+                .build();
+        try {
+            return client.getPresignedObjectUrl(args);
+        } catch (Exception e) {
+            log.error(String.format("生成预览链接失败，bucket=%s，object=%s", bucket, object), e);
+            throw new BusinessException("生成预览链接失败", e);
+        }
     }
 
     @Override

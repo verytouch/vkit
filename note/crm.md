@@ -85,7 +85,7 @@ docker exec -it gitlab gitlab-ctl reconfigure
 
 数据备份基于命令gitlab-rake gitlab:backup:create，配置正确会自动上传到阿里OSS。
 
-配置文件gitlab.rb和gitlab-secrets.json也需要备份，通过[ossutil](https://help.aliyun.com/document_detail/207217.html?spm=a2c4g.11186623.6.564.104764d3hNGq8L)上传到阿里OSS。
+配置文件gitlab.rb和gitlab-secrets.json也需要备份，通过[ossutil](https://help.aliyun.com/document_detail/207217.html?spm=a2c4g.11186623.6.564.104764d3hNGq8L)上传到阿里OSS。/app/ossutil，/root/.ossutilconfig
 
 ```shell
 # 修改配置 vi /var/lib/docker/volumes/gitlab_config/_data/gitlab.rb
