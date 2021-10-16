@@ -17,4 +17,13 @@
         <module>activity</module>
     </modules>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>top.verytouch.vkit</groupId>
+                <artifactId>common</artifactId>
+                <version>2.2.2</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>
