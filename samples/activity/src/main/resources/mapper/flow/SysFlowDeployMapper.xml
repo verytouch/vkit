@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.verytouch.vkit.samples.activity.flow.mapper.SysFlowDeployMapper">
+
+	<resultMap id="BaseResultMap" type="top.verytouch.vkit.samples.activity.flow.entity.SysFlowDeploy">
+        <id column="ID" jdbcType="INTEGER" property="id" />
+		<result column="flow_id" jdbcType="VARCHAR" property="flowId" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="data" jdbcType="VARCHAR" property="data" />
+		<result column="version" jdbcType="INTEGER" property="version" />
+		<result column="deploy_time" jdbcType="TIMESTAMP" property="deployTime" />
+	</resultMap>
+
+	<sql id="BaseColumnList">
+		`id`,
+		`flow_id`,
+		`name`,
+		`data`,
+		`version`,
+		`deploy_time`
+    </sql> 
+
+    <insert id="insert" parameterType="top.verytouch.vkit.samples.activity.flow.entity.SysFlowDeploy" useGeneratedKeys="true" keyProperty="id">
+        insert into `sys_flow_deploy` (
+            `flow_id`,
+            `name`,
+            `data`,
+            `version`,
+            `deploy_time`
+        ) values (
+            #{flowId},
+            #{name},
+            #{data},
+            #{version},
+            #{deployTime}
+        )
+    </insert>
+
+    <insert id="insertBatch" parameterType="top.verytouch.vkit.samples.activity.flow.entity.SysFlowDeploy" useGeneratedKeys="true" keyProperty="id">
+        insert into `sys_flow_deploy` (
+            `flow_id`,
+            `name`,
+            `data`,
+            `version`,
+            `deploy_time`
+        ) values
+        <foreach collection="list" item="item" separator=",">
+        (
+            #{item.flowId},
+            #{item.name},
+            #{item.data},
+            #{item.version},
+            #{item.deployTime}
+        )
+        </foreach>
+    </insert>
+
+    <select id="getById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select <include refid="BaseColumnList" />
+        from `sys_flow_deploy`
+        where ID = #{id}
+    </select>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        delete from `sys_flow_deploy`
+        where ID = #{id}
+    </delete>
+
+    <update id="updateById" parameterType="top.verytouch.vkit.samples.activity.flow.entity.SysFlowDeploy">
+        update `sys_flow_deploy` set 
+            `flow_id` = #{flowId},
+            `name` = #{name},
+            `data` = #{data},
+            `version` = #{version},
+            `deploy_time` = #{deployTime}
+        where ID = #{id}
+    </update>
+
+    <select id="getList" parameterType="top.verytouch.vkit.samples.activity.flow.entity.SysFlowDeploy" resultMap="BaseResultMap">
+        select <include refid="BaseColumnList" />
+        from `sys_flow_deploy`
+        <where>
+            <if test="flowId != null">
+            	and `flow_id` = #{flowId}
+            </if>
+            <if test="name != null">
+            	and `name` = #{name}
+            </if>
+            <if test="data != null">
+            	and `data` = #{data}
+            </if>
+            <if test="version != null">
+            	and `version` = #{version}
+            </if>
+            <if test="deployTime != null">
+            	and `deploy_time` = #{deployTime}
+            </if>
+        </where>
+        order by ID desc
+    </select>
+</mapper>

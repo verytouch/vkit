@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.verytouch.vkit.samples.activity.flow.mapper.SysFlowMapper">
+
+	<resultMap id="BaseResultMap" type="top.verytouch.vkit.samples.activity.flow.entity.SysFlow">
+        <id column="ID" jdbcType="VARCHAR" property="id" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="data" jdbcType="VARCHAR" property="data" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+	</resultMap>
+
+	<sql id="BaseColumnList">
+		`id`,
+		`name`,
+		`data`,
+		`update_time`
+    </sql> 
+
+    <insert id="insert" parameterType="top.verytouch.vkit.samples.activity.flow.entity.SysFlow" useGeneratedKeys="true" keyProperty="id">
+        insert into `sys_flow` (
+            `id`,
+            `name`,
+            `data`,
+            `update_time`
+        ) values (
+            #{id},
+            #{name},
+            #{data},
+            #{updateTime}
+        )
+    </insert>
+
+    <insert id="insertBatch" parameterType="top.verytouch.vkit.samples.activity.flow.entity.SysFlow" useGeneratedKeys="true" keyProperty="id">
+        insert into `sys_flow` (
+            `id`,
+            `name`,
+            `data`,
+            `update_time`
+        ) values
+        <foreach collection="list" item="item" separator=",">
+        (
+            #{item.id},
+            #{item.name},
+            #{item.data},
+            #{item.updateTime}
+        )
+        </foreach>
+    </insert>
+
+    <select id="getById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select <include refid="BaseColumnList" />
+        from `sys_flow`
+        where ID = #{id}
+    </select>
+
+    <delete id="deleteById" parameterType="java.lang.String">
+        delete from `sys_flow`
+        where ID = #{id}
+    </delete>
+
+    <update id="updateById" parameterType="top.verytouch.vkit.samples.activity.flow.entity.SysFlow">
+        update `sys_flow` set 
+            `name` = #{name},
+            `data` = #{data},
+            `update_time` = #{updateTime}
+        where ID = #{id}
+    </update>
+
+    <select id="getList" parameterType="top.verytouch.vkit.samples.activity.flow.entity.SysFlow" resultMap="BaseResultMap">
+        select <include refid="BaseColumnList" />
+        from `sys_flow`
+        <where>
+            <if test="name != null">
+            	and `name` = #{name}
+            </if>
+            <if test="data != null">
+            	and `data` = #{data}
+            </if>
+            <if test="updateTime != null">
+            	and `update_time` = #{updateTime}
+            </if>
+        </where>
+        order by update_time desc
+    </select>
+</mapper>

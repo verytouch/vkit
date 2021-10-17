@@ -4,12 +4,15 @@ import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.repository.Deployment;
+import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import top.verytouch.vkit.common.base.Assert;
 import top.verytouch.vkit.common.base.Response;
+import top.verytouch.vkit.samples.activity.flow.FlowService;
 import top.verytouch.vkit.samples.activity.modler.BpmnUtils;
 import top.verytouch.vkit.samples.activity.modler.Flow;
 import top.verytouch.vkit.samples.activity.modler.ProcessDeleteReason;
@@ -36,18 +39,42 @@ public class ProcessController {
     @Autowired
     ProcessEngine processEngine;
 
+    @Autowired
+    FlowService flowService;
+
+    /**
+     * 保存流程设计
+     */
+    @PostMapping("saveFlow")
+    public Response<Void> saveFlow(@RequestBody Flow flow) {
+        flowService.saveSysFlow(flow);
+        return Response.ok();
+    }
+
+    /**
+     * 获取流程设计
+     */
+    @GetMapping("getFlow")
+    public Response<Flow> getFlow(@RequestParam String processDefinitionKey) {
+        return Response.ok(flowService.getFlow(processDefinitionKey));
+    }
+
     /**
      * 发布流程
      */
     @PostMapping("deploy")
     public void deploy(@RequestBody Flow flow, HttpServletResponse response) throws IOException {
         BpmnModel bpmnModel = BpmnUtils.createBpmnModel(flow);
-        processEngine.getRepositoryService()
+        Deployment deploy = processEngine.getRepositoryService()
                 .createDeployment()
                 .addBpmnModel(flow.getName() + ".bpmn", bpmnModel)
                 .name(flow.getName())
                 .deploy();
-
+        ProcessDefinition processDefinition = processEngine.getRepositoryService()
+                .createProcessDefinitionQuery()
+                .deploymentId(deploy.getId())
+                .singleResult();
+        flowService.saveSysFlowDeploy(flow, processDefinition.getVersion());
         response.setContentType("image/png");
         FileCopyUtils.copy(BpmnUtils.generateDiagram(bpmnModel), response.getOutputStream());
     }
