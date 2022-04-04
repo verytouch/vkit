@@ -18,6 +18,7 @@ study and working notes
 ## samples
 1. oauth2
 2. rabbitmq
+3. activiti
 
 ## starter
 1. ocr: ali
