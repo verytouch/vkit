@@ -1,10 +1,9 @@
 # vkit
 my java develop kit, including
 1. common dependencies
-2. study and working notes
-3. samples of some framework
-4. easy-using starters
-5. etc
+2. samples of some framework
+3. spring starters
+4. etc
 
 ## common
 1. ApiCode、Response、Assert
@@ -12,15 +11,12 @@ my java develop kit, including
 3. Exception
 4. CryptUtils、ExcelUtils、HttpUtils、TreeUtils...
 
-## note
-study and working notes
-
 ## samples
 1. oauth2
 2. rabbitmq
 3. activiti
 
-## starter
+## starters
 1. ocr: ali
 2. oss: minio and ali
 3. captcha: image and tencent
