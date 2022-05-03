@@ -21,9 +21,9 @@ public class Node {
      */
     private String name;
     /**
-     * 节点类型
+     * 节点类型 {@link top.verytouch.vkit.samples.activity.modler.NodeType}
      */
-    private NodeType type;
+    private String type;
     /**
      * 处理人ID
      */

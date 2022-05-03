@@ -9,12 +9,24 @@ import lombok.Data;
 @Data
 public class SysFlow {
 
+    /**
+     * 主键ID
+     */
     private String id;
 
+    /**
+     * 流程名称
+     */
     private String name;
 
+    /**
+     * 流程设计数据json
+     */
     private String data;
 
+    /**
+     * 修改时间
+     */
     private java.util.Date updateTime;
 
 }

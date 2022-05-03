@@ -10,17 +10,45 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 public class TaskVO {
-
+    /**
+     * 任务ID
+     */
     private String id;
+    /**
+     * 任务KEY
+     */
     private String key;
+    /**
+     * 任务名称
+     */
     private String name;
+    /**
+     * 处理人
+     */
     private String assignee;
+    /**
+     * 创建时间
+     */
     private Date createTime;
+    /**
+     * 完成时间
+     */
     private Date endTime;
+    /**
+     * 备注
+     */
     private String remark;
-
+    /**
+     * 流程执行ID
+     */
     private String executionId;
+    /**
+     * 流程实例ID
+     */
     private String processInstanceId;
+    /**
+     * 流程定义ID
+     */
     private String processDefinitionId;
 
     public static TaskVO valueOf(Task task) {

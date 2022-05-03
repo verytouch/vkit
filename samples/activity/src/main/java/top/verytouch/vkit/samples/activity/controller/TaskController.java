@@ -31,6 +31,8 @@ public class TaskController {
 
     /**
      * 待办
+     *
+     * @param assignee 用户ID
      */
     @GetMapping("todo")
     public Response<List<TaskVO>> todo(@RequestParam(required = false) String assignee) {
@@ -49,6 +51,9 @@ public class TaskController {
 
     /**
      * 完成任务
+     *
+     * @param taskId    任务ID
+     * @param variables 流程变量
      */
     @PostMapping("{taskId}/complete")
     public Response<Void> complete(@PathVariable String taskId, @RequestBody Map<String, Object> variables) {
@@ -58,6 +63,8 @@ public class TaskController {
 
     /**
      * 驳回申请，直接终止流程
+     *
+     * @param taskId 任务ID
      */
     @PostMapping("{taskId}/reject")
     public Response<Void> reject(@PathVariable String taskId) {

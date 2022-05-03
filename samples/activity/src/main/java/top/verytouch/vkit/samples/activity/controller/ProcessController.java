@@ -53,6 +53,8 @@ public class ProcessController {
 
     /**
      * 获取流程设计
+     *
+     * @param processDefinitionKey 流程定义KEY
      */
     @GetMapping("getFlow")
     public Response<Flow> getFlow(@RequestParam String processDefinitionKey) {
@@ -81,6 +83,9 @@ public class ProcessController {
 
     /**
      * 启动流程
+     *
+     * @param processDefinitionKey 流程定义KEY
+     * @param variable             流程变量
      */
     @PostMapping("{processDefinitionKey}/start")
     public Response<String> start(@PathVariable String processDefinitionKey, @RequestBody Map<String, Object> variable) {
@@ -92,6 +97,8 @@ public class ProcessController {
 
     /**
      * 取消申请
+     *
+     * @param processInstanceId 流程实例ID
      */
     @PostMapping("{processInstanceId}/cancel")
     public Response<Void> stop(@PathVariable String processInstanceId) {
@@ -102,6 +109,8 @@ public class ProcessController {
 
     /**
      * 流程进度
+     *
+     * @param processInstanceId 流程实例ID
      */
     @GetMapping("{processInstanceId}/status")
     public Response<ProcessInstanceVO> status(@PathVariable String processInstanceId) {
@@ -140,6 +149,8 @@ public class ProcessController {
 
     /**
      * 流程图片
+     *
+     * @param processDefinitionId 流程定义ID
      */
     @GetMapping("img")
     public void history(@RequestParam String processDefinitionId, HttpServletResponse response) throws IOException {

@@ -15,11 +15,25 @@ import java.util.Map;
 @Accessors(chain = true)
 @SuppressWarnings("unused")
 public class Response<T> {
-
+    /**
+     * 状态码
+     */
     private int code;
+    /**
+     * 数据
+     */
     private T data;
+    /**
+     * 提示信息
+     */
     private String msg;
+    /**
+     * traceId
+     */
     private String traceId;
+    /**
+     * 扩展字段
+     */
     private Map<String, Object> extra;
 
     /**

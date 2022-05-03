@@ -55,10 +55,7 @@ public final class BpmnUtils {
     }
 
     public static FlowNode createFlowNode(Node node) {
-        NodeType type = node.getType();
-        if (type == null) {
-            throw new ActivitiException("node type can not be null: " + node.getId());
-        }
+        NodeType type = NodeType.valueOf(node.getType());
         return type.getNodeMapper().apply(node);
     }
 
