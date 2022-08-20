@@ -1,0 +1,47 @@
+* {
+    margin: 1em 0 0 0;
+    padding: 0;
+    text-align: left;
+}
+
+body {
+    margin-left: 1em;
+}
+
+table {
+    border-collapse: collapse;
+    display: inline-block;
+    min-width: 50%;
+    max-width: 80%;
+}
+
+table td, table th {
+    padding: 5px 8px;
+}
+
+pre {
+    display: inline-block;
+    min-width: 50%;
+    max-width: 80%;
+}
+
+code {
+    background: transparent !important;
+}
+
+blockquote {
+    background: transparent !important;
+    text-indent: 8px;
+}
+
+strong {
+    color: brown;
+}
+
+::-webkit-scrollbar-button {
+    width: 15px;
+}
+
+::-webkit-scrollbar {
+    background: transparent !important;
+}
