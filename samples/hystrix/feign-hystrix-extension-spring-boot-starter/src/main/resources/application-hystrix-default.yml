@@ -1,0 +1,40 @@
+# 配置类DefaultClientConfigImpl
+ribbon:
+  # 对所有操作请求都进行重试，默认false，只对Get重试
+  OkToRetryOnAllOperations: false
+  # 同实例重试次数，默认0
+  MaxAutoRetries: 0
+  # 可用实例重试次数，默认1
+  MaxAutoRetriesNextServer: 0
+
+# 开启断路器
+feign:
+  hystrix:
+    enabled: true
+
+# 断路器超时时间设置参考：(1 + MaxAutoRetries + MaxAutoRetriesNextServer) * ReadTimeout
+# 配置类HystrixCommandProperties
+# extension.requestAttributeStrategy=true和isolation.strategy=SEMAPHORE必须选择一个
+hystrix:
+  extension:
+    # 是否使用自定义并发策略传递RequestAttribute，设置为true可在线程隔离策略时传递RequestAttributes
+    requestAttributeStrategy: true
+  command:
+    # default全局有效，service-id指定应用有效
+    default:
+      execution:
+        timeout:
+          # 如果enabled设置为false，则请求超时交给ribbon控制
+          enabled: true
+        isolation:
+          # strategy: SEMAPHORE
+          thread:
+            # 超时时间，默认1000
+            timeoutInMilliseconds: 60000
+      circuitBreaker:
+        # 断路器请求量阈值，默认20
+        requestVolumeThreshold: 20
+        # 断路器错误百分比阈值，默认50
+        errorThresholdPercentage: 50
+        # 断路器打开持续时间，打开后拒绝所有请求，默认5000
+        sleepWindowInMilliseconds: 5000

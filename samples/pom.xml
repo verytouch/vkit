@@ -15,6 +15,7 @@
         <module>oauth2</module>
         <module>rabbitmq</module>
         <module>activity</module>
+        <module>hystrix</module>
     </modules>
 
     <dependencyManagement>

@@ -1,0 +1,20 @@
+### feign服务调用方
+GET http://localhost:8080/hello
+Accept: application/json
+
+### feign服务提供方，此方法随机睡眠0~5秒，模拟超时熔断
+GET http://localhost:8010/hello
+Accept: application/json
+
+### 仪表盘 -> http://localhost:8001/hystrix.stream
+GET http://localhost:8080/hystrix
+
+### 注解测试 failed=1时模拟异常熔断
+GET http://localhost:8080/annotation?failed=
+Accept: application/json
+
+### command测试 execute|queue|observe|toObserve
+GET http://localhost:8080/command/observe
+Accept: application/json
+
+###
