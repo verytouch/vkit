@@ -1,2 +1,0 @@
-gradle
-k8s
