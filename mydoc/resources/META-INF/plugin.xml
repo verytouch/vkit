@@ -1,0 +1,74 @@
+<idea-plugin>
+    <id>top.verytouch.vkit.mydoc.plugin.idea</id>
+    <name>MyDoc</name>
+    <version>2.1.0</version>
+    <vendor email="verytouch@qq.com" url="url">verytouch</vendor>
+
+    <description><![CDATA[
+      选中controller生成接口文档，支持markdown、html、word、postman、idea等格式<br>
+    ]]></description>
+
+    <change-notes><![CDATA[
+        <p>选中controller生成接口文档</p>
+        <p>支持markdown、html、word、postman、idea等格式</p>
+        <p>支持一些配置，如文档名称、是否必填、模板位置等</p>
+        <p>支持swagger注解或文档注释</p>
+    ]]>
+    </change-notes>
+
+    <!-- please see https://plugins.jetbrains.com/docs/intellij/build-number-ranges.html for description -->
+    <idea-version since-build="173.0"/>
+
+    <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.modules.java</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <notificationGroup id="MyDoc.Notification.Group" displayType="BALLOON"/>
+        <projectService serviceImplementation="top.verytouch.vkit.mydoc.config.ConfigStorage"/>
+        <projectConfigurable instance="top.verytouch.vkit.mydoc.config.ConfigAction"/>
+    </extensions>
+
+    <actions>
+        <group id="MyDoc.EditorPopup" class="top.verytouch.vkit.mydoc.action.group.EditorPopup" text="MyDoc" popup="true">
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+        </group>
+
+        <group id="MyDoc.ProjectPopup" class="top.verytouch.vkit.mydoc.action.group.ProjectPopup" text="MyDoc" popup="true">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="first" />
+        </group>
+
+        <action id="top.verytouch.vkit.mydoc.action.HtmlAction" class="top.verytouch.vkit.mydoc.action.HtmlAction" text="Build Html">
+            <add-to-group group-id="MyDoc.EditorPopup" anchor="first"/>
+            <add-to-group group-id="MyDoc.ProjectPopup" anchor="first"/>
+        </action>
+
+        <action id="top.verytouch.vkit.mydoc.action.MarkdownAction" class="top.verytouch.vkit.mydoc.action.MarkdownAction" text="Build Markdown">
+            <add-to-group group-id="MyDoc.EditorPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.HtmlAction"/>
+            <add-to-group group-id="MyDoc.ProjectPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.HtmlAction"/>
+        </action>
+
+        <action id="top.verytouch.vkit.mydoc.action.WordAction" class="top.verytouch.vkit.mydoc.action.WordAction" text="Build Word">
+            <add-to-group group-id="MyDoc.EditorPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.MarkdownAction"/>
+            <add-to-group group-id="MyDoc.ProjectPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.MarkdownAction"/>
+        </action>
+
+        <action id="top.verytouch.vkit.mydoc.action.JsonAction" class="top.verytouch.vkit.mydoc.action.JsonAction" text="Build Json">
+            <add-to-group group-id="MyDoc.EditorPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.WordAction"/>
+            <add-to-group group-id="MyDoc.ProjectPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.WordAction"/>
+        </action>
+
+        <action id="top.verytouch.vkit.mydoc.action.PostmanAction" class="top.verytouch.vkit.mydoc.action.PostmanAction" text="Build Postman Collection">
+            <add-to-group group-id="MyDoc.EditorPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.JsonAction"/>
+            <add-to-group group-id="MyDoc.ProjectPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.JsonAction"/>
+        </action>
+
+        <action id="top.verytouch.vkit.mydoc.action.IdeaHttpAction" class="top.verytouch.vkit.mydoc.action.IdeaHttpAction" text="Build Idea Http">
+            <add-to-group group-id="MyDoc.EditorPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.PostmanAction"/>
+            <add-to-group group-id="MyDoc.ProjectPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.PostmanAction"/>
+        </action>
+    </actions>
+
+</idea-plugin>
