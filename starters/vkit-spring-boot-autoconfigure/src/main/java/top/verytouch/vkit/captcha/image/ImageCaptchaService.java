@@ -10,6 +10,8 @@ import top.verytouch.vkit.common.exception.BusinessException;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.Map;
 import java.util.Random;
@@ -92,14 +94,14 @@ public class ImageCaptchaService implements CaptchaService {
         graphics.setColor(Color.WHITE);
         //填充背景
         graphics.fillRect(0, 0, properties.getWidth(), properties.getHeight());
-        graphics.setFont(new Font(properties.getFontName(), Font.BOLD, properties.getFontSize()));
+        graphics.setFont(new Font(properties.getFontName(), Font.PLAIN, properties.getFontSize()));
 
         // 画验证码，x为旋转原点的横坐标
         int x = 10;
         for (char c : code) {
             graphics.setColor(randomColor(random));
-            //设置字体旋转角度，小于30度
-            int degree = random.nextInt() % 30;
+            // 设置字体旋转角度
+            int degree = random.nextInt() % properties.getFontRotate();
             //正向旋转
             graphics.rotate(degree * Math.PI / 180, x, 45);
             graphics.drawString(String.valueOf(c), x, 45);
@@ -108,7 +110,7 @@ public class ImageCaptchaService implements CaptchaService {
             x += 48;
         }
         // 画干扰线
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < properties.getNoisyLines(); i++) {
             // 设置随机颜色
             graphics.setColor(randomColor(random));
             // 随机画线
@@ -118,7 +120,7 @@ public class ImageCaptchaService implements CaptchaService {
                     random.nextInt(properties.getHeight()));
         }
         // 添加噪点
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < properties.getNoisyPoints(); i++) {
             int x1 = random.nextInt(properties.getWidth());
             int y1 = random.nextInt(properties.getHeight());
             graphics.setColor(randomColor(random));
@@ -152,4 +154,12 @@ public class ImageCaptchaService implements CaptchaService {
         }
         return code;
     }
+
+
+    public static void main(String[] args) throws FileNotFoundException {
+        ImageCaptchaService captchaService = new ImageCaptchaService(null, new ImageCaptchaProperties());
+        FileOutputStream outputStream = new FileOutputStream("D:\\Temp\\1.png");
+        captchaService.draw(outputStream);
+    }
+
 }
