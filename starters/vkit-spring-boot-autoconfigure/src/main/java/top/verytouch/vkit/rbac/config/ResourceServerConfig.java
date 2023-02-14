@@ -47,7 +47,7 @@ public class ResourceServerConfig  extends ResourceServerConfigurerAdapter {
      * <li>ResourceServerConfigurerAdapter的order是3，{@link org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfiguration}</li>
      * <li>当匹配相同的url时，ResourceServerConfigurerAdapter的配置生效</li>
      *
-     * <i>{@link org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerSecurityConfiguration}优先级更高0</i>
+     * <li>{@link org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerSecurityConfiguration}优先级更高0</li>
      * </ol>
      */
     @Override
