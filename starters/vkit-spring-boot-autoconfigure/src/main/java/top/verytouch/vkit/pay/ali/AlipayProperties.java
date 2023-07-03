@@ -1,4 +1,4 @@
-package top.verytouch.vkit.alipay;
+package top.verytouch.vkit.pay.ali;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @author verytouch
  * @since 2021/4/30 10:32
  */
-@ConfigurationProperties("vkit.alipay")
+@ConfigurationProperties("vkit.pay.ali")
 @Data
 public class AlipayProperties {
 

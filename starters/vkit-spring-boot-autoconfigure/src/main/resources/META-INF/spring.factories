@@ -4,5 +4,6 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   top.verytouch.vkit.ocr.ali.AliOcrAutoConfiguration,\
   top.verytouch.vkit.oss.ali.AliOssAutoConfiguration,\
   top.verytouch.vkit.oss.minio.MinIoAutoConfiguration,\
-  top.verytouch.vkit.alipay.AlipayAutoConfiguration,\
-  top.verytouch.vkit.rbac.RbacAutoConfiguration
+  top.verytouch.vkit.pay.ali.AlipayAutoConfiguration,\
+  top.verytouch.vkit.rbac.RbacAutoConfiguration,\
+  top.verytouch.vkit.chat.ChatAutoConfiguration

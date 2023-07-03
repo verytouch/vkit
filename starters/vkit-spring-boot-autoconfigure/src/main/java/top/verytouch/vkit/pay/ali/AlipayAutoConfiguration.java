@@ -1,4 +1,4 @@
-package top.verytouch.vkit.alipay;
+package top.verytouch.vkit.pay.ali;
 
 import com.alipay.api.AlipayClient;
 import lombok.extern.slf4j.Slf4j;
