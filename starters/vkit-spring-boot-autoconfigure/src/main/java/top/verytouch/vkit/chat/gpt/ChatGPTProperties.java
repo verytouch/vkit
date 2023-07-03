@@ -33,4 +33,7 @@ public class ChatGPTProperties {
      */
     @NotEmpty(message = "apikey不能为空")
     private String apikey;
+
+    public static final String MODEL_TURBO = "gpt-3.5-turbo";
+    public static final String MODEL_DAVINCI3 = "text-davinci-003";
 }

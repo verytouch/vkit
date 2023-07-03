@@ -1,7 +1,6 @@
 package top.verytouch.vkit.chat.gpt.pojo;
 
 import lombok.Data;
-import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -9,7 +8,7 @@ import java.util.List;
  * completions-response
  *
  * @author verytouch
- * @since 2023/7/3 11:19
+ * @since 2023/7/3 19:30
  */
 @Data
 public class CompletionsResponse {
@@ -22,22 +21,7 @@ public class CompletionsResponse {
 
     private String model;
 
-    private List<Choice> choices;
+    private List<DavinciChoice> choices;
 
     private Usage usage;
-
-    /**
-     * get content from first choice.
-     * return null if failed
-     */
-    public String getFirstMessage() {
-        if (CollectionUtils.isEmpty(choices)) {
-            return null;
-        }
-        Message message = choices.get(0).getMessage();
-        if (message == null) {
-            return null;
-        }
-        return message.getContent();
-    }
 }
