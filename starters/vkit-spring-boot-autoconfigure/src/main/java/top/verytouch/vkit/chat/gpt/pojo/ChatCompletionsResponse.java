@@ -30,7 +30,7 @@ public class ChatCompletionsResponse {
      * get content from first choice.
      * return null if failed
      */
-    public String getFirstMessage() {
+    public String firstMessage() {
         if (CollectionUtils.isEmpty(choices)) {
             return null;
         }
