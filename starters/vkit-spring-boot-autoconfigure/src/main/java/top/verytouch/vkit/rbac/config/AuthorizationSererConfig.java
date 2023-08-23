@@ -24,6 +24,7 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.web.cors.CorsConfiguration;
 import top.verytouch.vkit.rbac.RbacProperties;
 import top.verytouch.vkit.rbac.oauth2.*;
 
@@ -98,7 +99,8 @@ public class AuthorizationSererConfig extends AuthorizationServerConfigurerAdapt
                 .authorizationCodeServices(new InMemoryAuthorizationCodeService(Duration.ofMinutes(3)))
                 .tokenEnhancer(tokenEnhancerChain())
                 .authorizationCodeServices(authorizationCodeServices)
-                .exceptionTranslator(e -> new ResponseEntity<>(new OauthException(e.getMessage()), HttpStatus.OK));
+                .exceptionTranslator(e -> new ResponseEntity<>(new OauthException(e.getMessage()), HttpStatus.OK))
+                .getFrameworkEndpointHandlerMapping().setCorsConfigurations(corsConfigurationMap());
     }
 
     @Bean
@@ -160,5 +162,16 @@ public class AuthorizationSererConfig extends AuthorizationServerConfigurerAdapt
                 rbacProperties
         ));
         return new CompositeTokenGranter(granters);
+    }
+
+    private Map<String, CorsConfiguration> corsConfigurationMap() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.addAllowedOrigin("*");
+        corsConfiguration.addAllowedHeader("*");
+        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.addAllowedMethod("*");
+        Map<String, CorsConfiguration> corsConfigurationMap = new HashMap<>();
+        corsConfigurationMap.put("/oauth/**", corsConfiguration);
+        return corsConfigurationMap;
     }
 }
