@@ -3,12 +3,12 @@ package top.verytouch.vkit.common.util;
 import lombok.Data;
 import org.apache.commons.io.IOUtils;
 import top.verytouch.vkit.common.base.Assert;
+import top.verytouch.vkit.common.exception.AssertException;
 import top.verytouch.vkit.common.exception.BusinessException;
 
-import java.io.ByteArrayInputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.Proxy;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
@@ -17,6 +17,7 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -42,6 +43,7 @@ public class HttpUtils {
     private boolean followRedirects = false;
     private boolean useCaches = false;
     private boolean encodeParam = true;
+    private Proxy proxy;
 
     public HttpUtils(String url) {
         Assert.nonNull(url, "url cannot be null or empty");
@@ -108,7 +110,7 @@ public class HttpUtils {
         try {
             return request();
         } catch (Exception e) {
-           throw new BusinessException("Http请求失败：" + e.getMessage());
+            throw new BusinessException("Http请求失败：" + e.getMessage());
         }
     }
 
@@ -116,40 +118,75 @@ public class HttpUtils {
      * 执行请求
      */
     public HttpResponse request() throws Exception {
-        if (params != null && params.size() > 0) {
-            url += "?" + params.entrySet().stream().
-                    map(entry -> entry.getKey() + "=" + entry.getValue())
-                    .collect(Collectors.joining("&"));
-        }
         HttpURLConnection connection = null;
         try {
-            connection = (HttpURLConnection) new URL(url).openConnection();
-            connection.setDoInput(true);
-            connection.setDoOutput(body != null);
-            connection.setUseCaches(useCaches);
-            connection.setInstanceFollowRedirects(followRedirects);
-            connection.setConnectTimeout(connectTimeout);
-            connection.setReadTimeout(readTimeout);
-            connection.setRequestMethod(method);
-            if (headers != null && headers.size() > 0) {
-                for (Map.Entry<String, String> headerEntry : headers.entrySet()) {
-                    connection.setRequestProperty(headerEntry.getKey(), headerEntry.getValue());
-                }
-            }
-            connection.connect();
-            if (body != null) {
-                try (OutputStream out = connection.getOutputStream()) {
-                    IOUtils.copy(new ByteArrayInputStream(body), out);
-                }
-            }
-            Assert.require(connection.getResponseCode() == 200, String.format("request failed: code=%s, message=%s",
-                    connection.getResponseCode(), connection.getResponseMessage()));
+            connection = getConnection(null);
             return new HttpResponse(IOUtils.toByteArray(connection.getInputStream()), connection.getHeaderFields());
         } finally {
             if (connection != null) {
                 connection.disconnect();
             }
         }
+    }
+
+    /**
+     * 执行SSE请求
+     */
+    public void sseRequest(Consumer<String> consumer) throws Exception {
+        HttpURLConnection connection = null;
+        BufferedReader reader = null;
+        try {
+            connection = getConnection(con -> con.setRequestProperty("Accept", "text/event-stream"));
+            reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                consumer.accept(line);
+            }
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+            if (reader != null) {
+                reader.close();
+            }
+        }
+    }
+
+    private HttpURLConnection getConnection(Consumer<HttpURLConnection> beforeConnect) throws Exception {
+        if (params != null && !params.isEmpty()) {
+            url += "?" + params.entrySet().stream().
+                    map(entry -> entry.getKey() + "=" + entry.getValue())
+                    .collect(Collectors.joining("&"));
+        }
+        URL u = new URL(url);
+        HttpURLConnection connection = (HttpURLConnection) (this.proxy != null ? u.openConnection(this.proxy) : u.openConnection());
+        connection.setDoInput(true);
+        connection.setDoOutput(body != null);
+        connection.setUseCaches(useCaches);
+        connection.setInstanceFollowRedirects(followRedirects);
+        connection.setConnectTimeout(connectTimeout);
+        connection.setReadTimeout(readTimeout);
+        connection.setRequestMethod(method);
+        if (headers != null && !headers.isEmpty()) {
+            for (Map.Entry<String, String> headerEntry : headers.entrySet()) {
+                connection.setRequestProperty(headerEntry.getKey(), headerEntry.getValue());
+            }
+        }
+        if (beforeConnect != null) {
+            beforeConnect.accept(connection);
+        }
+        if (body != null) {
+            try (OutputStream out = connection.getOutputStream()) {
+                IOUtils.copy(new ByteArrayInputStream(body), out);
+            }
+        }
+        connection.connect();
+        if (connection.getResponseCode() != 200) {
+            String message = String.format("request failed: code=%s, message=%s", connection.getResponseCode(), connection.getResponseMessage());
+            connection.disconnect();
+            throw new AssertException(message);
+        }
+        return connection;
     }
 
     public String get() {
@@ -160,8 +197,11 @@ public class HttpUtils {
         return method("POST").caughtRequest().getString();
     }
 
+    /**
+     * 设置请求方法
+     */
     public HttpUtils method(String method) {
-        this.method = method;
+        this.method = method.toUpperCase();
         return this;
     }
 
@@ -261,6 +301,14 @@ public class HttpUtils {
      */
     public HttpUtils followRedirects(boolean followRedirects) {
         this.followRedirects = followRedirects;
+        return this;
+    }
+
+    /**
+     * 设置代理
+     */
+    public HttpUtils proxy(Proxy proxy) {
+        this.proxy = proxy;
         return this;
     }
 

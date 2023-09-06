@@ -1,5 +1,7 @@
 package top.verytouch.vkit.chat;
 
+import com.knuddels.jtokkit.api.EncodingRegistry;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +19,7 @@ import top.verytouch.vkit.chat.gpt.ChatGPTProperties;
 @Configuration
 @EnableConfigurationProperties(ChatGPTProperties.class)
 @ConditionalOnProperty(prefix = "vkit.chat.gpt", name = "enabled", havingValue = "true")
+@ConditionalOnClass(EncodingRegistry.class)
 public class ChatAutoConfiguration {
 
     @Bean

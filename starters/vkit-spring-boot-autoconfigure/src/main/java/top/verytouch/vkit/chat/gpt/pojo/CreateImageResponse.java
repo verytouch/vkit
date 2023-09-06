@@ -18,6 +18,8 @@ public class CreateImageResponse {
 
     private List<Data> data;
 
+    private Usage usage;
+
 
     @lombok.Data
     public static class Data {

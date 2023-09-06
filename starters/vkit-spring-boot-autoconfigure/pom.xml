@@ -78,5 +78,10 @@
             <artifactId>spring-boot-starter-web</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>com.knuddels</groupId>
+            <artifactId>jtokkit</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 </project>
