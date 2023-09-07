@@ -12,9 +12,11 @@ import top.verytouch.vkit.common.util.StringUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -59,14 +61,35 @@ public class ChatGPTService {
      * 聊天 gpt-3.5-turbo sse方式
      *
      * @param messages 如果需要上下文，需要把之前的会话信息放入messages数组
+     * @param consumer 每次返回的数据
+     * @param finisher ChunkResponse为所有请求拼接好的，usage依照拼接好的算
      */
-    public void chatCompletions(List<Message> messages, Consumer<String> consumer) {
+    public void chatCompletions(List<Message> messages, Consumer<String> consumer, BiConsumer<ChunkResponse, Usage> finisher) {
         Map<String, Object> body = MapUtils.Builder.hashMap(String.class, Object.class)
                 .put("model", ChatGPTProperties.MODEL_TURBO)
                 .put("messages", messages)
                 .put("stream", true)
                 .build();
-        post(JsonUtils.toJson(body), ChatGPTApiEnum.CHAT_COMPLETIONS, consumer);
+        Consumer<List<String>> myFinisher = list -> {
+            ChunkResponse response = list.stream().map(this::parseChunk)
+                    .filter(Objects::nonNull)
+                    .reduce(ChunkResponse::mergeMessage)
+                    .orElse(null);
+            int promptTokens = messages.stream()
+                    .map(Message::getContent)
+                    .map(this::tokens)
+                    .reduce(0, Math::addExact);
+            int completionTokens = 0;
+            try {
+                completionTokens = response == null ? 0 : this.tokens(response.getChoices().get(0).getDelta().getContent());
+            } catch (Exception e) {
+                log.error("计算completionTokens异常", e);
+            }
+            Usage usage = Usage.of(promptTokens, completionTokens);
+            finisher.accept(response, usage);
+            log.info("chat-gpt-chunk组装后的数据 = {}, usage = {}", response, usage);
+        };
+        post(JsonUtils.toJson(body), ChatGPTApiEnum.CHAT_COMPLETIONS, consumer, myFinisher);
     }
 
     /**
@@ -109,16 +132,7 @@ public class ChatGPTService {
         if (!json.startsWith("{") && !json.endsWith("}")) {
             return null;
         }
-        ChunkResponse chunkResponse = JsonUtils.fromJson(json, ChunkResponse.class);
-        Integer token = chunkResponse.getChoices().stream()
-                .filter(Objects::nonNull)
-                .map(ChunkChoice::getDelta)
-                .filter(Objects::nonNull)
-                .map(Message::getContent)
-                .map(this::tokens)
-                .reduce(0, Math::addExact);
-        chunkResponse.setUsage(Usage.of(0, token));
-        return chunkResponse;
+        return JsonUtils.fromJson(json, ChunkResponse.class);
     }
 
     public String post(String body, ChatGPTApiEnum apiEnum) {
@@ -133,14 +147,19 @@ public class ChatGPTService {
         return responseString;
     }
 
-    public void post(String body, ChatGPTApiEnum apiEnum, Consumer<String> consumer) {
+    public void post(String body, ChatGPTApiEnum apiEnum, Consumer<String> consumer, Consumer<List<String>> finisher) {
+        List<String> msgList = new LinkedList<>();
         try {
             prepare(body, apiEnum).sseRequest(msg -> {
-                log.info("请求chat-gpt-stream返回, api={}, chunk={}", apiEnum.getPath(), msg);
+                log.debug("请求chat-gpt-chunk返回, api={}, chunk={}", apiEnum.getPath(), msg);
                 consumer.accept(msg);
+                msgList.add(msg);
             });
         } catch (Exception e) {
             throw new RuntimeException(e);
+        } finally {
+            log.info("请求chat-gpt-chunk完成, api={}", apiEnum.getPath());
+            finisher.accept(msgList);
         }
     }
 

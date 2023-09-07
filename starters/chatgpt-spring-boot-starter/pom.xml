@@ -9,9 +9,13 @@
         <version>2.2.4</version>
     </parent>
 
-    <artifactId>chatgpt-springboot-starter</artifactId>
+    <artifactId>chatgpt-spring-boot-starter</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>top.verytouch.vkit</groupId>
+            <artifactId>vkit-spring-boot-autoconfigure</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.knuddels</groupId>
             <artifactId>jtokkit</artifactId>

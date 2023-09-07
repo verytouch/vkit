@@ -1,5 +1,6 @@
 package top.verytouch.vkit.rbac;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -42,10 +43,15 @@ import java.time.Duration;
 @ConditionalOnClass({WebSecurityConfigurerAdapter.class, AuthorizationServerConfigurerAdapter.class, ResourceServerConfigurerAdapter.class})
 @ConditionalOnProperty(prefix = "vkit.rbac", name = "enabled", havingValue = "true", matchIfMissing = true)
 @Import({WebSecurityConfig.class, AuthorizationSererConfig.class, ResourceServerConfig.class})
+@Slf4j
 public class RbacAutoConfiguration implements ApplicationContextAware {
 
     @Autowired
     private RbacProperties rbacProperties;
+
+    public RbacAutoConfiguration() {
+        log.info("已启用rbac自动配置");
+    }
 
     @Override
     public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {

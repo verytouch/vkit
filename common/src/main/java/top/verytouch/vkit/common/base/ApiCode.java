@@ -24,6 +24,7 @@ public enum ApiCode {
     SYS_UPGRADE(10301, "接口维护"),
     SYS_ABANDON(10302, "接口停用"),
     SYS_NO_HANDLER(10303, "接口不存在"),
+    SYS_TOME_OUT(10401, "请求超时"),
     PARAM_ABSENT(20001, "缺少参数"),
     PARAM_ERROR(20002, "参数错误");
 

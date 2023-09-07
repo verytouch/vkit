@@ -21,7 +21,7 @@ public class AlipayAutoConfiguration {
 
     @Bean
     public AlipayService alipayService(AlipayProperties alipayProperties) {
-        log.info("已启用支付宝自动配置");
+        log.info("已启用Alipay自动配置");
         return new AlipayService(alipayProperties);
     }
 }

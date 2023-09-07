@@ -20,7 +20,7 @@ public class Usage {
     public static Usage of(long prompt, long completion) {
         Usage usage = new Usage();
         usage.setPrompt_tokens(prompt);
-        usage.setCompletion_tokens(prompt);
+        usage.setCompletion_tokens(completion);
         usage.setTotal_tokens(prompt + completion);
         return usage;
     }

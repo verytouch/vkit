@@ -7,6 +7,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import top.verytouch.vkit.common.base.ApiCode;
 import top.verytouch.vkit.common.base.Response;
@@ -72,6 +73,14 @@ public class RestControllerAdvice {
     @ExceptionHandler(NoHandlerFoundException.class)
     public Response<String> noHandlerFoundException() {
         return error(ApiCode.SYS_NO_HANDLER);
+    }
+
+    /**
+     * 异步请求超时异常
+     */
+    @ExceptionHandler(AsyncRequestTimeoutException.class)
+    public void asyncRequestTimeout(AsyncRequestTimeoutException e) {
+        log.error("异步请求超时异常", e);
     }
 
     /**
