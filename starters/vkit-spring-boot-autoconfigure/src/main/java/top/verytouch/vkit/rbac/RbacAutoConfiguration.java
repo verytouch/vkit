@@ -2,7 +2,6 @@ package top.verytouch.vkit.rbac;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -28,6 +27,7 @@ import top.verytouch.vkit.rbac.util.ApplicationContextUtils;
 import top.verytouch.vkit.rbac.web.RestControllerAdvice;
 
 import java.time.Duration;
+import java.util.Optional;
 
 /**
  * rbac自动配置
@@ -46,9 +46,6 @@ import java.time.Duration;
 @Slf4j
 public class RbacAutoConfiguration implements ApplicationContextAware {
 
-    @Autowired
-    private RbacProperties rbacProperties;
-
     public RbacAutoConfiguration() {
         log.info("已启用rbac自动配置");
     }
@@ -60,14 +57,15 @@ public class RbacAutoConfiguration implements ApplicationContextAware {
 
     @Bean
     @ConditionalOnMissingBean(ParameterPasswordEncoder.class)
-    public ParameterPasswordEncoder parameterPasswordEncoder() {
+    public ParameterPasswordEncoder parameterPasswordEncoder(RbacProperties rbacProperties) {
         return new AesPasswordEncoder(rbacProperties.getParameterAesKey(), null);
     }
 
     @Bean
     @ConditionalOnMissingBean(AuthorizationCodeServices.class)
-    public AuthorizationCodeServices authorizationCodeServices() {
-        return new InMemoryAuthorizationCodeService(Duration.ofSeconds(3));
+    public AuthorizationCodeServices authorizationCodeServices(RbacProperties rbacProperties) {
+        Duration duration = Optional.ofNullable(rbacProperties.getAuthorizationCodeDuration()).orElse(Duration.ofMinutes(5));
+        return new InMemoryAuthorizationCodeService(duration);
     }
 
     @Bean

@@ -11,12 +11,13 @@ import lombok.Getter;
  * @author verytouch
  * @since 2020/9/17 16:30
  */
+@Getter
 public enum ApiCode {
 
     OK(200, "请求成功"),
     ERROR(500, "请求失败"),
-    SYS_UNAUTHENTICATED(10001, "请登录"),
-    SYS_FORBIDDEN(10002, "权限不足"),
+    SYS_UNAUTHENTICATED(10001, "登录态不存在或已失效"),
+    SYS_FORBIDDEN(10002, "抱歉，您暂无权限访问"),
     SYS_LIMIT_ACCOUNT(10101, "账号请求超过限制"),
     SYS_LIMIT_IP(10102, "IP请求超过限制"),
     SYS_DISABLE_ACCOUNT(10201, "账号被禁用"),
@@ -28,9 +29,7 @@ public enum ApiCode {
     PARAM_ABSENT(20001, "缺少参数"),
     PARAM_ERROR(20002, "参数错误");
 
-    @Getter
     private final int code;
-    @Getter
     private final String desc;
 
     ApiCode(int code, String desc) {

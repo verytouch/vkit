@@ -15,4 +15,8 @@ public class OauthException extends OAuth2Exception {
     public OauthException(String msg) {
         super(msg);
     }
+
+    public OauthException(String msg, Throwable e) {
+        super(msg, e);
+    }
 }

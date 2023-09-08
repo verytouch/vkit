@@ -5,6 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotEmpty;
+import java.time.Duration;
 import java.util.Map;
 
 /**
@@ -46,9 +47,24 @@ public class RbacProperties {
     private String passwordParameter = "password";
 
     /**
+     * 账号错误的提示信息
+     */
+    private final String invalidAccountMsg = "账号不存在或密码错误";
+
+    /**
+     * 密码错误的提示信息
+     */
+    private final String invalidPasswordMsg = "账号不存在或密码错误";
+
+    /**
      * 资源服务器ID
      */
     private String resourceId;
+
+    /**
+     * 授权码存活时间
+     */
+    private Duration authorizationCodeDuration = Duration.ofMinutes(5);
 
     /**
      * 认证时是否校验验证码，仅authorization_type=captcha时生效
@@ -69,5 +85,10 @@ public class RbacProperties {
      * 注入默认的异常处理器
      */
     private boolean exceptionHandlerEnabled = true;
+
+    /**
+     * 是否提供openid授权
+     */
+    private boolean openidTokenGranterEnabled = false;
 
 }

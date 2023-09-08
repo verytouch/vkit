@@ -1,15 +1,15 @@
 package top.verytouch.vkit.rbac.oauth2;
 
-import top.verytouch.vkit.captcha.CaptchaContext;
-import top.verytouch.vkit.rbac.RbacProperties;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
 import org.springframework.security.oauth2.provider.*;
 import org.springframework.security.oauth2.provider.token.AbstractTokenGranter;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
+import top.verytouch.vkit.captcha.CaptchaContext;
+import top.verytouch.vkit.common.exception.BusinessException;
+import top.verytouch.vkit.common.util.StringUtils;
+import top.verytouch.vkit.rbac.RbacProperties;
 
 import java.util.Map;
 
@@ -23,9 +23,7 @@ public class CaptchaTokenGranter extends AbstractTokenGranter {
 
     private static final String GRANT_TYPE = "captcha";
 
-    private final UserDetailsService userDetailsService;
-
-    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
 
     private final ParameterPasswordEncoder parameterPasswordEncoder;
 
@@ -35,13 +33,11 @@ public class CaptchaTokenGranter extends AbstractTokenGranter {
             AuthorizationServerTokenServices tokenServices,
             ClientDetailsService clientDetailsService,
             OAuth2RequestFactory requestFactory,
-            UserDetailsService userDetailService,
-            PasswordEncoder passwordEncoder,
+            AuthenticationManager authenticationManager,
             ParameterPasswordEncoder parameterPasswordEncoder,
             RbacProperties rbacProperties) {
         super(tokenServices, clientDetailsService, requestFactory, GRANT_TYPE);
-        this.userDetailsService = userDetailService;
-        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
         this.parameterPasswordEncoder = parameterPasswordEncoder;
         this.rbacProperties = rbacProperties;
     }
@@ -51,29 +47,46 @@ public class CaptchaTokenGranter extends AbstractTokenGranter {
     protected OAuth2Authentication getOAuth2Authentication(ClientDetails client, TokenRequest tokenRequest) {
         Map<String, String> parameters = tokenRequest.getRequestParameters();
         // 比对验证码
-        verifyCode(parameters);
-        // 比对用户名密码
-        UserDetails userDetails = verifyUserNameAndPassword(parameters);
-        // 认证成功
-        Authentication auth = new UsernamePasswordAuthenticationToken(userDetails.getUsername()
-                , userDetails, userDetails.getAuthorities());
-        OAuth2Authentication authentication = new OAuth2Authentication(tokenRequest.createOAuth2Request(client), auth);
-        authentication.setDetails(userDetails);
-        return authentication;
-    }
-
-    private UserDetails verifyUserNameAndPassword(Map<String, String> parameters) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(parameters.get(rbacProperties.getUsernameParameter()));
-        String password = parameterPasswordEncoder.decode(parameters.get(rbacProperties.getPasswordParameter()));
-        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
-            throw new OauthException("密码错误");
-        }
-        return userDetails;
-    }
-
-    private void verifyCode(Map<String, String> parameters) {
         if (rbacProperties.isCaptchaEnabled()) {
             CaptchaContext.verify(parameters);
         }
+        // 交给AuthenticationManager认证
+        String username = getUsername(parameters);
+        String password = getDecodedPassword(parameters);
+        Authentication userAuth = new UsernamePasswordAuthenticationToken(username, password);
+        ((AbstractAuthenticationToken) userAuth).setDetails(parameters);
+        try {
+            userAuth = authenticationManager.authenticate(userAuth);
+        } catch (AccountStatusException | BadCredentialsException e) {
+            throw new OauthException(e.getMessage());
+        }
+        if (userAuth != null && userAuth.isAuthenticated()) {
+            OAuth2Request storedOAuth2Request = this.getRequestFactory().createOAuth2Request(client, tokenRequest);
+            return new OAuth2Authentication(storedOAuth2Request, userAuth);
+        } else {
+            throw new InvalidGrantException("Could not authenticate user: " + username);
+        }
     }
+
+    private String getUsername(Map<String, String> parameters) {
+        String inputUsername = parameters.get(rbacProperties.getUsernameParameter());
+        if (StringUtils.isBlank(inputUsername)) {
+            throw new OauthException(rbacProperties.getInvalidAccountMsg());
+        }
+        return inputUsername;
+    }
+
+    private String getDecodedPassword(Map<String, String> parameters) {
+        String inputPassword = parameters.get(rbacProperties.getPasswordParameter());
+        if (StringUtils.isBlank(inputPassword)) {
+            throw new OauthException(rbacProperties.getInvalidPasswordMsg());
+        }
+        try {
+            return parameterPasswordEncoder.decode(inputPassword);
+        } catch (BusinessException e) {
+            throw new OauthException(rbacProperties.getInvalidPasswordMsg(), e);
+        }
+
+    }
+
 }

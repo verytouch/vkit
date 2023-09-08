@@ -74,6 +74,9 @@ public class ResourceServerConfig  extends ResourceServerConfigurerAdapter {
             Set<Map.Entry<String, String[]>> entries = rbacProperties.getPathAnyAuthorityMapping().entrySet();
             entries.forEach(entry -> registry.antMatchers(entry.getKey()).hasAnyAuthority(entry.getValue()));
         }
+        if (rbacProperties.isOpenidTokenGranterEnabled()) {
+            registry.antMatchers("/login/openid/*").permitAll();
+        }
         // 方法级别的权限控制可以使用{@link org.springframework.security.access.prepost.PreAuthorize}等注解
         // 其他接口需要通过认证
         registry.anyRequest().authenticated();

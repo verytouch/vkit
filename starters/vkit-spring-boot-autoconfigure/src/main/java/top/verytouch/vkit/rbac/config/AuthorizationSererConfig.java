@@ -1,6 +1,7 @@
 package top.verytouch.vkit.rbac.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -9,7 +10,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -27,6 +27,10 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.web.cors.CorsConfiguration;
 import top.verytouch.vkit.rbac.RbacProperties;
 import top.verytouch.vkit.rbac.oauth2.*;
+import top.verytouch.vkit.rbac.openid.OpenIdService;
+import top.verytouch.vkit.rbac.openid.OpenIdTokenEndpoint;
+import top.verytouch.vkit.rbac.openid.OpenIdTokenGranter;
+import top.verytouch.vkit.rbac.util.ApplicationContextUtils;
 
 import java.time.Duration;
 import java.util.*;
@@ -39,7 +43,6 @@ import java.util.*;
  */
 @Configuration
 @EnableAuthorizationServer
-
 public class AuthorizationSererConfig extends AuthorizationServerConfigurerAdapter {
 
     @Autowired
@@ -52,9 +55,6 @@ public class AuthorizationSererConfig extends AuthorizationServerConfigurerAdapt
 
     @Autowired
     private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Autowired
     @SuppressWarnings("all")
@@ -103,6 +103,7 @@ public class AuthorizationSererConfig extends AuthorizationServerConfigurerAdapt
                 .getFrameworkEndpointHandlerMapping().setCorsConfigurations(corsConfigurationMap());
     }
 
+
     @Bean
     public TokenStore tokenStore() {
         return new JwtTokenStore(jwtAccessTokenConverter());
@@ -125,11 +126,11 @@ public class AuthorizationSererConfig extends AuthorizationServerConfigurerAdapt
             if (authentication.getDetails() instanceof UserDetails) {
                 details = (UserDetails) authentication.getDetails();
             } else {
-                Authentication userAuthentication = authentication.getUserAuthentication();
-                if (userAuthentication instanceof UserDetails) {
+                Authentication userAuth = authentication.getUserAuthentication();
+                if (userAuth instanceof UserDetails) {
                     details = (UserDetails) authentication.getDetails();
                 } else {
-                    Object principal = userAuthentication.getPrincipal();
+                    Object principal = userAuth.getPrincipal();
                     if (principal instanceof UserDetails) {
                         details = (UserDetails) principal;
                     }
@@ -144,6 +145,12 @@ public class AuthorizationSererConfig extends AuthorizationServerConfigurerAdapt
         };
     }
 
+    @Bean
+    @ConditionalOnProperty(prefix = "vkit.rbac", name = "openid-token-granter-enabled", havingValue = "true")
+    public OpenIdTokenEndpoint openIdTokenEndpoint(OpenIdService openIdService) {
+        return new OpenIdTokenEndpoint(openIdService);
+    }
+
     private TokenEnhancerChain tokenEnhancerChain() {
         TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
         tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), jwtAccessTokenConverter()));
@@ -152,15 +159,25 @@ public class AuthorizationSererConfig extends AuthorizationServerConfigurerAdapt
 
     private TokenGranter tokenGranter(final AuthorizationServerEndpointsConfigurer endpoints) {
         List<TokenGranter> granters = new ArrayList<>(Collections.singletonList(endpoints.getTokenGranter()));
+        // 用户名 + 密码 + 验证码
         granters.add(new CaptchaTokenGranter(
                 endpoints.getTokenServices(),
                 endpoints.getClientDetailsService(),
                 endpoints.getOAuth2RequestFactory(),
-                userDetailsService,
-                passwordEncoder,
+                authenticationManager,
                 parameterPasswordEncoder,
                 rbacProperties
         ));
+        // openid授权 + secretId查询授权
+        if (rbacProperties.isOpenidTokenGranterEnabled()) {
+            granters.add(new OpenIdTokenGranter(
+                    endpoints.getTokenServices(),
+                    endpoints.getClientDetailsService(),
+                    endpoints.getOAuth2RequestFactory(),
+                    ApplicationContextUtils.getBean(OpenIdService.class),
+                    rbacProperties
+            ));
+        }
         return new CompositeTokenGranter(granters);
     }
 

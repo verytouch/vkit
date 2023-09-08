@@ -63,6 +63,22 @@ public class Oauth2Utils {
     }
 
     /**
+     * 获取jwt中自定义的信息
+     */
+    public static Object get(String key) {
+        String claims = JwtHelper.decode(getAccessToken()).getClaims();
+        return getJwtClaims().get(key);
+    }
+
+    /**
+     * 获取jwt中自定义的信息
+     */
+    public static <T> Object getOrDefault(String key, T defaultVal) {
+        String claims = JwtHelper.decode(getAccessToken()).getClaims();
+        return getJwtClaims().getOrDefault(key, defaultVal);
+    }
+
+    /**
      * 获取token过期时间戳
      */
     public static long getJwtExpireAt() {
