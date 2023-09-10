@@ -33,19 +33,29 @@ public class OpenIdTokenGranter extends AbstractTokenGranter {
 
     @Override
     protected OAuth2Authentication getOAuth2Authentication(ClientDetails client, TokenRequest tokenRequest) {
-        String secret = tokenRequest.getRequestParameters().get(rbacProperties.getUsernameParameter());
-        if (StringUtils.isBlank(secret)) {
-            throw new OauthException("secret can not be null");
+        String codeName = rbacProperties.getUsernameParameter();
+        String secretName = rbacProperties.getPasswordParameter();
+        String code = tokenRequest.getRequestParameters().get(codeName);
+        // code为空时，通过secret换取
+        if (StringUtils.isBlank(code)) {
+            String secret = tokenRequest.getRequestParameters().get(secretName);
+            if (StringUtils.isBlank(secret)) {
+                throw new OauthException(codeName + " and " + secretName + " can not be null both");
+            }
+            code = openIdService.getCode(secret);
+            if (StringUtils.isBlank(code)) {
+                throw new OauthException("invalid " + secretName);
+            }
         }
-        String openid = openIdService.get(secret);
+        String openid = openIdService.getOpenid(code);
         if (StringUtils.isBlank(openid)) {
-            throw new OauthException("secret unauthorized");
+            throw new OauthException("invalid " + codeName);
         }
         UserDetails userDetails = openIdService.loadUserByOpenId(openid);
         if (userDetails == null) {
             throw new OauthException("not bind any account");
         }
-        OpenIdAuthenticationToken userAuth = new OpenIdAuthenticationToken(openid, secret, userDetails.getAuthorities());
+        OpenIdAuthenticationToken userAuth = new OpenIdAuthenticationToken(openid, userDetails.getAuthorities());
         OAuth2Authentication authentication = new OAuth2Authentication(tokenRequest.createOAuth2Request(client), userAuth);
         authentication.setAuthenticated(true);
         authentication.setDetails(userDetails);

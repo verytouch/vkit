@@ -10,11 +10,33 @@ import org.springframework.security.core.userdetails.UserDetails;
  */
 public interface OpenIdService {
 
+    /**
+     * 根据openid查询用户
+     */
     UserDetails loadUserByOpenId(String openid);
 
-    Object preAuthorize(String secret, Object platform);
+    /**
+     * 用来生成第三方认证方式，如微信二维码、github登录页等
+     */
+    String authorize(String secret);
 
-    void store(String secret, String openid);
+    /**
+     * 用code换取openid
+     */
+    String getOpenid(String code);
 
-    String get(String secret);
+    /**
+     * 用于secret换取code，小程序自己登录用不上
+     */
+    default void storeCode(String secret, String code) {
+
+    }
+
+    /**
+     * 用于secret换取code，小程序自己登录用不上
+     */
+    default String getCode(String secret) {
+        return null;
+    }
+
 }

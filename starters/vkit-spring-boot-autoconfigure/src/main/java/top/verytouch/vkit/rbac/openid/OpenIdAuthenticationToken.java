@@ -15,17 +15,15 @@ import java.util.Collection;
 public class OpenIdAuthenticationToken extends AbstractAuthenticationToken {
 
     private final String openId;
-    private final String secretId;
 
-    public OpenIdAuthenticationToken(String openId, String secretId, Collection<? extends GrantedAuthority> authorities) {
+    public OpenIdAuthenticationToken(String openId, Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         this.openId = openId;
-        this.secretId = secretId;
     }
 
     @Override
     public Object getCredentials() {
-        return secretId;
+        return "";
     }
 
     @Override
