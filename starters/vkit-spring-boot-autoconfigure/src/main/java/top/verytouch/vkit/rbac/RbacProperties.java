@@ -87,6 +87,11 @@ public class RbacProperties {
     private boolean exceptionHandlerEnabled = true;
 
     /**
+     * 注入默认的接口日志打印
+     */
+    private boolean requestLogEnabled = true;
+
+    /**
      * 是否提供openid授权
      */
     private boolean openidTokenGranterEnabled = false;

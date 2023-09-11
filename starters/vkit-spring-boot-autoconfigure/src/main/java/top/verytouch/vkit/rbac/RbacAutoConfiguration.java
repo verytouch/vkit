@@ -1,6 +1,7 @@
 package top.verytouch.vkit.rbac;
 
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -24,6 +25,7 @@ import top.verytouch.vkit.rbac.config.ResourceServerConfig;
 import top.verytouch.vkit.rbac.config.WebSecurityConfig;
 import top.verytouch.vkit.rbac.oauth2.*;
 import top.verytouch.vkit.rbac.util.ApplicationContextUtils;
+import top.verytouch.vkit.rbac.web.RestControllerLogger;
 import top.verytouch.vkit.rbac.web.RestControllerAdvice;
 
 import java.time.Duration;
@@ -81,6 +83,13 @@ public class RbacAutoConfiguration implements ApplicationContextAware {
     @ConditionalOnProperty(prefix = "vkit.rbac", name = "exceptionHandlerEnabled", havingValue = "true", matchIfMissing = true)
     public RestControllerAdvice restControllerAdvice() {
         return new RestControllerAdvice();
+    }
+
+    @Bean
+    @ConditionalOnClass(Aspect.class)
+    @ConditionalOnProperty(prefix = "vkit.rbac", name = "requestLogEnabled", havingValue = "true", matchIfMissing = true)
+    public RestControllerLogger restControllerLogger() {
+        return new RestControllerLogger();
     }
 
     @Bean
