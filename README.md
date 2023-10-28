@@ -23,7 +23,7 @@ mvn clean package
 java -jar ${samples-name}.${latest.verison}.jar
 ```
 * activity: samples of activity
-* hystrix: samples of activity
+* hystrix: samples of hystrix
 * oauth2: samples of oauth2
 * rabbitmq: samples of rabbitmq
 
