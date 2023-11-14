@@ -1,17 +1,20 @@
 package top.verytouch.vkit.mydoc.builder;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import top.verytouch.vkit.mydoc.constant.DocType;
 import top.verytouch.vkit.mydoc.model.ApiField;
 import top.verytouch.vkit.mydoc.model.ApiGroup;
 import top.verytouch.vkit.mydoc.model.ApiOperation;
 import top.verytouch.vkit.mydoc.util.ApiUtil;
 import top.verytouch.vkit.mydoc.util.JsonUtil;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -31,7 +34,7 @@ public class PostmanBuilder extends OutputStreamDocBuilder {
     }
 
     @Override
-    protected OutputStream buildDoc(String path) throws Exception {
+    protected OutputStream buildOutputStream() throws IOException {
         initHeaders();
         List<Map<String, Object>> groupList = JsonUtil.newArray();
         for (ApiGroup group : model.getData()) {
@@ -49,7 +52,7 @@ public class PostmanBuilder extends OutputStreamDocBuilder {
         Map<String, Object> collection = JsonUtil.newObject()
                 .putOne("info", info)
                 .putOne("item", groupList);
-        OutputStream outputStream = new FileOutputStream(path);
+        OutputStream outputStream = Files.newOutputStream(Paths.get(getOutPath()));
         JsonUtil.toJson(collection, outputStream);
         return outputStream;
     }

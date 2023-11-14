@@ -2,17 +2,20 @@ package top.verytouch.vkit.mydoc.builder;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.util.ResourceUtil;
-import top.verytouch.vkit.mydoc.constant.DocType;
-import top.verytouch.vkit.mydoc.util.ApiUtil;
 import freemarker.cache.ByteArrayTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import top.verytouch.vkit.mydoc.constant.DocType;
+import top.verytouch.vkit.mydoc.util.ApiUtil;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * 使用freemarker渲染模板文件
@@ -27,15 +30,19 @@ public class FreemarkerBuilder extends OutputStreamDocBuilder {
     }
 
     @Override
-    protected OutputStream buildDoc(String path) throws Exception {
+    protected OutputStream buildOutputStream() throws IOException {
         Configuration configuration = new Configuration(Configuration.getVersion());
         configuration.setDefaultEncoding(StandardCharsets.UTF_8.name());
         configuration.setClassicCompatible(true);
         configuration.setTemplateLoader(getTemplateLoader());
         Template template = configuration.getTemplate(docType.getName());
-        OutputStream outputStream = new FileOutputStream(path);
+        OutputStream outputStream = Files.newOutputStream(Paths.get(getOutPath()));
         OutputStreamWriter streamWriter = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
-        template.process(model, streamWriter);
+        try {
+            template.process(model, streamWriter);
+        } catch (TemplateException e) {
+            throw new IOException(e);
+        }
         streamWriter.flush();
         return outputStream;
     }

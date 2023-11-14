@@ -39,6 +39,9 @@ public enum ClassKind {
     private final Pattern pattern;
 
     public boolean isMatch(PsiType psiType) {
+        if (psiType == null) {
+            return false;
+        }
         if (this == ENUM) {
             PsiClass psiClass = PsiTypesUtil.getPsiClass(psiType);
             return psiClass != null && psiClass.isEnum();
@@ -47,6 +50,9 @@ public enum ClassKind {
     }
 
     public boolean isNotMatch(PsiType psiType) {
+        if (psiType == null) {
+            return true;
+        }
         return !pattern.matcher(psiType.getCanonicalText()).find();
     }
 

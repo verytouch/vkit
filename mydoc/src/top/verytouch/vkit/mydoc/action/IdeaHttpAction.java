@@ -11,10 +11,10 @@ import top.verytouch.vkit.mydoc.constant.DocType;
 import top.verytouch.vkit.mydoc.model.ApiGroup;
 import top.verytouch.vkit.mydoc.model.ApiModel;
 import top.verytouch.vkit.mydoc.model.ApiOperation;
-import top.verytouch.vkit.mydoc.util.JsonUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
@@ -31,8 +31,8 @@ public class IdeaHttpAction extends AnAction {
     public void actionPerformed(@NotNull AnActionEvent event) {
         new OutputStreamDocBuilder(event, DocType.IDEA_HTTP) {
             @Override
-            protected OutputStream buildDoc(String path) throws Exception {
-                FileOutputStream outputStream = new FileOutputStream(path);
+            protected OutputStream buildOutputStream() throws IOException {
+                FileOutputStream outputStream = new FileOutputStream(getOutPath());
                 String content = buildIdeaHttp(model);
                 ByteArrayInputStream inputStream = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
                 IOUtils.copy(inputStream, outputStream);

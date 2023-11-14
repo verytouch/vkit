@@ -47,7 +47,8 @@ public class AnnotationUtil {
         }
         return attributeValue.getText()
                 .replaceAll("\"", "")
-                .trim();
+                .trim()
+                .replace("{}", "");
     }
 
     /**

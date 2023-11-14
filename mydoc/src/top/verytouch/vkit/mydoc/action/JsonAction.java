@@ -2,12 +2,13 @@ package top.verytouch.vkit.mydoc.action;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import org.jetbrains.annotations.NotNull;
 import top.verytouch.vkit.mydoc.builder.OutputStreamDocBuilder;
 import top.verytouch.vkit.mydoc.constant.DocType;
 import top.verytouch.vkit.mydoc.util.JsonUtil;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 
 /**
@@ -22,8 +23,8 @@ public class JsonAction extends AnAction {
     public void actionPerformed(@NotNull AnActionEvent event) {
         new OutputStreamDocBuilder(event, DocType.JSON) {
             @Override
-            protected OutputStream buildDoc(String path) throws Exception {
-                FileOutputStream outputStream = new FileOutputStream(path);
+            protected OutputStream buildOutputStream() throws IOException {
+                FileOutputStream outputStream = new FileOutputStream(getOutPath());
                 JsonUtil.toJson(model, outputStream);
                 return outputStream;
             }

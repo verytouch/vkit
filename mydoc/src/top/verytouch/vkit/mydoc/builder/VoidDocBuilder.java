@@ -2,6 +2,10 @@ package top.verytouch.vkit.mydoc.builder;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import top.verytouch.vkit.mydoc.constant.DocType;
+import top.verytouch.vkit.mydoc.model.ApiModel;
+
+import java.io.IOException;
+import java.util.function.Consumer;
 
 /**
  * 文档生成
@@ -9,11 +13,17 @@ import top.verytouch.vkit.mydoc.constant.DocType;
  * @author verytouch
  * @since 2021-12
  */
-public abstract class VoidDocBuilder extends DocBuilder {
+public final class VoidDocBuilder extends DocBuilder {
 
-    protected VoidDocBuilder(AnActionEvent event, DocType docType) {
+    private final Consumer<ApiModel> consumer;
+
+    public VoidDocBuilder(AnActionEvent event, DocType docType, Consumer<ApiModel> consumer) {
         super(event, docType);
+        this.consumer = consumer;
     }
 
-    protected abstract void buildDoc();
+    @Override
+    protected void buildDoc() throws IOException {
+        consumer.accept(model);
+    }
 }

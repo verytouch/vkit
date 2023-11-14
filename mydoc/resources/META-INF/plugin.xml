@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>top.verytouch.vkit.mydoc.plugin.idea</id>
     <name>MyDoc</name>
-    <version>2.1.0</version>
+    <version>2.2.0</version>
     <vendor email="verytouch@qq.com" url="url">verytouch</vendor>
 
     <description><![CDATA[
@@ -13,11 +13,12 @@
         <p>支持markdown、html、word、postman、idea等格式</p>
         <p>支持一些配置，如文档名称、是否必填、模板位置等</p>
         <p>支持swagger注解或文档注释</p>
+        <p>支持ctrl + \ 查找url</p>
     ]]>
     </change-notes>
 
     <!-- please see https://plugins.jetbrains.com/docs/intellij/build-number-ranges.html for description -->
-    <idea-version since-build="173.0"/>
+    <idea-version since-build="221.5080.210"/>
 
     <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
          on how to target different products -->
@@ -29,7 +30,9 @@
         <notificationGroup id="MyDoc.Notification.Group" displayType="BALLOON"/>
         <projectService serviceImplementation="top.verytouch.vkit.mydoc.config.ConfigStorage"/>
         <projectConfigurable instance="top.verytouch.vkit.mydoc.config.ConfigAction"/>
+        <searchEverywhereContributor implementation="top.verytouch.vkit.mydoc.search.UrlSearchEverywhereContributorFactory"/>
     </extensions>
+
 
     <actions>
         <group id="MyDoc.EditorPopup" class="top.verytouch.vkit.mydoc.action.group.EditorPopup" text="MyDoc" popup="true">
@@ -68,6 +71,12 @@
         <action id="top.verytouch.vkit.mydoc.action.IdeaHttpAction" class="top.verytouch.vkit.mydoc.action.IdeaHttpAction" text="Build Idea Http">
             <add-to-group group-id="MyDoc.EditorPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.PostmanAction"/>
             <add-to-group group-id="MyDoc.ProjectPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.PostmanAction"/>
+        </action>
+
+        <action id="top.verytouch.vkit.mydoc.search.UrlSearchEverywhereAction" class="top.verytouch.vkit.mydoc.search.UrlSearchEverywhereAction"
+                text="Search URLs"
+                icon="AllIcons.Actions.Find">
+            <keyboard-shortcut keymap="$default" first-keystroke="control BACK_SLASH"/>
         </action>
     </actions>
 

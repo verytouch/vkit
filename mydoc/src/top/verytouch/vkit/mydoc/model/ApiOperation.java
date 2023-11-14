@@ -1,5 +1,7 @@
 package top.verytouch.vkit.mydoc.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.intellij.psi.PsiMethod;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -77,5 +79,8 @@ public class ApiOperation {
      * 返回示例
      */
     private String responseBodyExample;
+
+    @JsonIgnore
+    private PsiMethod psiMethod;
 
 }

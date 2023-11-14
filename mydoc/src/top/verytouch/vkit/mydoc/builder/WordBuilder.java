@@ -1,13 +1,15 @@
 package top.verytouch.vkit.mydoc.builder;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import top.verytouch.vkit.mydoc.constant.DocType;
 import org.apache.commons.io.IOUtils;
+import top.verytouch.vkit.mydoc.constant.DocType;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -28,14 +30,18 @@ public class WordBuilder extends FreemarkerBuilder {
     }
 
     @Override
-    protected OutputStream buildDoc(String path) throws Exception {
+    protected String getOutPath() {
+        return System.getProperty("java.io.tmpdir") + TO_REPLACE_FILE;
+    }
+
+    @Override
+    protected OutputStream buildOutputStream() throws IOException {
         // 渲染document并读取为输入流
-        String temp = System.getProperty("java.io.tmpdir") + TO_REPLACE_FILE;
-        IOUtils.close(super.buildDoc(temp));
-        File documentFile = new File(temp);
+        IOUtils.close(super.buildOutputStream());
+        File documentFile = new File(this.getOutPath());
         FileInputStream documentIn = new FileInputStream(documentFile);
         // 替换document文件并输出为docx
-        ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(path));
+        ZipOutputStream zipOut = new ZipOutputStream(Files.newOutputStream(Paths.get(super.getOutPath())));
         ZipInputStream zipIn = new ZipInputStream(getTemplateResourceAsStream(WORD_RESOURCE));
         for (ZipEntry entry = zipIn.getNextEntry(); entry != null; entry = zipIn.getNextEntry()) {
             if (entry.getName().endsWith(TO_REPLACE_FILE)) {

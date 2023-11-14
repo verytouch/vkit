@@ -1,10 +1,12 @@
 package top.verytouch.vkit.mydoc.builder;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import org.apache.commons.io.IOUtils;
 import top.verytouch.vkit.mydoc.constant.DocType;
 
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
+import java.io.IOException;
 import java.io.OutputStream;
 
 /**
@@ -19,17 +21,17 @@ public abstract class OutputStreamDocBuilder extends DocBuilder {
         super(event, docType);
     }
 
-    /**
-     * 获取默认导出位置
-     */
-    protected String getOutputPath() {
-        return FileSystemView.getFileSystemView().getHomeDirectory().getPath() +
-                File.separator + model.getName() + docType.getSuffix();
+    @Override
+    protected void buildDoc() throws IOException {
+        OutputStream outputStream = buildOutputStream();
+        outputStream.flush();
+        IOUtils.close(outputStream);
     }
 
-    /**
-     * 生成文档输出流
-     */
-    protected abstract OutputStream buildDoc(String path) throws Exception;
+    protected String getOutPath() {
+        return FileSystemView.getFileSystemView().getHomeDirectory().getPath() + File.separator + model.getName() + docType.getSuffix();
+    }
+
+    protected abstract OutputStream buildOutputStream() throws IOException;
 
 }
