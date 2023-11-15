@@ -58,19 +58,34 @@
             <add-to-group group-id="MyDoc.ProjectPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.MarkdownAction"/>
         </action>
 
-        <action id="top.verytouch.vkit.mydoc.action.JsonAction" class="top.verytouch.vkit.mydoc.action.JsonAction" text="Build Json">
+        <action id="top.verytouch.vkit.mydoc.action.PostmanAction" class="top.verytouch.vkit.mydoc.action.PostmanAction" text="Build Postman Collection">
             <add-to-group group-id="MyDoc.EditorPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.WordAction"/>
             <add-to-group group-id="MyDoc.ProjectPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.WordAction"/>
         </action>
 
-        <action id="top.verytouch.vkit.mydoc.action.PostmanAction" class="top.verytouch.vkit.mydoc.action.PostmanAction" text="Build Postman Collection">
+        <action id="top.verytouch.vkit.mydoc.action.JsonAction" class="top.verytouch.vkit.mydoc.action.JsonAction" text="Copy Json">
+            <add-to-group group-id="MyDoc.EditorPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.PostmanAction"/>
+            <add-to-group group-id="MyDoc.ProjectPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.PostmanAction"/>
+        </action>
+
+        <action id="top.verytouch.vkit.mydoc.action.IdeaHttpAction" class="top.verytouch.vkit.mydoc.action.IdeaHttpAction" text="Copy Idea Http">
             <add-to-group group-id="MyDoc.EditorPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.JsonAction"/>
             <add-to-group group-id="MyDoc.ProjectPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.JsonAction"/>
         </action>
+        <action id="top.verytouch.vkit.mydoc.action.CurlApiAction" class="top.verytouch.vkit.mydoc.action.CurlApiAction" text="Copy Curl">
+            <add-to-group group-id="MyDoc.EditorPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.IdeaHttpAction"/>
+            <add-to-group group-id="MyDoc.ProjectPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.IdeaHttpAction"/>
+        </action>
 
-        <action id="top.verytouch.vkit.mydoc.action.IdeaHttpAction" class="top.verytouch.vkit.mydoc.action.IdeaHttpAction" text="Build Idea Http">
-            <add-to-group group-id="MyDoc.EditorPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.PostmanAction"/>
-            <add-to-group group-id="MyDoc.ProjectPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.PostmanAction"/>
+
+        <action id="top.verytouch.vkit.mydoc.action.OpenApiAction" class="top.verytouch.vkit.mydoc.action.OpenApiAction" text="Copy OpenApi">
+            <add-to-group group-id="MyDoc.EditorPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.CurlApiAction"/>
+            <add-to-group group-id="MyDoc.ProjectPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.CurlApiAction"/>
+        </action>
+
+        <action id="top.verytouch.vkit.mydoc.action.ApiFoxAction" class="top.verytouch.vkit.mydoc.action.ApiFoxAction" text="Upload ApiFox">
+            <add-to-group group-id="MyDoc.EditorPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.OpenApiAction"/>
+            <add-to-group group-id="MyDoc.ProjectPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.OpenApiAction"/>
         </action>
 
         <action id="top.verytouch.vkit.mydoc.search.UrlSearchEverywhereAction" class="top.verytouch.vkit.mydoc.search.UrlSearchEverywhereAction"

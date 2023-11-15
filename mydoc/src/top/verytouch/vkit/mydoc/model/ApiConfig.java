@@ -28,6 +28,8 @@ public class ApiConfig {
 
     public String headers;
 
+    public String apiFox;
+
     public String templateDir;
 
     public boolean showExample;
@@ -42,6 +44,7 @@ public class ApiConfig {
         this.apiServer = storage.apiServer;
         this.contextPath = storage.contextPath;
         this.headers = storage.headers;
+        this.apiFox = storage.apiFox;
         this.templateDir = storage.templateDir;
         this.showApiDesc = storage.showApiDesc;
         this.showExample = storage.showExample;

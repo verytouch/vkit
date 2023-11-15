@@ -46,11 +46,11 @@ public class UrlSearchEverywherePsiRenderer extends SearchEverywherePsiRenderer 
                 int maxWidth = list.getWidth() - fm.stringWidth(name) - myRightComponentWidth - 36;
                 int fullWidth = fm.stringWidth(locationString);
                 if (fullWidth < maxWidth) {
-                    SpeedSearchUtil.appendColoredFragmentForMatcher(locationString, renderer, SimpleTextAttributes.GRAYED_ATTRIBUTES, itemMatchers.nameMatcher, bgColor, selected);
+                    SpeedSearchUtil.appendColoredFragmentForMatcher(locationString, renderer, SimpleTextAttributes.GRAYED_ATTRIBUTES, null, bgColor, selected);
                 } else {
                     int adjustedWidth = Math.max(locationString.length() * maxWidth / fullWidth - 1, 3);
                     locationString = StringUtil.trimMiddle(locationString, adjustedWidth);
-                    SpeedSearchUtil.appendColoredFragmentForMatcher(locationString, renderer, SimpleTextAttributes.GRAYED_ATTRIBUTES, itemMatchers.nameMatcher, bgColor, selected);
+                    SpeedSearchUtil.appendColoredFragmentForMatcher(locationString, renderer, SimpleTextAttributes.GRAYED_ATTRIBUTES, null, bgColor, selected);
                 }
             }
             return true;

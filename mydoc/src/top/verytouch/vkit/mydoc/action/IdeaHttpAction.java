@@ -3,20 +3,15 @@ package top.verytouch.vkit.mydoc.action;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import top.verytouch.vkit.mydoc.builder.OutputStreamDocBuilder;
+import top.verytouch.vkit.mydoc.builder.VoidDocBuilder;
 import top.verytouch.vkit.mydoc.constant.DocType;
 import top.verytouch.vkit.mydoc.model.ApiGroup;
 import top.verytouch.vkit.mydoc.model.ApiModel;
 import top.verytouch.vkit.mydoc.model.ApiOperation;
+import top.verytouch.vkit.mydoc.util.BuilderUtil;
 
-import java.io.ByteArrayInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
 /**
@@ -29,16 +24,10 @@ public class IdeaHttpAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
-        new OutputStreamDocBuilder(event, DocType.IDEA_HTTP) {
-            @Override
-            protected OutputStream buildOutputStream() throws IOException {
-                FileOutputStream outputStream = new FileOutputStream(getOutPath());
-                String content = buildIdeaHttp(model);
-                ByteArrayInputStream inputStream = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
-                IOUtils.copy(inputStream, outputStream);
-                return outputStream;
-            }
-        }.build();
+        new VoidDocBuilder(event, DocType.IDEA_HTTP, apiModel -> {
+            String text = buildIdeaHttp(apiModel);
+            BuilderUtil.copyToClipboard(text);
+        }).build();
     }
 
     private String buildIdeaHttp(ApiModel apiModel) {

@@ -32,6 +32,8 @@ public class ConfigAction implements Configurable {
 
     private JTextArea headers;
 
+    private JTextArea apiFox;
+
     private JTextField templateDir;
 
     private JCheckBox showExample;
@@ -64,6 +66,7 @@ public class ConfigAction implements Configurable {
         contextPath = new JTextField();
         host = new JTextField();
         headers = new JTextArea(2, 0);
+        apiFox = new JTextArea(2, 0);
         templateDir = new JTextField();
         showExample = new JCheckBox("请求示例");
         showRequired = new JCheckBox("必填说明");
@@ -84,6 +87,7 @@ public class ConfigAction implements Configurable {
                 .addLabeledComponent("TemplateDir", templateDir)
                 .addLabeledComponent("Headers", headers)
                 .addLabeledComponent("Optional", checkBoxGroup)
+                .addLabeledComponent("Headers", apiFox)
                 .addComponentFillVertically(new JPanel(), 0)
                 .getPanel();
     }
@@ -95,6 +99,7 @@ public class ConfigAction implements Configurable {
                 isModified(host, config.apiServer) ||
                 isModified(contextPath, config.contextPath) ||
                 !headers.getText().trim().equals(config.headers) ||
+                !apiFox.getText().trim().equals(config.apiFox) ||
                 isModified(templateDir, config.templateDir) ||
                 isModified(showExample, config.showExample) ||
                 isModified(showRequired, config.showRequired) ||
@@ -108,6 +113,7 @@ public class ConfigAction implements Configurable {
         config.apiServer = host.getText().trim();
         config.contextPath = contextPath.getText().trim();
         config.headers = headers.getText().trim();
+        config.apiFox = apiFox.getText().trim();
         config.templateDir = templateDir.getText().trim();
         config.showExample = showExample.isSelected();
         config.showRequired = showRequired.isSelected();
@@ -121,6 +127,7 @@ public class ConfigAction implements Configurable {
         host.setText(config.apiServer);
         contextPath.setText(config.contextPath);
         headers.setText(config.headers);
+        apiFox.setText(config.apiFox);
         templateDir.setText(config.templateDir);
         showExample.setSelected(config.showExample);
         showRequired.setSelected(config.showRequired);

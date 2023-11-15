@@ -18,7 +18,11 @@ public enum DocType {
     JSON("json", ".json", ""),
     POSTMAN("postman", ".postman.json", ""),
     WORD("word", ".docx", "word.ftl"),
-    IDEA_HTTP("idea", ".http", "");
+    IDEA_HTTP("idea", ".http", ""),
+    NONE("api", "", ""),
+    CURL("curl", "", ""),
+    API_FOX("apifox", "", ""),
+    OPEN_API("openapi", "", "");
 
     /**
      * 默认模板目录

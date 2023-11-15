@@ -71,6 +71,7 @@ public class PostmanBuilder extends OutputStreamDocBuilder {
         Map<String, Object> url = JsonUtil.newObject()
                 .putOne("host", model.getConfig().getApiServer())
                 .putOne("path", processPathArray(group.getPath() + apiOperation.getPath()))
+                .putOne("raw", model.getConfig().getApiServer() + group.getPath() + apiOperation.getPath())
                 .putOne("query", contentType.startsWith("multipart/form-data") ?
                         null : processParam(apiOperation.getRequestParam(), ""))
                 .putOne("variable", processParam(apiOperation.getPathVariable(), "1"));

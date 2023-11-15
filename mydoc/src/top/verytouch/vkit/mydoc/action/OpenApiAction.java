@@ -6,23 +6,22 @@ import org.jetbrains.annotations.NotNull;
 import top.verytouch.vkit.mydoc.builder.VoidDocBuilder;
 import top.verytouch.vkit.mydoc.constant.DocType;
 import top.verytouch.vkit.mydoc.util.BuilderUtil;
-import top.verytouch.vkit.mydoc.util.JsonUtil;
+import top.verytouch.vkit.mydoc.util.OpenApiUtil;
 
 /**
- * 导出为Json
+ * 复制为openapi json
  *
  * @author verytouch
- * @since 2021-11
+ * @since 2023-11
  */
-public class JsonAction extends AnAction {
+public class OpenApiAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
-        new VoidDocBuilder(event, DocType.JSON, apiModel -> {
-            String json = JsonUtil.toJson(apiModel);
-            BuilderUtil.copyToClipboard(json);
+        new VoidDocBuilder(event, DocType.OPEN_API, apiModel -> {
+            String openApi = OpenApiUtil.buildModel(apiModel);
+            BuilderUtil.copyToClipboard(openApi);
         }).build();
-
     }
 
 }

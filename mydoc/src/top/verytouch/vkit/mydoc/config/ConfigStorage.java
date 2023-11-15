@@ -25,6 +25,8 @@ public class ConfigStorage implements PersistentStateComponent<ConfigStorage> {
 
     public String headers = "Authorization:Bearer {{token}}";
 
+    public String apiFox = "{\"project\":\"\", \"token\":\"\", \"apiOverwriteMode\":\"ignore\"}";
+
     public String templateDir = "";
 
     public boolean showExample = true;
