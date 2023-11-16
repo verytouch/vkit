@@ -27,7 +27,6 @@ public final class OpenApiUtil {
         JsonObject<String, Object> openapi = JsonUtil.newObject()
                 .putOne("openapi", "3.0.0")
                 .putOne("info", JsonUtil.newObject("title", model.getName()).putOne("version", "1.0.0"))
-                .putOne("definitions", JsonUtil.newObject())
                 .putOne("paths", paths);
         return JsonUtil.toJson(openapi);
     }
@@ -99,9 +98,7 @@ public final class OpenApiUtil {
         }
         JsonObject<String, Object> schema = JsonUtil.newObject();
         body.putOne("content", JsonUtil.newObject("application/json", JsonUtil.newObject("schema", schema)));
-        if (bodyFields.size() == 1 &&
-                bodyFields.get(0).getClassKind() == ClassKind.ARRAY &&
-                StringUtils.isBlank(bodyFields.get(0).getName())) {
+        if (ApiUtil.isBodyArray(bodyFields)) {
             // body是list
             schema.putOne("type", "array").putOne("items", buildField(bodyFields.get(0)));
         } else {
@@ -123,6 +120,7 @@ public final class OpenApiUtil {
         if (StringUtils.isNotBlank(apiType)) {
             return apiType;
         }
+
         switch (param.getType().toLowerCase()) {
             case "boolean":
                 return "boolean";
@@ -137,8 +135,14 @@ public final class OpenApiUtil {
             case "decimal":
             case "number":
                 return "number";
-            default:
+            case "char":
+            case "character":
+            case "charsequence":
+            case "string":
+            case "date":
                 return "string";
+            default:
+                return "object";
         }
     }
 

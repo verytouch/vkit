@@ -1,10 +1,10 @@
 package top.verytouch.vkit.mydoc.util;
 
 import com.intellij.psi.PsiModifierListOwner;
-import top.verytouch.vkit.mydoc.model.ApiField;
-import top.verytouch.vkit.mydoc.model.ClassKind;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import top.verytouch.vkit.mydoc.model.ApiField;
+import top.verytouch.vkit.mydoc.model.ClassKind;
 
 import java.util.Arrays;
 import java.util.List;
@@ -92,6 +92,15 @@ public class ApiUtil {
     }
 
     /**
+     * 判断body是否是array
+     */
+    public static boolean isBodyArray(List<ApiField> bodyFields) {
+        return bodyFields.size() == 1 &&
+                bodyFields.get(0).getClassKind() == ClassKind.ARRAY &&
+                StringUtils.isBlank(bodyFields.get(0).getName());
+    }
+
+    /**
      * 构建参数示例
      *
      * @param apiFields 参数
@@ -101,9 +110,7 @@ public class ApiUtil {
             return null;
         }
         Object body;
-        if (apiFields.size() == 1 &&
-                apiFields.get(0).getClassKind() == ClassKind.ARRAY &&
-                StringUtils.isBlank(apiFields.get(0).getName())) {
+        if (isBodyArray(apiFields)) {
             // body是list
             ApiField field = apiFields.get(0);
             Object item = buildBodyExample(field.getChildren());

@@ -65,6 +65,7 @@ public class UrlSearchEverywhereContributor implements WeightedSearchEverywhereC
                         BuilderUtil.buildModel(event, BuilderUtil.ALL_IN_PROJECT).getData().stream()
                                 .flatMap(g -> g.getOperationList().stream().peek(a -> a.setPath(g.getPath() + a.getPath())))
                                 .collect(Collectors.toList()));
+                fetchWeightedElements(pattern, progressIndicator, processor);
             } catch (Throwable e) {
                 throw new RuntimeException(e);
             }
