@@ -35,12 +35,12 @@
 
 
     <actions>
-        <group id="MyDoc.EditorPopup" class="top.verytouch.vkit.mydoc.action.group.EditorPopup" text="MyDoc" popup="true">
-            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+        <group id="MyDoc.EditorPopup" class="top.verytouch.vkit.mydoc.action.group.EditorPopup" text="My Doc" popup="true">
+            <add-to-group group-id="EditorPopupMenu" anchor="before" relative-to-action="EditorPopupMenu1"/>
         </group>
 
-        <group id="MyDoc.ProjectPopup" class="top.verytouch.vkit.mydoc.action.group.ProjectPopup" text="MyDoc" popup="true">
-            <add-to-group group-id="ProjectViewPopupMenu" anchor="first" />
+        <group id="MyDoc.ProjectPopup" class="top.verytouch.vkit.mydoc.action.group.ProjectPopup" text="My Doc" popup="true">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="before" relative-to-action="FindUsages" />
         </group>
 
         <action id="top.verytouch.vkit.mydoc.action.HtmlAction" class="top.verytouch.vkit.mydoc.action.HtmlAction" text="Build Html">

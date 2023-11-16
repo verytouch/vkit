@@ -36,10 +36,10 @@ public class UrlSearchEverywherePsiRenderer extends SearchEverywherePsiRenderer 
             ItemMatchers itemMatchers = getItemMatchers(list, value);
             ApiOperation api = (ApiOperation) value;
             String name = api.getPath();
-            String locationString = "    " + ((PsiClass) api.getPsiMethod().getParent()).getName() + "." + api.getPsiMethod().getName();
+            String locationString = String.format("  (%s#%s) [%s]", ((PsiClass) api.getPsiMethod().getParent()).getName(), api.getPsiMethod().getName(), api.getMethod());
 
             SpeedSearchUtil.appendColoredFragmentForMatcher(name, renderer, nameAttributes, itemMatchers.nameMatcher, bgColor, selected);
-            // renderer.setIcon(IconHolder.getHttpMethodIcon(api.getHttpMethod()));
+            // renderer.setIcon(new TextIcon(String.valueOf(api.getMethod().charAt(0)), fgColor, bgColor, 2));
 
             if (StringUtils.isNotEmpty(locationString)) {
                 FontMetrics fm = list.getFontMetrics(list.getFont());
@@ -55,8 +55,7 @@ public class UrlSearchEverywherePsiRenderer extends SearchEverywherePsiRenderer 
             }
             return true;
         } catch (Throwable ex) {
-            ex.printStackTrace();
-            return false;
+            throw new RuntimeException(ex);
         }
     }
 
