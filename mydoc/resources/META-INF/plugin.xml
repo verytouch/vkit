@@ -5,45 +5,46 @@
     <vendor email="verytouch@qq.com" url="url">verytouch</vendor>
 
     <description><![CDATA[
-      <p>右键生成接口文档，支持</p>
+      <strong>click the right mouse button and build api docs, support: </strong>
       <ol>
-        <li>html</li>
-        <li>markdown</li>
-        <li>word</li>
-        <li>postman collection</li>
-        <li>idea http client</li>
-        <li>curl</li>
-        <li>openapi</li>
-        <li>同步到apifox</li>
-        <li>ctrl + \ 查找接口</li>
+        <li>build html</li>
+        <li>build markdown</li>
+        <li>build word</li>
+        <li>build postman collection</li>
+        <li>copy idea http client</li>
+        <li>copy curl</li>
+        <li>copy openapi</li>
+        <li>copy json</li>
+        <li>upload to apifox</li>
+        <li>search url (ctrl + \)</li>
       </ol>
-      <p>注释来源</p>
+      <strong>doc source: </strong>
       <ol>
-        <li>swagger注解</li>
-        <li>文档注释</li>
-        <li>类名/方法名</li>
+        <li>source code</li>
+        <li>swagger annotation</li>
+        <li>document comments</li>
       </ol>
     ]]></description>
 
     <change-notes><![CDATA[
      <div>
-        <p>v2.2.0</p>
+        <strong>v2.2.0</strong>
         <ul>
           <li>copy curl</li>
           <li>copy openapi</li>
-          <li>同步到apifox</li>
-          <li>ctrl + \ 查找接口</li>
+          <li>upload to apifox</li>
+          <li>search url(ctrl + \)</li>
         </ul>
      </div>
      <div>
-        <p>v2.1.0</p>
+        <strong>v2.1.0</strong>
         <ul>
           <li>copy json</li>
           <li>copy idea http client</li>
         </ul>
      </div>
      <div>
-        <p>v2.0.0</p>
+        <strong>v2.0.0</strong>
         <ul>
           <li>html template</li>
           <li>markdown template</li>
@@ -52,12 +53,12 @@
         </ul>
      </div>
      <div>
-        <p>v1.1.0</p>
+        <strong>v1.1.0</strong>
         <ul>
           <li>build postman collection</li>
         </ul>
      <div>
-        <p>v1.0.0</p>
+        <strong>v1.0.0</strong>
         <ul>
           <li>build html</li>
           <li>build markdown</li>
