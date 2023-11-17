@@ -60,7 +60,7 @@ public class ConfigAction implements Configurable {
                 .map(variable -> variable.getVariable() + "=" + variable.getRemark())
                 .collect(Collectors.joining(", ")));
         tips.add("Header每行一个，键值之间用冒号分隔");
-        tips.add("TemplateDir非空时使用该目录下的模板文件：html.ftl、markdown.ftl");
+        tips.add("TemplateDir非空时使用该目录下的模板文件：html.ftl、markdown.ftl、word.ftl、word.docx");
 
         docName = new JTextField();
         contextPath = new JTextField();
@@ -87,7 +87,7 @@ public class ConfigAction implements Configurable {
                 .addLabeledComponent("TemplateDir", templateDir)
                 .addLabeledComponent("Headers", headers)
                 .addLabeledComponent("Optional", checkBoxGroup)
-                .addLabeledComponent("Headers", apiFox)
+                .addLabeledComponent("ApiFox", apiFox)
                 .addComponentFillVertically(new JPanel(), 0)
                 .getPanel();
     }

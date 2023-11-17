@@ -1,4 +1,4 @@
-package top.verytouch.vkit.mydoc.model;
+package top.verytouch.vkit.mydoc.constant;
 
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiType;

@@ -2,6 +2,7 @@ package top.verytouch.vkit.mydoc.model;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import top.verytouch.vkit.mydoc.constant.ClassKind;
 
 import java.util.List;
 

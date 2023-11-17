@@ -4,7 +4,7 @@ import com.intellij.psi.PsiModifierListOwner;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import top.verytouch.vkit.mydoc.model.ApiField;
-import top.verytouch.vkit.mydoc.model.ClassKind;
+import top.verytouch.vkit.mydoc.constant.ClassKind;
 
 import java.util.Arrays;
 import java.util.List;

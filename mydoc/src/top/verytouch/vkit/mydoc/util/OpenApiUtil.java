@@ -2,6 +2,7 @@ package top.verytouch.vkit.mydoc.util;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import top.verytouch.vkit.mydoc.constant.ClassKind;
 import top.verytouch.vkit.mydoc.model.*;
 import top.verytouch.vkit.mydoc.util.JsonUtil.JsonArray;
 import top.verytouch.vkit.mydoc.util.JsonUtil.JsonObject;
