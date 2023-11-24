@@ -2,6 +2,7 @@ package top.verytouch.vkit.mydoc.model;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.apache.commons.lang3.StringUtils;
 import top.verytouch.vkit.mydoc.constant.ClassKind;
 
 import java.util.List;
@@ -43,8 +44,43 @@ public class ApiField {
     private Boolean required;
 
     /**
+     * @mock 标记值
+     */
+    private String mock;
+
+    /**
      * 子元素
      */
     private List<ApiField> children;
+
+    public String getOpenApiType() {
+        String apiType = this.getClassKind().getOpenApiType();
+        if (StringUtils.isNotBlank(apiType)) {
+            return apiType;
+        }
+        switch (this.getType().toLowerCase()) {
+            case "boolean":
+                return "boolean";
+            case "byte":
+            case "short":
+            case "int":
+            case "long":
+            case "integer":
+                return "integer";
+            case "float":
+            case "double":
+            case "decimal":
+            case "number":
+                return "number";
+            case "char":
+            case "character":
+            case "charsequence":
+            case "string":
+            case "date":
+                return "string";
+            default:
+                return "object";
+        }
+    }
 
 }

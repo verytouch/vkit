@@ -3,8 +3,8 @@ package top.verytouch.vkit.mydoc.util;
 import com.intellij.psi.PsiModifierListOwner;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import top.verytouch.vkit.mydoc.model.ApiField;
 import top.verytouch.vkit.mydoc.constant.ClassKind;
+import top.verytouch.vkit.mydoc.model.ApiField;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,13 +22,17 @@ public class ApiUtil {
 
     /**
      * Mock值
-     * 键为java类简称
+     * 键为openApiType或java类简称
      * 值为mock值
      */
     private static final JsonUtil.JsonObject<String, Object> MOCK_MAP = JsonUtil.newObject()
-            .putOne("String", "")
-            .putOne("int", 1)
-            .putOne("Integer", 1);
+            .putOne("boolean", false)
+            .putOne("integer", 0)
+            .putOne("string", "")
+            .putOne("number", null)
+            .putOne("object", null)
+            .putOne("int", 0)
+            .putOne("long", 0);
 
     /**
      * 是否private
@@ -130,7 +134,7 @@ public class ApiUtil {
                 Object value = buildBodyExample(field.getChildren());
                 // 该字段没有children，说明是简单字段或者不需要解析的字段
                 if (value == null) {
-                    value = MOCK_MAP.get(field.getType());
+                    value = getMockValue(field);
                 }
                 // 该字段是list，保证其value是数组
                 if (field.getClassKind() == ClassKind.ARRAY && !(value instanceof JsonUtil.JsonArray)) {
@@ -141,6 +145,30 @@ public class ApiUtil {
             body = bodyObject;
         }
         return body;
+    }
+
+    public static Object getMockValue(ApiField field) {
+        String prefer = field.getMock();
+        if (StringUtils.isBlank(prefer)) {
+            if ("date".equalsIgnoreCase(field.getType())) {
+                return null;
+            }
+            return MOCK_MAP.get(field.getOpenApiType());
+        }
+        try {
+            switch (field.getOpenApiType()) {
+                case "boolean":
+                    return Boolean.parseBoolean(prefer);
+                case "integer":
+                    return Long.parseLong(prefer);
+                case "string":
+                    return prefer;
+                default:
+                    return null;
+            }
+        } catch (Exception e) {
+            return MOCK_MAP.get(field.getOpenApiType());
+        }
     }
 
 }

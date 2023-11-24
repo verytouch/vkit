@@ -20,24 +20,27 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public enum ClassKind {
 
-    MAP(Pattern.compile("^java.util.*Map|com.alibaba.fastjson.JSONObject", Pattern.CASE_INSENSITIVE), "object"),
+    PRIMARY(Pattern.compile("^[a-z]+$"), "", true),
 
-    ARRAY(Pattern.compile("^java.util.*(Collection|List|Set)|com.alibaba.fastjson.JSONArray", Pattern.CASE_INSENSITIVE), "array"),
+    MAP(Pattern.compile("^java.util.*Map|com.alibaba.fastjson.JSONObject", Pattern.CASE_INSENSITIVE), "object", true),
 
-    DIAMOND(Pattern.compile("^[A-Z]$"), "object"),
+    ARRAY(Pattern.compile("^java.util.*(Collection|List|Set)|com.alibaba.fastjson.JSONArray", Pattern.CASE_INSENSITIVE), "array", false),
 
-    ENUM(Pattern.compile("java.lang.Enum"), "object"),
+    DIAMOND(Pattern.compile("^[A-Z]$"), "object", false),
 
-    JAVA(Pattern.compile("^java.*", Pattern.CASE_INSENSITIVE), ""),
+    ENUM(Pattern.compile("java.lang.Enum"), "object", true),
 
-    SERVLET(Pattern.compile("javax.servlet.*"), "object"),
+    JAVA(Pattern.compile("^java.*", Pattern.CASE_INSENSITIVE), "", true),
 
-    WEB_ANNO(Pattern.compile("org.springframework.web.bind.annotation.*"), "object"),
+    SERVLET(Pattern.compile("javax.servlet.*"), "object", true),
 
-    OTHERS(Pattern.compile(".*", Pattern.CASE_INSENSITIVE), "object");
+    WEB_ANNO(Pattern.compile("org.springframework.web.bind.annotation.*"), "object", true),
+
+    OTHERS(Pattern.compile(".*", Pattern.CASE_INSENSITIVE), "object", false);
 
     private final Pattern pattern;
     private final String openApiType;
+    private final boolean ignoreChildren;
 
     public boolean isMatch(PsiType psiType) {
         if (psiType == null) {

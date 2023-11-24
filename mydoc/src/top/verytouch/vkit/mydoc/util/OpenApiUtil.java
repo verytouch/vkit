@@ -1,9 +1,11 @@
 package top.verytouch.vkit.mydoc.util;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import top.verytouch.vkit.mydoc.constant.ClassKind;
-import top.verytouch.vkit.mydoc.model.*;
+import top.verytouch.vkit.mydoc.model.ApiField;
+import top.verytouch.vkit.mydoc.model.ApiGroup;
+import top.verytouch.vkit.mydoc.model.ApiModel;
+import top.verytouch.vkit.mydoc.model.ApiOperation;
 import top.verytouch.vkit.mydoc.util.JsonUtil.JsonArray;
 import top.verytouch.vkit.mydoc.util.JsonUtil.JsonObject;
 
@@ -18,11 +20,14 @@ import java.util.UUID;
  */
 public final class OpenApiUtil {
 
+    @SuppressWarnings("unchecked")
     public static String buildModel(ApiModel model) {
         JsonObject<String, Object> paths = JsonUtil.newObject();
         for (ApiGroup group : model.getData()) {
             for (ApiOperation operation : group.getOperationList()) {
-                paths.putOne(group.getPath() + operation.getPath(), buildOperation(group, operation));
+                String path = group.getPath() + operation.getPath();
+                paths.putIfAbsent(path, JsonUtil.newObject());
+                ((JsonObject<String, Object>) paths.get(path)).putAll(buildOperation(group, operation));
             }
         }
         JsonObject<String, Object> openapi = JsonUtil.newObject()
@@ -37,13 +42,17 @@ public final class OpenApiUtil {
                 .putOne("x-apifox-folder", group.getName())
                 .putOne("x-apifox-status", "developing")
                 .putOne("description", operation.getDesc())
-                .putOne("summary", operation.getDesc())
+                .putOne("summary", operation.getName())
                 .putOne("operationId", UUID.randomUUID().toString())
                 .putOne("parameters", buildParameters(operation))
                 .putOne("requestBody", buildBody(operation.getRequestBody()))
                 .putOne("responses", JsonUtil.newObject("200", buildBody(operation.getResponseBody())));
-        String method = operation.getMethod().toLowerCase().split(",")[0];
-        return JsonUtil.newObject().putOne(method, content);
+        JsonObject<String, Object> methods = JsonUtil.newObject();
+        String[] httpMethods = operation.getMethod().toLowerCase().split(",");
+        for (String method : httpMethods) {
+            methods.putOne(method.toLowerCase(), content);
+        }
+        return methods;
     }
 
     private static JsonArray<Object> buildParameters(ApiOperation operation) {
@@ -70,7 +79,7 @@ public final class OpenApiUtil {
 
     private static JsonObject<String, Object> buildField(ApiField field) {
         JsonObject<String, Object> content = JsonUtil.newObject()
-                .putOne("type", getType(field))
+                .putOne("type", field.getOpenApiType())
                 .putOne("name", field.getName())
                 .putOne("description", field.getDesc());
         List<ApiField> children = field.getChildren();
@@ -114,37 +123,6 @@ public final class OpenApiUtil {
             schema.putOne("type", "object").putOne("properties", properties);
         }
         return body;
-    }
-
-    private static String getType(ApiField param) {
-        String apiType = param.getClassKind().getOpenApiType();
-        if (StringUtils.isNotBlank(apiType)) {
-            return apiType;
-        }
-
-        switch (param.getType().toLowerCase()) {
-            case "boolean":
-                return "boolean";
-            case "byte":
-            case "short":
-            case "int":
-            case "long":
-            case "integer":
-                return "integer";
-            case "float":
-            case "double":
-            case "decimal":
-            case "number":
-                return "number";
-            case "char":
-            case "character":
-            case "charsequence":
-            case "string":
-            case "date":
-                return "string";
-            default:
-                return "object";
-        }
     }
 
 }

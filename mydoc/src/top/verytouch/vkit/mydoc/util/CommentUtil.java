@@ -72,13 +72,47 @@ public class CommentUtil {
         }
         PsiDocTag[] docTags = docComment.findTagsByName(tagName);
         for (PsiDocTag docTag : docTags) {
-            String tagValue = Arrays.stream(docTag.getDataElements())
-                    .filter(item -> item instanceof PsiDocTagValue)
-                    .map(PsiElement::getText)
-                    .collect(Collectors.joining());
+            String tagValue = docTag.getText().replace("@" + tagName, "").trim();
             values.add(tagValue);
         }
         return values;
+    }
+
+    /**
+     * 获取注释中的tag值
+     *
+     * @param element 被注释的元素
+     * @param tagName tagName
+     */
+    public static String getFirstTagValue(PsiJavaDocumentedElement element, String tagName) {
+        PsiDocComment docComment = element.getDocComment();
+        if (docComment == null) {
+            return null;
+        }
+        PsiDocTag[] docTags = docComment.findTagsByName(tagName);
+        for (PsiDocTag docTag : docTags) {
+            String tagValue = docTag.getText().replace("@" + tagName, "").trim();
+            if (StringUtils.isNotBlank(tagValue)) {
+                return tagValue;
+            }
+        }
+        return null;
+    }
+
+
+    /**
+     * 是否有注释tag
+     *
+     * @param element 被注释的元素
+     * @param tagName tagName
+     */
+    public static boolean hasTag(PsiJavaDocumentedElement element, String tagName) {
+        PsiDocComment docComment = element.getDocComment();
+        if (docComment == null) {
+            return false;
+        }
+        PsiDocTag[] docTags = docComment.findTagsByName(tagName);
+        return docTags.length > 0;
     }
 
     /**
