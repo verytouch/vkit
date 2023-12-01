@@ -47,4 +47,13 @@ public abstract class DocBuilder {
      */
     protected abstract void buildDoc() throws IOException;
 
+    protected String getSuccessMessage() {
+        return "build " + this.docType.getName() + " success";
+    }
+
+    protected String geErrorMessage() {
+        return "build " + this.docType.getName() + " failed";
+    }
+
+
 }

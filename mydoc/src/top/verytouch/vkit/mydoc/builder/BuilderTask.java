@@ -3,6 +3,7 @@ package top.verytouch.vkit.mydoc.builder;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import top.verytouch.vkit.mydoc.util.NotifyUtil;
 
@@ -33,9 +34,11 @@ public class BuilderTask extends Task.Backgroundable {
 
         try {
             this.docBuilder.buildDoc();
-            NotifyUtil.info(this.docBuilder.event.getProject(), "build " + this.docBuilder.docType.getName() + " success.");
+            if (StringUtils.isNotBlank(this.docBuilder.getSuccessMessage())) {
+                NotifyUtil.info(this.docBuilder.event.getProject(), this.docBuilder.getSuccessMessage());
+            }
         } catch (Exception e) {
-            NotifyUtil.error(docBuilder.event.getProject(), "build " + docBuilder.docType.getName() + " failed: " + e.getMessage());
+            NotifyUtil.error(docBuilder.event.getProject(), this.docBuilder.geErrorMessage() + ": " + e.getMessage());
             throw new RuntimeException(e);
         } finally {
             // 完成

@@ -7,7 +7,6 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.DumbService;
@@ -21,11 +20,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import top.verytouch.vkit.mydoc.model.ApiGroup;
 import top.verytouch.vkit.mydoc.model.ApiOperation;
 import top.verytouch.vkit.mydoc.util.BuilderUtil;
 
 import javax.swing.*;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -42,13 +43,14 @@ public class UrlSearchEverywhereContributor implements WeightedSearchEverywhereC
 
     private List<ApiOperation> operationList;
     private final PersistentSearchEverywhereContributorFilter<String> moduleFilter;
+    private final List<String> modules = new LinkedList<>();
 
     public UrlSearchEverywhereContributor(@NotNull AnActionEvent event) {
         this.event = event;
         this.project = event.getProject();
         assert project != null;
         this.moduleFilter = new PersistentSearchEverywhereContributorFilter<>(
-                Arrays.stream(ModuleManager.getInstance(project).getModules()).map(Module::getName).collect(Collectors.toList()),
+                modules,
                 UrlSearchModuleFilterConfiguration.getInstance(project),
                 Function.identity(),
                 s -> AllIcons.Nodes.Module
@@ -71,15 +73,8 @@ public class UrlSearchEverywhereContributor implements WeightedSearchEverywhereC
         }
         MinusculeMatcher matcher = NameUtil.buildMatcher("*" + pattern + "*", NameUtil.MatchingCaseSensitivity.NONE);
         if (operationList == null) {
-            try {
-                operationList = ApplicationManager.getApplication().runReadAction((ThrowableComputable<List<ApiOperation>, Throwable>) () ->
-                        BuilderUtil.buildModel(event, BuilderUtil.ALL_IN_PROJECT).getData().stream()
-                                .flatMap(g -> g.getOperationList().stream().peek(a -> a.setPath(g.getPath() + a.getPath())))
-                                .collect(Collectors.toList()));
-                fetchWeightedElements(pattern, progressIndicator, processor);
-            } catch (Throwable e) {
-                throw new RuntimeException(e);
-            }
+            fetchData();
+            fetchWeightedElements(pattern, progressIndicator, processor);
         } else {
             Set<String> modules = new HashSet<>(moduleFilter.getSelectedElements());
             if (modules.isEmpty()) {
@@ -93,6 +88,29 @@ public class UrlSearchEverywhereContributor implements WeightedSearchEverywhereC
                     }
                 }
             }
+        }
+    }
+
+    private void fetchData() {
+        try {
+            Set<String> moduleNames = new HashSet<>();
+            Consumer<ApiGroup> moduleNameCollector = g -> {
+                if (!g.getOperationList().isEmpty()) {
+                    Module module = ModuleUtil.findModuleForFile(g.getOperationList().get(0).getPsiMethod().getContainingFile());
+                    if (module != null) {
+                        moduleNames.add(module.getName());
+                    }
+                }
+            };
+            this.operationList = ApplicationManager.getApplication().runReadAction((ThrowableComputable<List<ApiOperation>, Throwable>) () ->
+                    BuilderUtil.buildModel(this.event, BuilderUtil.ALL_IN_PROJECT).getData()
+                            .stream().peek(moduleNameCollector)
+                            .flatMap(g -> g.getOperationList().stream().peek(a -> a.setPath(g.getPath() + a.getPath())))
+                            .collect(Collectors.toList()));
+            this.modules.clear();
+            this.modules.addAll(moduleNames);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
         }
     }
 
