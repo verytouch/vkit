@@ -86,6 +86,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <notificationGroup id="MyDoc.Notification.Group" displayType="BALLOON"/>
         <projectService serviceImplementation="top.verytouch.vkit.mydoc.config.ConfigStorage"/>
+        <projectService serviceImplementation="top.verytouch.vkit.mydoc.search.UrlSearchModuleFilterConfiguration"/>
         <projectConfigurable instance="top.verytouch.vkit.mydoc.config.ConfigAction"/>
         <searchEverywhereContributor implementation="top.verytouch.vkit.mydoc.search.UrlSearchEverywhereContributorFactory"/>
     </extensions>

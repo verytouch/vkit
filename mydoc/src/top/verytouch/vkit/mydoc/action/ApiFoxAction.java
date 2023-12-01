@@ -37,8 +37,11 @@ public class ApiFoxAction extends AnAction {
             if (StringUtils.isBlank(apiFoxToken)) {
                 throw new RuntimeException("please config apiFox token");
             }
-
-            String openApi = OpenApiUtil.buildModel(apiModel);
+            String folder = apiFoxConfigObj.getOrDefault("folder", "").toString();
+            String status = apiFoxConfigObj.getOrDefault("status", "developing").toString();
+            String openApi = OpenApiUtil.buildModel(apiModel, (group, operation) -> JsonUtil.newObject()
+                    .putOne("x-apifox-folder", StringUtils.isBlank(folder) ? group.getName() : folder + "/" + group.getName())
+                    .putOne("x-apifox-status", StringUtils.isBlank(status) ? "developing" : status));
             Map<String, Object> data = new HashMap<>();
             data.put("importFormat", "openapi");
             // name both merge ignore

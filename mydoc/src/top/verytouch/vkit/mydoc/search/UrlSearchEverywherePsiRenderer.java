@@ -1,14 +1,17 @@
 package top.verytouch.vkit.mydoc.search;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.actions.SearchEverywherePsiRenderer;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.psi.PsiClass;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
+import com.intellij.util.TextWithIcon;
 import com.intellij.util.ui.UIUtil;
-import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
 import top.verytouch.vkit.mydoc.model.ApiOperation;
 
 import javax.swing.*;
@@ -33,30 +36,27 @@ public class UrlSearchEverywherePsiRenderer extends SearchEverywherePsiRenderer 
             Color bgColor = UIUtil.getListBackground();
             SimpleTextAttributes nameAttributes = new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, fgColor);
 
-            ItemMatchers itemMatchers = getItemMatchers(list, value);
             ApiOperation api = (ApiOperation) value;
-            String name = api.getPath();
-            String locationString = String.format("  (%s#%s) [%s]", ((PsiClass) api.getPsiMethod().getParent()).getName(), api.getPsiMethod().getName(), api.getMethod());
+            String path = api.getPath();
+            String desc = String.format(" (%s#%s) [%s] ", ((PsiClass) api.getPsiMethod().getParent()).getName(), api.getPsiMethod().getName(), api.getMethod());
 
-            SpeedSearchUtil.appendColoredFragmentForMatcher(name, renderer, nameAttributes, itemMatchers.nameMatcher, bgColor, selected);
-            // renderer.setIcon(new TextIcon(String.valueOf(api.getMethod().charAt(0)), fgColor, bgColor, 2));
-
-            if (StringUtils.isNotEmpty(locationString)) {
-                FontMetrics fm = list.getFontMetrics(list.getFont());
-                int maxWidth = list.getWidth() - fm.stringWidth(name) - myRightComponentWidth - 36;
-                int fullWidth = fm.stringWidth(locationString);
-                if (fullWidth < maxWidth) {
-                    SpeedSearchUtil.appendColoredFragmentForMatcher(locationString, renderer, SimpleTextAttributes.GRAYED_ATTRIBUTES, null, bgColor, selected);
-                } else {
-                    int adjustedWidth = Math.max(locationString.length() * maxWidth / fullWidth - 1, 3);
-                    locationString = StringUtil.trimMiddle(locationString, adjustedWidth);
-                    SpeedSearchUtil.appendColoredFragmentForMatcher(locationString, renderer, SimpleTextAttributes.GRAYED_ATTRIBUTES, null, bgColor, selected);
-                }
-            }
+            SpeedSearchUtil.appendColoredFragmentForMatcher(path, renderer, nameAttributes, getItemMatchers(list, value).nameMatcher, bgColor, selected);
+            SpeedSearchUtil.appendColoredFragmentForMatcher(desc, renderer, SimpleTextAttributes.GRAYED_ATTRIBUTES, null, bgColor, selected);
+            renderer.setIcon(AllIcons.Nodes.Servlet);
             return true;
         } catch (Throwable ex) {
             throw new RuntimeException(ex);
         }
     }
 
+    @Override
+    protected @Nullable TextWithIcon getItemLocation(Object value) {
+        if (!(value instanceof ApiOperation)) {
+            return super.getItemLocation(value);
+        }
+        ApiOperation api = (ApiOperation) value;
+        Module module = ModuleUtil.findModuleForFile(api.getPsiMethod().getContainingFile());
+        String moduleName = module == null ? "" : module.getName();
+        return new TextWithIcon(moduleName, AllIcons.Nodes.Module);
+    }
 }

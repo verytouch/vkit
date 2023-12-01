@@ -10,7 +10,9 @@ import top.verytouch.vkit.mydoc.util.JsonUtil.JsonArray;
 import top.verytouch.vkit.mydoc.util.JsonUtil.JsonObject;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.BiFunction;
 
 /**
  * 生成OpenApi3
@@ -21,13 +23,13 @@ import java.util.UUID;
 public final class OpenApiUtil {
 
     @SuppressWarnings("unchecked")
-    public static String buildModel(ApiModel model) {
+    public static String buildModel(ApiModel model, BiFunction<ApiGroup, ApiOperation, Map<String, Object>> extra) {
         JsonObject<String, Object> paths = JsonUtil.newObject();
         for (ApiGroup group : model.getData()) {
             for (ApiOperation operation : group.getOperationList()) {
                 String path = group.getPath() + operation.getPath();
                 paths.putIfAbsent(path, JsonUtil.newObject());
-                ((JsonObject<String, Object>) paths.get(path)).putAll(buildOperation(group, operation));
+                ((JsonObject<String, Object>) paths.get(path)).putAll(buildOperation(group, operation, extra));
             }
         }
         JsonObject<String, Object> openapi = JsonUtil.newObject()
@@ -37,16 +39,22 @@ public final class OpenApiUtil {
         return JsonUtil.toJson(openapi);
     }
 
-    public static JsonObject<String, Object> buildOperation(ApiGroup group, ApiOperation operation) {
+    public static String buildModel(ApiModel model) {
+        return buildModel(model, null);
+    }
+
+    public static JsonObject<String, Object> buildOperation(ApiGroup group, ApiOperation operation, BiFunction<ApiGroup, ApiOperation, Map<String, Object>> extra) {
         JsonObject<String, Object> content = JsonUtil.newObject()
-                .putOne("x-apifox-folder", group.getName())
-                .putOne("x-apifox-status", "developing")
                 .putOne("description", operation.getDesc())
                 .putOne("summary", operation.getName())
                 .putOne("operationId", UUID.randomUUID().toString())
                 .putOne("parameters", buildParameters(operation))
                 .putOne("requestBody", buildBody(operation.getRequestBody()))
                 .putOne("responses", JsonUtil.newObject("200", buildBody(operation.getResponseBody())));
+        if (extra != null) {
+            Map<String, Object> map = extra.apply(group, operation);
+            content.putAll(map);
+        }
         JsonObject<String, Object> methods = JsonUtil.newObject();
         String[] httpMethods = operation.getMethod().toLowerCase().split(",");
         for (String method : httpMethods) {
