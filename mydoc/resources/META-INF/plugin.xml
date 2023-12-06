@@ -14,7 +14,8 @@
         <li>copy idea http client</li>
         <li>copy curl</li>
         <li>copy openapi</li>
-        <li>copy json</li>
+        <li>copy json doc</li>
+        <li>copy json schema</li>
         <li>upload to apifox</li>
         <li>search url (ctrl + \)</li>
       </ol>
@@ -27,6 +28,14 @@
     ]]></description>
 
     <change-notes><![CDATA[
+    <div>
+        <strong>v2.2.2</strong>
+        <ul>
+          <li>copy json schema</li>
+          <li>search everywhere module filter</li>
+          <li>dock builder refactor</li>
+        </ul>
+     </div>
     <div>
         <strong>v2.2.1</strong>
         <ul>
@@ -121,14 +130,18 @@
             <add-to-group group-id="MyDoc.ProjectPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.WordAction"/>
         </action>
 
-        <action id="top.verytouch.vkit.mydoc.action.JsonAction" class="top.verytouch.vkit.mydoc.action.JsonAction" text="Copy Json">
+        <action id="top.verytouch.vkit.mydoc.action.JsonAction" class="top.verytouch.vkit.mydoc.action.JsonAction" text="Copy Json Doc">
             <add-to-group group-id="MyDoc.EditorPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.PostmanAction"/>
             <add-to-group group-id="MyDoc.ProjectPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.PostmanAction"/>
         </action>
 
-        <action id="top.verytouch.vkit.mydoc.action.IdeaHttpAction" class="top.verytouch.vkit.mydoc.action.IdeaHttpAction" text="Copy Idea Http">
+        <action id="top.verytouch.vkit.mydoc.action.JsonSchemaAction" class="top.verytouch.vkit.mydoc.action.JsonSchemaAction" text="Copy Json Schema">
             <add-to-group group-id="MyDoc.EditorPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.JsonAction"/>
-            <add-to-group group-id="MyDoc.ProjectPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.JsonAction"/>
+        </action>
+
+        <action id="top.verytouch.vkit.mydoc.action.IdeaHttpAction" class="top.verytouch.vkit.mydoc.action.IdeaHttpAction" text="Copy Idea Http">
+            <add-to-group group-id="MyDoc.EditorPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.JsonSchemaAction"/>
+            <add-to-group group-id="MyDoc.ProjectPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.JsonSchemaAction"/>
         </action>
         <action id="top.verytouch.vkit.mydoc.action.CurlApiAction" class="top.verytouch.vkit.mydoc.action.CurlApiAction" text="Copy Curl">
             <add-to-group group-id="MyDoc.EditorPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.IdeaHttpAction"/>

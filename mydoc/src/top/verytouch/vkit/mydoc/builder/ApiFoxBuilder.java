@@ -40,14 +40,14 @@ public final class ApiFoxBuilder extends DocBuilder {
         }
         String folder = apiFoxConfigObj.getOrDefault("folder", "").toString();
         String status = apiFoxConfigObj.getOrDefault("status", "developing").toString();
-        String openApi = OpenApiUtil.buildModel(model, (group, operation) -> JsonUtil.newObject()
+        JsonUtil.JsonObject<String, Object> openApi = OpenApiUtil.buildModel(model, (group, operation) -> JsonUtil.newObject()
                 .putOne("x-apifox-folder", StringUtils.isBlank(folder) ? group.getName() : folder + "/" + group.getName())
                 .putOne("x-apifox-status", StringUtils.isBlank(status) ? "developing" : status));
         Map<String, Object> data = new HashMap<>();
         data.put("importFormat", "openapi");
         // name both merge ignore
         data.put("apiOverwriteMode", apiFoxConfigObj.getOrDefault("apiOverwriteMode", "ignore"));
-        data.put("data", openApi);
+        data.put("data", openApi.toJson());
         String res = new HttpUtil("https://api.apifox.cn/api/v1/projects/" + apiFoxProject + "/import-data")
                 .addHeader("X-Apifox-Version", "2022-11-16")
                 .addHeader("Authorization", "Bearer " + apiFoxToken)

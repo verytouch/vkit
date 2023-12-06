@@ -4,6 +4,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.apache.commons.collections.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
+import top.verytouch.vkit.mydoc.builder.BuilderTask;
 import top.verytouch.vkit.mydoc.builder.VoidDocBuilder;
 import top.verytouch.vkit.mydoc.constant.DocType;
 import top.verytouch.vkit.mydoc.model.ApiConfig;
@@ -23,10 +24,10 @@ public class CurlApiAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
-        new VoidDocBuilder(event, DocType.CURL, apiModel -> {
+        BuilderTask.start(new VoidDocBuilder(event, DocType.CURL, apiModel -> {
             String curl = buildCurl(apiModel);
             BuilderUtil.copyToClipboard(curl);
-        }).build();
+        }));
     }
 
     private static final String WRAP = " \\\n";
@@ -36,11 +37,10 @@ public class CurlApiAction extends AnAction {
         String headers = config.realHeaders().entrySet().stream()
                 .map(entry -> "     --header '" + entry.getKey() + ": " + entry.getValue() + "'")
                 .collect(Collectors.joining(WRAP, WRAP, ""));
-        StringBuilder builder = new StringBuilder();
-        apiModel.getData().stream()
+        return apiModel.getData().stream()
                 .flatMap(g -> g.getOperationList().stream().peek(a -> a.setPath(config.getApiServer() + config.getContextPath() + g.getPath() + a.getPath())))
-                .forEach(operation -> builder.append(buildOperation(operation, headers)).append("\n\n\n"));
-        return builder.toString();
+                .map(operation -> buildOperation(operation, headers))
+                .collect(Collectors.joining("\n\n\n"));
     }
 
     private String buildOperation(ApiOperation operation, String headers) {

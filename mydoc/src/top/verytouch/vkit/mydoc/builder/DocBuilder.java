@@ -1,7 +1,6 @@
 package top.verytouch.vkit.mydoc.builder;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.progress.ProgressManager;
 import top.verytouch.vkit.mydoc.constant.DocType;
 import top.verytouch.vkit.mydoc.model.ApiModel;
 import top.verytouch.vkit.mydoc.util.BuilderUtil;
@@ -23,15 +22,6 @@ public abstract class DocBuilder {
     protected DocBuilder(AnActionEvent event, DocType docType) {
         this.event = event;
         this.docType = docType;
-    }
-
-    /**
-     * 执行构建任务
-     * dea下方出现进度条
-     * buildApi -> buildDoc
-     */
-    public final void build() {
-        ProgressManager.getInstance().run(new BuilderTask(this));
     }
 
     /**

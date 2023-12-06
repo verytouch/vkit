@@ -23,7 +23,7 @@ public final class VoidDocBuilder extends DocBuilder {
     }
 
     @Override
-    protected void buildDoc() throws IOException {
+    protected void buildDoc() {
         consumer.accept(model);
     }
 }

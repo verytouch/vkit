@@ -2,6 +2,7 @@ package top.verytouch.vkit.mydoc.builder;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -20,6 +21,15 @@ public class BuilderTask extends Task.Backgroundable {
     public BuilderTask(DocBuilder docBuilder) {
         super(docBuilder.event.getProject(), "MyDoc", false);
         this.docBuilder = docBuilder;
+    }
+
+    /**
+     * 执行构建任务
+     * idea下方出现进度条
+     * buildApi -> buildDoc
+     */
+    public static void start(DocBuilder docBuilder) {
+        ProgressManager.getInstance().run(new BuilderTask(docBuilder));
     }
 
     @Override

@@ -117,6 +117,10 @@ public class JsonUtil {
             super.put(k, v);
             return this;
         }
+
+        public String toJson() {
+            return JsonUtil.toJson(this);
+        }
     }
 
     /**
@@ -127,6 +131,10 @@ public class JsonUtil {
         public JsonArray<E> addOne(E e) {
             super.add(e);
             return this;
+        }
+
+        public String toJson() {
+            return JsonUtil.toJson(this);
         }
     }
 }

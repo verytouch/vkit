@@ -22,8 +22,12 @@ import java.util.function.BiFunction;
  */
 public final class OpenApiUtil {
 
+    /**
+     * 生成openapi文档
+     * extra对每个接口添加定制属性
+     */
     @SuppressWarnings("unchecked")
-    public static String buildModel(ApiModel model, BiFunction<ApiGroup, ApiOperation, Map<String, Object>> extra) {
+    public static JsonObject<String, Object> buildModel(ApiModel model, BiFunction<ApiGroup, ApiOperation, Map<String, Object>> extra) {
         JsonObject<String, Object> paths = JsonUtil.newObject();
         for (ApiGroup group : model.getData()) {
             for (ApiOperation operation : group.getOperationList()) {
@@ -32,18 +36,20 @@ public final class OpenApiUtil {
                 ((JsonObject<String, Object>) paths.get(path)).putAll(buildOperation(group, operation, extra));
             }
         }
-        JsonObject<String, Object> openapi = JsonUtil.newObject()
+        return JsonUtil.newObject()
                 .putOne("openapi", "3.0.0")
                 .putOne("info", JsonUtil.newObject("title", model.getName()).putOne("version", "1.0.0"))
                 .putOne("paths", paths);
-        return JsonUtil.toJson(openapi);
     }
 
-    public static String buildModel(ApiModel model) {
+    /**
+     * 生成openapi文档
+     */
+    public static JsonObject<String, Object> buildModel(ApiModel model) {
         return buildModel(model, null);
     }
 
-    public static JsonObject<String, Object> buildOperation(ApiGroup group, ApiOperation operation, BiFunction<ApiGroup, ApiOperation, Map<String, Object>> extra) {
+    private static JsonObject<String, Object> buildOperation(ApiGroup group, ApiOperation operation, BiFunction<ApiGroup, ApiOperation, Map<String, Object>> extra) {
         JsonObject<String, Object> content = JsonUtil.newObject()
                 .putOne("description", operation.getDesc())
                 .putOne("summary", operation.getName())
@@ -94,15 +100,14 @@ public final class OpenApiUtil {
         if (CollectionUtils.isEmpty(children)) {
             return content;
         }
+        JsonObject<String, Object> properties = JsonUtil.newObject();
         if (ClassKind.ARRAY == field.getClassKind()) {
-            JsonObject<String, Object> properties = JsonUtil.newObject();
             children.forEach(child -> properties.putOne(child.getName(), buildField(child)));
             JsonObject<String, Object> items = JsonUtil.newObject()
                     .putOne("type", "object")
                     .putOne("properties", properties);
             content.putOne("items", items);
         } else {
-            JsonObject<String, Object> properties = JsonUtil.newObject();
             children.forEach(child -> properties.putOne(child.getName(), buildField(child)));
             content.putOne("properties", properties);
         }

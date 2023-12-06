@@ -6,6 +6,12 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 
+/**
+ * module filter选项持久化
+ *
+ * @author verytouch
+ * @since 2021-12
+ */
 @State(name = "UrlSearchModuleFilterConfiguration", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 public class UrlSearchModuleFilterConfiguration extends ChooseByNameFilterConfiguration<String> {
 

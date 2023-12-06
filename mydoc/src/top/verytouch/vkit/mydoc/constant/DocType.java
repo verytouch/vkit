@@ -22,20 +22,24 @@ public enum DocType {
     NONE("api", "", ""),
     CURL("curl", "", ""),
     API_FOX("apifox", "", ""),
-    OPEN_API("openapi", "", "");
+    OPEN_API("openapi", "", ""),
+    JSON_SCHEMA("json schema", ".json", "");
 
     /**
      * 默认模板目录
      */
     public static final String TEMPLATE_DIR = "template";
+
     /**
      * 类型名称
      */
     private final String name;
+
     /**
      * 导出文件的后缀
      */
     private final String suffix;
+
     /**
      * 模板文件的名称
      */

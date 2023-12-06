@@ -28,7 +28,7 @@ public enum ClassKind {
 
     DIAMOND(Pattern.compile("^[A-Z]$"), "object", false),
 
-    ENUM(Pattern.compile("java.lang.Enum"), "object", true),
+    ENUM(Pattern.compile("java.lang.Enum"), "string", true),
 
     JAVA(Pattern.compile("^java.*", Pattern.CASE_INSENSITIVE), "", true),
 
@@ -38,8 +38,19 @@ public enum ClassKind {
 
     OTHERS(Pattern.compile(".*", Pattern.CASE_INSENSITIVE), "object", false);
 
+    /**
+     * 匹配类全限定名的正则
+     */
     private final Pattern pattern;
+
+    /**
+     * 对应的openApiType，不确定时留空
+     */
     private final String openApiType;
+
+    /**
+     * 是否忽略子节点，为true时不解析其属性
+     */
     private final boolean ignoreChildren;
 
     public boolean isMatch(PsiType psiType) {

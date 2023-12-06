@@ -5,6 +5,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import top.verytouch.vkit.mydoc.builder.BuilderTask;
 import top.verytouch.vkit.mydoc.builder.VoidDocBuilder;
 import top.verytouch.vkit.mydoc.constant.DocType;
 import top.verytouch.vkit.mydoc.model.ApiGroup;
@@ -24,38 +25,40 @@ public class IdeaHttpAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
-        new VoidDocBuilder(event, DocType.IDEA_HTTP, apiModel -> {
+        BuilderTask.start(new VoidDocBuilder(event, DocType.IDEA_HTTP, apiModel -> {
             String text = buildIdeaHttp(apiModel);
             BuilderUtil.copyToClipboard(text);
-        }).build();
+        }));
     }
 
     private String buildIdeaHttp(ApiModel apiModel) {
-        StringBuilder content = new StringBuilder();
         if (apiModel == null || CollectionUtils.isEmpty(apiModel.getData())) {
-            return content.toString();
+            return "";
         }
         String host = apiModel.getConfig().getApiServer();
         String headers = apiModel.getConfig().realHeaders().entrySet().stream()
                 .map(h -> h.getKey() + ": " + h.getValue())
                 .collect(Collectors.joining("\n", "\n", ""));
-        for (ApiGroup apiGroup : apiModel.getData()) {
-            for (ApiOperation apiOperation : apiGroup.getOperationList()) {
-                content.append("### ").append(apiOperation.getName())
-                        .append("\n").append(apiOperation.getMethod()).append(" ").append(host).append(apiGroup.getPath()).append(apiOperation.getPath());
-                if (CollectionUtils.isNotEmpty(apiOperation.getRequestParam())) {
-                    String params = apiOperation.getRequestParam().stream()
-                            .map(p -> p.getName() + "=")
-                            .collect(Collectors.joining("&", "?", ""));
-                    content.append(params);
-                }
-                content.append(headers);
-                if (StringUtils.isNotBlank(apiOperation.getRequestBodyExample())) {
-                    content.append("\nContent-Type: application/json")
-                            .append("\n\n").append(apiOperation.getRequestBodyExample());
-                }
-                content.append("\n\n\n");
-            }
+        return apiModel.getData().stream()
+                .flatMap(g -> g.getOperationList().stream().peek(a -> a.setPath(host + g.getPath() + a.getPath())))
+                .map(operation -> buildOperation(operation, headers))
+                .collect(Collectors.joining("\n\n\n"));
+    }
+
+    private String buildOperation(ApiOperation apiOperation, String headers) {
+        StringBuilder content = new StringBuilder();
+        content.append("### ").append(apiOperation.getName())
+                .append("\n").append(apiOperation.getMethod()).append(" ").append(apiOperation.getPath());
+        if (CollectionUtils.isNotEmpty(apiOperation.getRequestParam())) {
+            String params = apiOperation.getRequestParam().stream()
+                    .map(p -> p.getName() + "=")
+                    .collect(Collectors.joining("&", "?", ""));
+            content.append(params);
+        }
+        content.append(headers);
+        if (StringUtils.isNotBlank(apiOperation.getRequestBodyExample())) {
+            content.append("\nContent-Type: application/json")
+                    .append("\n\n").append(apiOperation.getRequestBodyExample());
         }
         return content.toString();
     }

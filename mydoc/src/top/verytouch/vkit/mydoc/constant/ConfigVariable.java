@@ -33,10 +33,12 @@ public enum ConfigVariable {
      * 变量
      */
     private final String variable;
+
     /**
      * 说明
      */
     private final String remark;
+
     /**
      * 变量替换为真实值的方法
      */

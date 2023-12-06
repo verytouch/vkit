@@ -16,6 +16,7 @@ import com.intellij.psi.codeStyle.MinusculeMatcher;
 import com.intellij.psi.codeStyle.NameUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.PsiNavigateUtil;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +44,7 @@ public class UrlSearchEverywhereContributor implements WeightedSearchEverywhereC
 
     private List<ApiOperation> operationList;
     private final PersistentSearchEverywhereContributorFilter<String> moduleFilter;
-    private final List<String> modules = new LinkedList<>();
+    private final List<String> modules = Collections.synchronizedList(new LinkedList<>());
 
     public UrlSearchEverywhereContributor(@NotNull AnActionEvent event) {
         this.event = event;
@@ -76,10 +77,10 @@ public class UrlSearchEverywhereContributor implements WeightedSearchEverywhereC
             fetchData();
             fetchWeightedElements(pattern, progressIndicator, processor);
         } else {
-            Set<String> modules = new HashSet<>(moduleFilter.getSelectedElements());
-            if (modules.isEmpty()) {
+            if (CollectionUtils.isEmpty(moduleFilter.getAllElements()) || CollectionUtils.isEmpty(moduleFilter.getSelectedElements())) {
                 return;
             }
+            Set<String> modules = new HashSet<>(moduleFilter.getSelectedElements());
             for (ApiOperation item : operationList) {
                 Module module = ModuleUtil.findModuleForFile(item.getPsiMethod().getContainingFile());
                 if (module != null && modules.contains(module.getName()) && matcher.matches(item.getPath())) {

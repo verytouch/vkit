@@ -2,8 +2,9 @@ package top.verytouch.vkit.mydoc.action;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import top.verytouch.vkit.mydoc.builder.WordBuilder;
 import org.jetbrains.annotations.NotNull;
+import top.verytouch.vkit.mydoc.builder.BuilderTask;
+import top.verytouch.vkit.mydoc.builder.WordBuilder;
 
 /**
  * 导出为word
@@ -15,6 +16,6 @@ public class WordAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
-        new WordBuilder(event).build();
+        BuilderTask.start(new WordBuilder(event));
     }
 }

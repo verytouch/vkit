@@ -34,13 +34,11 @@ public class UrlSearchEverywherePsiRenderer extends SearchEverywherePsiRenderer 
         try {
             Color fgColor = list.getForeground();
             Color bgColor = UIUtil.getListBackground();
-            SimpleTextAttributes nameAttributes = new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, fgColor);
-
             ApiOperation api = (ApiOperation) value;
             String path = api.getPath();
-            String desc = String.format(" (%s#%s) [%s] ", ((PsiClass) api.getPsiMethod().getParent()).getName(), api.getPsiMethod().getName(), api.getMethod());
+            String desc = String.format(" (%s) [%s] ", ((PsiClass) api.getPsiMethod().getParent()).getName(), api.getMethod());
 
-            SpeedSearchUtil.appendColoredFragmentForMatcher(path, renderer, nameAttributes, getItemMatchers(list, value).nameMatcher, bgColor, selected);
+            SpeedSearchUtil.appendColoredFragmentForMatcher(path, renderer, new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, fgColor), getItemMatchers(list, value).nameMatcher, bgColor, selected);
             SpeedSearchUtil.appendColoredFragmentForMatcher(desc, renderer, SimpleTextAttributes.GRAYED_ATTRIBUTES, null, bgColor, selected);
             renderer.setIcon(AllIcons.Nodes.Servlet);
             return true;

@@ -22,7 +22,7 @@ public abstract class JavaActionGroup extends DefaultActionGroup {
     @Override
     public void update(@NotNull AnActionEvent event) {
         PsiFile psiFile = event.getData(PlatformDataKeys.PSI_FILE);
-        if (isJavaFileOrDirectory(psiFile)) {
+        if (isJavaFile(psiFile) || isJavaDirectory(psiFile)) {
             event.getPresentation().setVisible(true);
             return;
         }
@@ -31,17 +31,23 @@ public abstract class JavaActionGroup extends DefaultActionGroup {
             event.getPresentation().setVisible(false);
             return;
         }
-        boolean javaFileSelected = Arrays.stream(data).anyMatch(this::isJavaFileOrDirectory);
+        boolean javaFileSelected = Arrays.stream(data).anyMatch(e -> isJavaFile(e) ||isJavaDirectory(e));
         event.getPresentation().setVisible(javaFileSelected);
     }
 
-    private boolean isJavaFileOrDirectory(Object data) {
+    public static boolean isJavaFile(Object data) {
         if (data == null) {
             return false;
         }
         return data instanceof PsiJavaFile ||
-                data instanceof PsiClass ||
-                data instanceof PsiDirectoryNode;
+                data instanceof PsiClass;
+    }
+
+    public static boolean isJavaDirectory(Object data) {
+        if (data == null) {
+            return false;
+        }
+        return data instanceof PsiDirectoryNode;
     }
 
 }
