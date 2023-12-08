@@ -3,6 +3,7 @@ package top.verytouch.vkit.mydoc.search;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.actions.SearchEverywherePsiRenderer;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.psi.PsiClass;
@@ -31,7 +32,7 @@ public class UrlSearchEverywherePsiRenderer extends SearchEverywherePsiRenderer 
 
     @Override
     protected boolean customizeNonPsiElementLeftRenderer(ColoredListCellRenderer renderer, JList list, Object value, int index, boolean selected, boolean hasFocus) {
-        try {
+        ApplicationManager.getApplication().runReadAction(() -> {
             Color fgColor = list.getForeground();
             Color bgColor = UIUtil.getListBackground();
             ApiOperation api = (ApiOperation) value;
@@ -41,10 +42,8 @@ public class UrlSearchEverywherePsiRenderer extends SearchEverywherePsiRenderer 
             SpeedSearchUtil.appendColoredFragmentForMatcher(path, renderer, new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, fgColor), getItemMatchers(list, value).nameMatcher, bgColor, selected);
             SpeedSearchUtil.appendColoredFragmentForMatcher(desc, renderer, SimpleTextAttributes.GRAYED_ATTRIBUTES, null, bgColor, selected);
             renderer.setIcon(AllIcons.Nodes.Servlet);
-            return true;
-        } catch (Throwable ex) {
-            throw new RuntimeException(ex);
-        }
+        });
+        return true;
     }
 
     @Override

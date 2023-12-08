@@ -123,7 +123,7 @@ public final class OpenApiUtil {
         body.putOne("content", JsonUtil.newObject("application/json", JsonUtil.newObject("schema", schema)));
         if (ApiUtil.isBodyArray(bodyFields)) {
             // body是list
-            schema.putOne("type", "array").putOne("items", buildField(bodyFields.get(0)));
+            schema.putAll(buildField(bodyFields.get(0)));
         } else {
             // body是对象，解析其字段
             JsonObject<String, Object> properties = JsonUtil.newObject();

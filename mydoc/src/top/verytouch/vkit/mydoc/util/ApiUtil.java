@@ -85,7 +85,7 @@ public class ApiUtil {
             return "";
         }
         // 多路径，取第一个
-        if (multiplePath.startsWith("{") && multiplePath.endsWith("}")) {
+        if (multiplePath.startsWith("{") && multiplePath.endsWith("}") && multiplePath.contains(",")) {
             multiplePath = multiplePath.substring(1, multiplePath.length() - 1).split(",")[0];
         }
         // 处理斜杠
