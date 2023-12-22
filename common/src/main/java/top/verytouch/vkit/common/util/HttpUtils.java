@@ -225,6 +225,14 @@ public class HttpUtils {
     }
 
     /**
+     * 设置路径
+     */
+    public HttpUtils path(String path) {
+        this.url += path;
+        return this;
+    }
+
+    /**
      * 设置参数
      */
     public HttpUtils params(Map<String, Object> params) {

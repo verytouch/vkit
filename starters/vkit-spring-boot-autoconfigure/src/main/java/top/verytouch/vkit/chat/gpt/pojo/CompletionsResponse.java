@@ -1,6 +1,7 @@
 package top.verytouch.vkit.chat.gpt.pojo;
 
 import lombok.Data;
+import top.verytouch.vkit.chat.common.ChatUsage;
 
 import java.util.List;
 
@@ -23,5 +24,5 @@ public class CompletionsResponse {
 
     private List<DavinciChoice> choices;
 
-    private Usage usage;
+    private ChatUsage usage;
 }

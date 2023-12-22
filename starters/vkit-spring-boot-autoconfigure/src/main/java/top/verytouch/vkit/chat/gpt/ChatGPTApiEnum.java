@@ -2,6 +2,7 @@ package top.verytouch.vkit.chat.gpt;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import top.verytouch.vkit.chat.common.ChatApi;
 
 /**
  * chat-gpt官方接口
@@ -13,7 +14,7 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 @Getter
-public enum ChatGPTApiEnum {
+public enum ChatGPTApiEnum implements ChatApi {
 
     CHAT_COMPLETIONS("/v1/chat/completions"),
     COMPLETIONS("/v1/completions"),

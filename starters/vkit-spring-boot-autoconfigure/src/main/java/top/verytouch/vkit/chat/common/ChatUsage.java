@@ -1,4 +1,4 @@
-package top.verytouch.vkit.chat.gpt.pojo;
+package top.verytouch.vkit.chat.common;
 
 import lombok.Data;
 
@@ -9,7 +9,7 @@ import lombok.Data;
  * @since 2023/7/3 11:16
  */
 @Data
-public class Usage {
+public class ChatUsage {
 
     private long prompt_tokens;
 
@@ -17,15 +17,15 @@ public class Usage {
 
     private long total_tokens;
 
-    public static Usage of(long prompt, long completion) {
-        Usage usage = new Usage();
+    public static ChatUsage of(long prompt, long completion) {
+        ChatUsage usage = new ChatUsage();
         usage.setPrompt_tokens(prompt);
         usage.setCompletion_tokens(completion);
         usage.setTotal_tokens(prompt + completion);
         return usage;
     }
 
-    public Usage add(Usage another) {
+    public ChatUsage add(ChatUsage another) {
         if (another == null) {
             return this;
         }

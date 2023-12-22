@@ -46,7 +46,7 @@ public class RateService {
 
     private long getExpireAt(RateLimiter limiter) {
         return LocalDateTime.now()
-                .plus(limiter.time(), limiter.unit())
+                .plus(limiter.expire(), limiter.timUnit())
                 .toInstant(DateUtils.ZONE_OFFSET)
                 .toEpochMilli();
     }

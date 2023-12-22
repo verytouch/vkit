@@ -4,6 +4,10 @@ import com.knuddels.jtokkit.Encodings;
 import com.knuddels.jtokkit.api.Encoding;
 import com.knuddels.jtokkit.api.EncodingType;
 import lombok.extern.slf4j.Slf4j;
+import top.verytouch.vkit.chat.common.ChatMessage;
+import top.verytouch.vkit.chat.common.ChatResult;
+import top.verytouch.vkit.chat.common.ChatService;
+import top.verytouch.vkit.chat.common.ChatUsage;
 import top.verytouch.vkit.chat.gpt.pojo.*;
 import top.verytouch.vkit.common.util.HttpUtils;
 import top.verytouch.vkit.common.util.JsonUtils;
@@ -18,6 +22,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * chat-gpt接口
@@ -26,7 +31,7 @@ import java.util.function.Consumer;
  * @since 2023/7/3 10:49
  */
 @Slf4j
-public class ChatGPTService {
+public class ChatGPTService implements ChatService {
 
     private final ChatGPTProperties properties;
     private final Encoding encoding;
@@ -34,6 +39,22 @@ public class ChatGPTService {
     public ChatGPTService(ChatGPTProperties properties) {
         this.properties = properties;
         this.encoding = Encodings.newLazyEncodingRegistry().getEncoding(EncodingType.fromName(properties.getTokenEncodingType()).orElse(EncodingType.CL100K_BASE));
+    }
+
+    @Override
+    public ChatResult<String> chat(List<ChatMessage> messages) {
+        ChatCompletionsResponse response = chatCompletions(messages);
+        return ChatResult.of(response.firstMessage(), response.getUsage());
+    }
+
+    @Override
+    public List<String> createImage(String prompt, String size, int n) {
+        CreateImageRequest request = new CreateImageRequest();
+        request.setN(n);
+        request.setPrompt(prompt);
+        request.setSize(size);
+        CreateImageResponse response = createImage(request);
+        return response.getData().stream().map(CreateImageResponse.Data::getUrl).collect(Collectors.toList());
     }
 
     /**
@@ -48,7 +69,7 @@ public class ChatGPTService {
      *
      * @param messages 如果需要上下文，需要把之前的会话信息放入messages数组
      */
-    public ChatCompletionsResponse chatCompletions(List<Message> messages) {
+    public ChatCompletionsResponse chatCompletions(List<ChatMessage> messages) {
         Map<String, Object> body = MapUtils.Builder.hashMap(String.class, Object.class)
                 .put("model", ChatGPTProperties.MODEL_TURBO)
                 .put("messages", messages)
@@ -64,7 +85,7 @@ public class ChatGPTService {
      * @param consumer 每次返回的数据
      * @param finisher ChunkResponse为所有请求拼接好的，usage依照拼接好的算
      */
-    public void chatCompletions(List<Message> messages, Consumer<String> consumer, BiConsumer<ChunkResponse, Usage> finisher) {
+    public void chatCompletions(List<ChatMessage> messages, Consumer<String> consumer, BiConsumer<ChunkResponse, ChatUsage> finisher) {
         Map<String, Object> body = MapUtils.Builder.hashMap(String.class, Object.class)
                 .put("model", ChatGPTProperties.MODEL_TURBO)
                 .put("messages", messages)
@@ -76,7 +97,7 @@ public class ChatGPTService {
                     .reduce(ChunkResponse::mergeMessage)
                     .orElse(null);
             int promptTokens = messages.stream()
-                    .map(Message::getContent)
+                    .map(ChatMessage::getContent)
                     .map(this::tokens)
                     .reduce(0, Math::addExact);
             int completionTokens = 0;
@@ -85,7 +106,7 @@ public class ChatGPTService {
             } catch (Exception e) {
                 log.error("计算completionTokens异常", e);
             }
-            Usage usage = Usage.of(promptTokens, completionTokens);
+            ChatUsage usage = ChatUsage.of(promptTokens, completionTokens);
             finisher.accept(response, usage);
             log.info("chat-gpt-chunk组装后的数据 = {}, usage = {}", response, usage);
         };
@@ -111,7 +132,7 @@ public class ChatGPTService {
                 .map(CreateImageResponse.Data::getUrl)
                 .map(this::tokens)
                 .reduce(0, Math::addExact);
-        imageResponse.setUsage(Usage.of(this.tokens(request.getPrompt()), completionTokens));
+        imageResponse.setUsage(ChatUsage.of(this.tokens(request.getPrompt()), completionTokens));
         return imageResponse;
     }
 
@@ -173,5 +194,4 @@ public class ChatGPTService {
                 .connectTimeout(Duration.ofSeconds(30))
                 .readTimeout(Duration.ofSeconds(120));
     }
-
 }

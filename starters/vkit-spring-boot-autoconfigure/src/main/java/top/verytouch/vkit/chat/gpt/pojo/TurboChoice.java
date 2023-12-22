@@ -1,6 +1,7 @@
 package top.verytouch.vkit.chat.gpt.pojo;
 
 import lombok.Data;
+import top.verytouch.vkit.chat.common.ChatMessage;
 
 /**
  * choice for gpt-3.5-turbo
@@ -14,7 +15,7 @@ public class TurboChoice {
 
     private long index;
 
-    private Message message;
+    private ChatMessage message;
 
     private String finish_reason;
 }

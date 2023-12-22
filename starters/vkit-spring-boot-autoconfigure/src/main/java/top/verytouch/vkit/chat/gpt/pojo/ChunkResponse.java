@@ -1,6 +1,7 @@
 package top.verytouch.vkit.chat.gpt.pojo;
 
 import lombok.Data;
+import top.verytouch.vkit.chat.common.ChatMessage;
 import top.verytouch.vkit.common.util.JsonUtils;
 
 import java.util.LinkedList;
@@ -30,7 +31,7 @@ public class ChunkResponse {
         if (another == null || another.getChoices() == null || another.getChoices().isEmpty()) {
             return this;
         }
-        Message anotherDelta = another.getChoices().get(0).getDelta();
+        ChatMessage anotherDelta = another.getChoices().get(0).getDelta();
         if (anotherDelta == null || anotherDelta.getContent() == null) {
             return this;
         }
@@ -41,7 +42,7 @@ public class ChunkResponse {
             if (this.choices.get(0) == null) {
                 this.choices.remove(0);
             }
-            Message message = new Message();
+            ChatMessage message = new ChatMessage();
             message.setContent("");
             ChunkChoice chunkChoice = new ChunkChoice();
             chunkChoice.setIndex(0);
@@ -50,11 +51,11 @@ public class ChunkResponse {
         }
         ChunkChoice firstChoice = this.choices.get(0);
         if (firstChoice.getDelta() == null) {
-            Message message = new Message();
+            ChatMessage message = new ChatMessage();
             message.setContent("");
             this.choices.get(0).setDelta(message);
         }
-        Message delta = this.choices.get(0).getDelta();
+        ChatMessage delta = this.choices.get(0).getDelta();
         String content = Optional.ofNullable(delta.getContent()).orElse("");
         delta.setContent(content + anotherDelta.getContent());
         return this;

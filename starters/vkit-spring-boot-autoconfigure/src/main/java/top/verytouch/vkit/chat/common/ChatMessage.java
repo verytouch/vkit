@@ -1,6 +1,8 @@
-package top.verytouch.vkit.chat.gpt.pojo;
+package top.verytouch.vkit.chat.common;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * message
@@ -10,7 +12,9 @@ import lombok.Data;
  *
  */
 @Data
-public class Message {
+@NoArgsConstructor
+@AllArgsConstructor
+public class ChatMessage {
 
     /**
      * The role of the messages author. One of system, user, assistant, or function

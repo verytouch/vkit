@@ -2,6 +2,8 @@ package top.verytouch.vkit.chat.gpt.pojo;
 
 import lombok.Data;
 import org.springframework.util.CollectionUtils;
+import top.verytouch.vkit.chat.common.ChatMessage;
+import top.verytouch.vkit.chat.common.ChatUsage;
 
 import java.util.List;
 
@@ -24,7 +26,7 @@ public class ChatCompletionsResponse {
 
     private List<TurboChoice> choices;
 
-    private Usage usage;
+    private ChatUsage usage;
 
     /**
      * get content from first choice.
@@ -34,7 +36,7 @@ public class ChatCompletionsResponse {
         if (CollectionUtils.isEmpty(choices)) {
             return null;
         }
-        Message message = choices.get(0).getMessage();
+        ChatMessage message = choices.get(0).getMessage();
         if (message == null) {
             return null;
         }

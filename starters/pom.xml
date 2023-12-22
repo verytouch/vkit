@@ -19,6 +19,7 @@
         <module>alipay-spring-boot-starter</module>
         <module>rbac-spring-boot-starter</module>
         <module>chatgpt-spring-boot-starter</module>
+        <module>yiyan-spring-boot-starter</module>
     </modules>
 
     <properties>

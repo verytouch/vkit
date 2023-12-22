@@ -1,6 +1,7 @@
 package top.verytouch.vkit.chat.gpt.pojo;
 
 import lombok.Data;
+import top.verytouch.vkit.chat.common.ChatMessage;
 
 /**
  * choice for chatCompletions chunk
@@ -13,7 +14,7 @@ import lombok.Data;
 public class ChunkChoice {
 
     private Integer index;
-    private Message delta;
+    private ChatMessage delta;
     private String finish_reason;
 
 }

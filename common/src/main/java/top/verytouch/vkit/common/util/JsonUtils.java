@@ -10,6 +10,7 @@ import top.verytouch.vkit.common.exception.BusinessException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -96,6 +97,71 @@ public final class JsonUtils {
             return mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, clazz));
         } catch (IOException e) {
             throw new BusinessException("json反序列化失败", e);
+        }
+    }
+
+    /**
+     * 创建一个对象
+     */
+    public static JsonObject<String, Object> newObject() {
+        return new JsonObject<>();
+    }
+
+    /**
+     * 创建一个对象，并放入键值对
+     *
+     * @param k 键
+     * @param v 值
+     */
+    public static <K, V> JsonObject<K, V> newObject(K k, V v) {
+        JsonObject<K, V> obj = new JsonObject<>();
+        return obj.putOne(k, v);
+    }
+
+    /**
+     * 创建一个数组
+     */
+    public static <T> JsonArray<T> newArray() {
+        return new JsonArray<>();
+    }
+
+    /**
+     * 创建一个数组，并放入一个元素
+     *
+     * @param item 元素
+     */
+    public static <T> JsonArray<T> newArray(T item) {
+        return new JsonArray<T>().addOne(item);
+    }
+
+    /**
+     * 对象
+     */
+    public static class JsonObject<K, V> extends HashMap<K, V> {
+
+        public JsonObject<K, V> putOne(K k, V v) {
+            super.put(k, v);
+            return this;
+        }
+
+        public String toJson() {
+            return JsonUtils.toJson(this);
+        }
+
+    }
+
+    /**
+     * 数组
+     */
+    public static class JsonArray<E> extends LinkedList<E> {
+
+        public JsonArray<E> addOne(E e) {
+            super.add(e);
+            return this;
+        }
+
+        public String toJson() {
+            return JsonUtils.toJson(this);
         }
     }
 
