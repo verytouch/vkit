@@ -131,7 +131,7 @@
             <add-to-group group-id="MyDoc.ProjectPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.WordAction"/>
         </action>
 
-        <action id="top.verytouch.vkit.mydoc.action.JsonAction" class="top.verytouch.vkit.mydoc.action.JsonAction" text="Copy Json Doc">
+        <action id="top.verytouch.vkit.mydoc.action.JsonAction" class="top.verytouch.vkit.mydoc.action.JsonAction" text="Copy Json Model">
             <add-to-group group-id="MyDoc.EditorPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.PostmanAction"/>
             <add-to-group group-id="MyDoc.ProjectPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.PostmanAction"/>
         </action>
