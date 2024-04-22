@@ -3,10 +3,7 @@ package top.verytouch.vkit.mydoc.util;
 import lombok.Data;
 import org.apache.commons.io.IOUtils;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URL;
@@ -312,7 +309,11 @@ public class HttpUtil {
     }
 
     private String urlEncode(String value) {
-        return URLEncoder.encode(value, charset);
+        try {
+            return URLEncoder.encode(value, charset.displayName());
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

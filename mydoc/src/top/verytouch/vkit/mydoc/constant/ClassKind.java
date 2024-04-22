@@ -34,6 +34,8 @@ public enum ClassKind {
 
     SERVLET(Pattern.compile("javax.servlet.*"), "object", true),
 
+    FILE(Pattern.compile("org.springframework.web.multipart.*"), "file", true),
+
     WEB_ANNO(Pattern.compile("org.springframework.web.bind.annotation.*"), "object", true),
 
     OTHERS(Pattern.compile(".*", Pattern.CASE_INSENSITIVE), "object", false);

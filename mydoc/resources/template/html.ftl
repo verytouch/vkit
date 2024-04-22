@@ -158,7 +158,7 @@
 </div>
 <div id="right">
     <#macro ftable fields>
-        <#if fields??>
+        <#if fields?? && (fields ? size > 0)>
             <#nested>
             <table>
                 <tr>
@@ -199,15 +199,21 @@
             <@ftable fields=api.requestParam>
                 <p><span></span>RequestParam</p>
             </@ftable>
-            <@ftable fields=api.requestBody>
-                <p><span></span>RequestBody</p>
-            </@ftable>
-            <#if api.requestBodyExample>
-                <p class="sub-table-title">
-                    RequestBody示例
-                    <a onclick="copyClipboard('#req-${group_index}-${api_index}')">📰</a>
-                </p>
-                <pre id="req-${group_index}-${api_index}">${api.requestBodyExample}</pre>
+            <#if api.requestFile?? && (api.requestFile ? size > 0)>
+                <@ftable fields=api.requestFile>
+                    <p><span></span>RequestBody</p>
+                </@ftable>
+            <#else>
+                <@ftable fields=api.requestBody>
+                    <p><span></span>RequestBody</p>
+                </@ftable>
+                <#if api.requestBodyExample>
+                    <p class="sub-table-title">
+                        RequestBody示例
+                        <a onclick="copyClipboard('#req-${group_index}-${api_index}')">📰</a>
+                    </p>
+                    <pre id="req-${group_index}-${api_index}">${api.requestBodyExample}</pre>
+                </#if>
             </#if>
             <@ftable fields=api.responseBody>
                 <p><span></span>ResponseBody</p>

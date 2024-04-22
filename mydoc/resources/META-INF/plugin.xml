@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>top.verytouch.vkit.mydoc.plugin.idea</id>
     <name>MyDoc</name>
-    <version>2.2.2</version>
+    <version>2.2.3</version>
     <vendor email="verytouch@qq.com" url="url">verytouch</vendor>
 
     <description><![CDATA[
@@ -14,7 +14,7 @@
         <li>copy idea http client</li>
         <li>copy curl</li>
         <li>copy openapi</li>
-        <li>copy json doc</li>
+        <li>copy json model</li>
         <li>copy json schema</li>
         <li>upload to apifox</li>
         <li>search url (ctrl + \)</li>
@@ -28,6 +28,13 @@
     ]]></description>
 
     <change-notes><![CDATA[
+    <div>
+        <strong>v2.2.3</strong>
+        <ul>
+          <li>fix bugs</li>
+        </ul>
+     </div>
+    <div>
     <div>
         <strong>v2.2.2</strong>
         <ul>
@@ -131,13 +138,13 @@
             <add-to-group group-id="MyDoc.ProjectPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.WordAction"/>
         </action>
 
-        <action id="top.verytouch.vkit.mydoc.action.JsonAction" class="top.verytouch.vkit.mydoc.action.JsonAction" text="Copy Json Model">
+        <action id="top.verytouch.vkit.mydoc.action.JsonModelAction" class="top.verytouch.vkit.mydoc.action.JsonModelAction" text="Copy Json Model">
             <add-to-group group-id="MyDoc.EditorPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.PostmanAction"/>
             <add-to-group group-id="MyDoc.ProjectPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.PostmanAction"/>
         </action>
 
         <action id="top.verytouch.vkit.mydoc.action.JsonSchemaAction" class="top.verytouch.vkit.mydoc.action.JsonSchemaAction" text="Copy Json Schema">
-            <add-to-group group-id="MyDoc.EditorPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.JsonAction"/>
+            <add-to-group group-id="MyDoc.EditorPopup" anchor="after" relative-to-action="top.verytouch.vkit.mydoc.action.JsonModelAction"/>
         </action>
 
         <action id="top.verytouch.vkit.mydoc.action.IdeaHttpAction" class="top.verytouch.vkit.mydoc.action.IdeaHttpAction" text="Copy Idea Http">

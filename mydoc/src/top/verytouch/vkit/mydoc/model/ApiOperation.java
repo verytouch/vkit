@@ -66,6 +66,11 @@ public class ApiOperation {
     private List<ApiField> requestBody;
 
     /**
+     * 文件上传
+     */
+    private List<ApiField> requestFile;
+
+    /**
      * 请求示例
      */
     private String requestBodyExample;

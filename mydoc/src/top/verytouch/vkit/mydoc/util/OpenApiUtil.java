@@ -55,8 +55,8 @@ public final class OpenApiUtil {
                 .putOne("summary", operation.getName())
                 .putOne("operationId", UUID.randomUUID().toString())
                 .putOne("parameters", buildParameters(operation))
-                .putOne("requestBody", buildBody(operation.getRequestBody()))
-                .putOne("responses", JsonUtil.newObject("200", buildBody(operation.getResponseBody())));
+                .putOne("requestBody", buildRequestBody(operation))
+                .putOne("responses", JsonUtil.newObject("200", buildBody(operation.getResponseBody(), "application/json")));
         if (extra != null) {
             Map<String, Object> map = extra.apply(group, operation);
             content.putAll(map);
@@ -114,13 +114,20 @@ public final class OpenApiUtil {
         return content;
     }
 
-    private static JsonObject<String, Object> buildBody(List<ApiField> bodyFields) {
+    private static JsonObject<String, Object> buildRequestBody(ApiOperation operation) {
+        boolean isFile = CollectionUtils.isNotEmpty(operation.getRequestFile());
+        List<ApiField> bodyFields = isFile ? operation.getRequestFile() : operation.getResponseBody();
+        String contentType = isFile ? "multipart/form-data" : "application/json";
+        return buildBody(bodyFields, contentType);
+    }
+
+    private static JsonObject<String, Object> buildBody(List<ApiField> bodyFields, String contentType) {
         JsonObject<String, Object> body = JsonUtil.newObject();
         if (CollectionUtils.isEmpty(bodyFields)) {
             return body;
         }
         JsonObject<String, Object> schema = JsonUtil.newObject();
-        body.putOne("content", JsonUtil.newObject("application/json", JsonUtil.newObject("schema", schema)));
+        body.putOne("content", JsonUtil.newObject(contentType, JsonUtil.newObject("schema", schema)));
         if (ApiUtil.isBodyArray(bodyFields)) {
             // body是list
             schema.putAll(buildField(bodyFields.get(0)));

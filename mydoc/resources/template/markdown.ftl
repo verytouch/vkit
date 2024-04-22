@@ -31,16 +31,23 @@
 <@ftable fields=api.requestParam>
 ▪ **RequestParam**
 </@ftable>
-<@ftable fields=api.requestBody>
+
+<#if api.requestFile?? && (api.requestFile ? size > 0)>
+<@ftable fields=api.requestFile>
 ▪ **RequestBody**
 </@ftable>
-
+<#else>
+<@ftable fields=api.requestBody>
+    ▪ **RequestBody**
+</@ftable>
 <#if api.requestBodyExample>
 > RequestBody示例
 ```json
 ${api.requestBodyExample}
 ```
 </#if>
+</#if>
+
 <@ftable fields=api.responseBody>
 ▪ **ResponseBody**
 </@ftable>

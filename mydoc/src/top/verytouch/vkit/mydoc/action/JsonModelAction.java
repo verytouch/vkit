@@ -15,7 +15,7 @@ import top.verytouch.vkit.mydoc.util.JsonUtil;
  * @author verytouch
  * @since 2021-11
  */
-public class JsonAction extends AnAction {
+public class JsonModelAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {

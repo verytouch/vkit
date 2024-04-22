@@ -406,34 +406,38 @@
 
         <@ftable fields=api.pathVariable>RequestPath</@ftable>
         <@ftable fields=api.requestParam>RequestParam</@ftable>
-        <@ftable fields=api.requestBody>RequestBody</@ftable>
-        <#if api.requestBodyExample>
-            <w:p w:rsidR="00FF63BA" w:rsidRPr="001F27D6" w:rsidRDefault="00AD7DD0" w:rsidP="001F27D6">
-                <w:pPr>
-                    <w:spacing w:line="360" w:lineRule="auto"/>
-                    <w:rPr>
-                        <w:rFonts w:ascii="宋体" w:eastAsia="宋体" w:hAnsi="宋体" w:cs="Open Sans"/>
-                        <w:b/>
-                        <w:color w:val="888888"/>
-                        <w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
-                    </w:rPr>
-                </w:pPr>
-                <w:r w:rsidRPr="001F27D6">
-                    <w:rPr>
-                        <w:rFonts w:ascii="宋体" w:eastAsia="宋体" w:hAnsi="宋体" w:cs="Open Sans"/>
-                        <w:b/>
-                        <w:color w:val="888888"/>
-                        <w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
-                    </w:rPr>
-                    <w:t>RequestBody示例</w:t>
-                </w:r>
-            </w:p>
-            <w:p>
-                <w:r>
-                    <w:rPr><w:color w:val="666666"/></w:rPr>
-                    <w:t>${api.requestBodyExample ? replace('\r\n', '<w:br/>')}</w:t>
-                </w:r>
-            </w:p>
+        <#if api.requestFile?? && (api.requestFile ? size > 0)>
+            <@ftable fields=api.requestFile>RequestBody</@ftable>
+        <#else>
+            <@ftable fields=api.requestBody>RequestBody</@ftable>
+            <#if api.requestBodyExample>
+                <w:p w:rsidR="00FF63BA" w:rsidRPr="001F27D6" w:rsidRDefault="00AD7DD0" w:rsidP="001F27D6">
+                    <w:pPr>
+                        <w:spacing w:line="360" w:lineRule="auto"/>
+                        <w:rPr>
+                            <w:rFonts w:ascii="宋体" w:eastAsia="宋体" w:hAnsi="宋体" w:cs="Open Sans"/>
+                            <w:b/>
+                            <w:color w:val="888888"/>
+                            <w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+                        </w:rPr>
+                    </w:pPr>
+                    <w:r w:rsidRPr="001F27D6">
+                        <w:rPr>
+                            <w:rFonts w:ascii="宋体" w:eastAsia="宋体" w:hAnsi="宋体" w:cs="Open Sans"/>
+                            <w:b/>
+                            <w:color w:val="888888"/>
+                            <w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+                        </w:rPr>
+                        <w:t>RequestBody示例</w:t>
+                    </w:r>
+                </w:p>
+                <w:p>
+                    <w:r>
+                        <w:rPr><w:color w:val="666666"/></w:rPr>
+                        <w:t>${api.requestBodyExample ? replace('\r\n', '<w:br/>')}</w:t>
+                    </w:r>
+                </w:p>
+            </#if>
         </#if>
 
         <@ftable fields=api.responseBody>ResponseBody</@ftable>
