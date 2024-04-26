@@ -20,7 +20,6 @@ import top.verytouch.vkit.mydoc.model.ApiConfig;
 import top.verytouch.vkit.mydoc.model.ApiGroup;
 import top.verytouch.vkit.mydoc.model.ApiModel;
 
-import javax.annotation.Nullable;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.util.List;
@@ -94,7 +93,7 @@ public class BuilderUtil {
      * @param toBuildList     选中的类
      * @param specifiedMethod 选中的方法
      */
-    public static List<ApiGroup> buildData(ApiBuilder builder, List<PsiClass> toBuildList, @Nullable String specifiedMethod) {
+    public static List<ApiGroup> buildData(ApiBuilder builder, List<PsiClass> toBuildList, String specifiedMethod) {
         List<ApiGroup> data = new LinkedList<>();
         if (CollectionUtils.isEmpty(toBuildList)) {
             return data;

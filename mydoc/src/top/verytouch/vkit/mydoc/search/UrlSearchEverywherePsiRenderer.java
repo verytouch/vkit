@@ -47,7 +47,7 @@ public class UrlSearchEverywherePsiRenderer extends SearchEverywherePsiRenderer 
     }
 
     @Override
-    protected @Nullable TextWithIcon getItemLocation(Object value) {
+    protected TextWithIcon getItemLocation(Object value) {
         if (!(value instanceof ApiOperation)) {
             return super.getItemLocation(value);
         }

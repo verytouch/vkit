@@ -5,7 +5,7 @@ import com.intellij.psi.PsiType;
 import com.intellij.psi.util.PsiTypesUtil;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
 import java.util.regex.Pattern;

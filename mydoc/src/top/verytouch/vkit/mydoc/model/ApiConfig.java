@@ -5,7 +5,7 @@ import top.verytouch.vkit.mydoc.config.ConfigStorage;
 import top.verytouch.vkit.mydoc.constant.ConfigVariable;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;

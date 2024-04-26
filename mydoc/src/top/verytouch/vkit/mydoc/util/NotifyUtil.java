@@ -3,8 +3,8 @@ package top.verytouch.vkit.mydoc.util;
 import com.intellij.notification.NotificationGroupManager;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.project.Project;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 
 /**
  * 日志输出到idea右下角event log

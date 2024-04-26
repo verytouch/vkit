@@ -2,7 +2,7 @@ package top.verytouch.vkit.mydoc.util;
 
 import com.intellij.psi.PsiModifierListOwner;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import top.verytouch.vkit.mydoc.constant.ClassKind;
 import top.verytouch.vkit.mydoc.model.ApiField;
 

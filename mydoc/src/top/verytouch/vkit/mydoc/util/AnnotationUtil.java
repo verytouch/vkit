@@ -2,7 +2,7 @@ package top.verytouch.vkit.mydoc.util;
 
 import com.intellij.psi.*;
 import top.verytouch.vkit.mydoc.constant.SpecialClassNames;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
 import java.util.List;

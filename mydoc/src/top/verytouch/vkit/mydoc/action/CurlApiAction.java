@@ -1,9 +1,8 @@
 package top.verytouch.vkit.mydoc.action;
 
-import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import top.verytouch.vkit.mydoc.builder.BuilderTask;
 import top.verytouch.vkit.mydoc.builder.VoidDocBuilder;
@@ -21,7 +20,7 @@ import java.util.stream.Collectors;
  * @author verytouch
  * @since 2023-11
  */
-public class CurlApiAction extends AnAction {
+public class CurlApiAction extends AbstractMyAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {

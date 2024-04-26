@@ -9,7 +9,6 @@ import top.verytouch.vkit.mydoc.constant.ClassKind;
 import top.verytouch.vkit.mydoc.constant.DocType;
 import top.verytouch.vkit.mydoc.model.ApiConfig;
 import top.verytouch.vkit.mydoc.model.ApiField;
-import top.verytouch.vkit.mydoc.util.ApiUtil;
 import top.verytouch.vkit.mydoc.util.BuilderUtil;
 import top.verytouch.vkit.mydoc.util.JsonUtil;
 import top.verytouch.vkit.mydoc.util.JsonUtil.JsonObject;

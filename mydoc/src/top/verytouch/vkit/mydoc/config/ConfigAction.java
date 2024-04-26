@@ -95,15 +95,15 @@ public class ConfigAction implements Configurable {
     @Override
     public boolean isModified() {
         ConfigStorage config = ConfigStorage.getInstance(project);
-        return isModified(docName, config.docName) ||
-                isModified(host, config.apiServer) ||
-                isModified(contextPath, config.contextPath) ||
+        return !docName.getText().trim().equals(config.docName) ||
+                !host.getText().trim().equals(config.apiServer) ||
+                !contextPath.getText().trim().equals(config.contextPath) ||
                 !headers.getText().trim().equals(config.headers) ||
                 !apiFox.getText().trim().equals(config.apiFox) ||
-                isModified(templateDir, config.templateDir) ||
-                isModified(showExample, config.showExample) ||
-                isModified(showRequired, config.showRequired) ||
-                isModified(showApiDesc, config.showApiDesc);
+                !templateDir.getText().trim().equals(config.templateDir) ||
+                showExample.isSelected() != config.showExample ||
+                showRequired.isSelected() != config.showRequired ||
+                showApiDesc.isSelected() != config.showApiDesc;
     }
 
     @Override

@@ -170,7 +170,7 @@ public class UrlSearchEverywhereContributor implements WeightedSearchEverywhereC
 
 
     @Override
-    public @Nullable Object getDataForItem(@NotNull ApiOperation apiOperation, @NotNull String s) {
+    public Object getDataForItem(@NotNull ApiOperation apiOperation, @NotNull String s) {
         return null;
     }
 

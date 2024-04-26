@@ -1,6 +1,7 @@
 package top.verytouch.vkit.mydoc.action.group;
 
 import com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode;
+import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
@@ -18,6 +19,11 @@ import java.util.Arrays;
  * @since 2021-12-5
  */
 public abstract class JavaActionGroup extends DefaultActionGroup {
+
+    @Override
+    public @NotNull ActionUpdateThread getActionUpdateThread() {
+        return ActionUpdateThread.BGT;
+    }
 
     @Override
     public void update(@NotNull AnActionEvent event) {
