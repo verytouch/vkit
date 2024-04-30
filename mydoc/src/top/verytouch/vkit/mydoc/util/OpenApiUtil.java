@@ -116,7 +116,7 @@ public final class OpenApiUtil {
 
     private static JsonObject<String, Object> buildRequestBody(ApiOperation operation) {
         boolean isFile = CollectionUtils.isNotEmpty(operation.getRequestFile());
-        List<ApiField> bodyFields = isFile ? operation.getRequestFile() : operation.getResponseBody();
+        List<ApiField> bodyFields = isFile ? operation.getRequestFile() : operation.getRequestBody();
         String contentType = isFile ? "multipart/form-data" : "application/json";
         return buildBody(bodyFields, contentType);
     }

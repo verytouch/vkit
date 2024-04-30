@@ -175,8 +175,8 @@ public class BuilderUtil {
         Project project = event.getProject();
         assert project != null;
         for (Module module : ModuleManager.getInstance(project).getModules()) {
-            Collection<PsiAnnotation> annotations = JavaAnnotationIndex.getInstance().get(restController, project, module.getModuleScope());
-            annotations.addAll(JavaAnnotationIndex.getInstance().get(controller, project, module.getModuleScope()));
+            Collection<PsiAnnotation> annotations = JavaAnnotationIndex.getInstance().getAnnotations(restController, project, module.getModuleScope());
+            annotations.addAll(JavaAnnotationIndex.getInstance().getAnnotations(controller, project, module.getModuleScope()));
             for (PsiAnnotation psiAnnotation : annotations) {
                 PsiModifierList psiModifierList = (PsiModifierList) psiAnnotation.getParent();
                 PsiElement psiElement = psiModifierList.getParent();

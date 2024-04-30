@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>top.verytouch.vkit.mydoc.plugin.idea</id>
     <name>MyDoc</name>
-    <version>2.2.4</version>
+    <version>2.2.5</version>
     <vendor email="verytouch@qq.com" url="url">verytouch</vendor>
 
     <description><![CDATA[
@@ -28,6 +28,14 @@
     ]]></description>
 
     <change-notes><![CDATA[
+    <div>
+        <strong>v2.2.5</strong>
+        <ul>
+          <li>fix deprecated API usages</li>
+          <li>fix openapi request body</li>
+          <li>pretty apifox config</li>
+        </ul>
+     </div>
     <div>
         <strong>v2.2.4</strong>
         <ul>

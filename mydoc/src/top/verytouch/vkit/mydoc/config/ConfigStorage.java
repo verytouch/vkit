@@ -24,7 +24,13 @@ public class ConfigStorage implements PersistentStateComponent<ConfigStorage> {
 
     public String headers = "Authorization:Bearer {{token}}";
 
-    public String apiFox = "{\"project\":\"\", \"token\":\"\", \"apiOverwriteMode\":\"ignore\", \"folder\":\"mydoc\", \"status\":\"\"}";
+    public String apiFox = "{\n" +
+            "    \"project\": \"\",\n" +
+            "    \"token\": \"\",\n" +
+            "    \"apiOverwriteMode\": \"ignore\",\n" +
+            "    \"folder\": \"mydoc\",\n" +
+            "    \"status\": \"\"\n" +
+            "}\n";
 
     public String templateDir = "";
 
@@ -48,7 +54,7 @@ public class ConfigStorage implements PersistentStateComponent<ConfigStorage> {
     }
 
     public static ConfigStorage getInstance(Project project) {
-        return ServiceManager.getService(project, ConfigStorage.class);
+        return project.getService(ConfigStorage.class);
     }
 
 }
