@@ -27,7 +27,11 @@ public enum NodeType {
     /**
      * 排他网关
      */
-    EXCLUSIVE_GATEWAY(BpmnUtils::createExclusiveGateway);
+    EXCLUSIVE_GATEWAY(BpmnUtils::createExclusiveGateway),
+    /**
+     * 并行网关
+     */
+    PARALLEL_GATEWAY(BpmnUtils::createParallelGateway);
 
     private final Function<Node, FlowNode> nodeMapper;
 }

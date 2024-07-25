@@ -79,6 +79,18 @@ public final class BpmnUtils {
         userTask.setName(node.getName());
         if (StringUtils.isNotBlank(node.getAssignee())) {
             userTask.setAssignee(node.getAssignee());
+        } else {
+            userTask.setAssignee("${assignee}");
+        }
+        // 多实例任务，用于会签、或签
+        if (node.getLoopCardinality() > 1) {
+            MultiInstanceLoopCharacteristics loopCharacteristics = new MultiInstanceLoopCharacteristics();
+            loopCharacteristics.setLoopCardinality(node.getLoopCardinality().toString());
+            loopCharacteristics.setCompletionCondition(node.getCompleteCondition());
+            loopCharacteristics.setSequential(false);
+            loopCharacteristics.setElementVariable("assignee");
+            loopCharacteristics.setInputDataItem("assigneeList");
+            userTask.setLoopCharacteristics(loopCharacteristics);
         }
         return userTask;
     }
@@ -88,6 +100,13 @@ public final class BpmnUtils {
         exclusiveGateway.setId(node.getId());
         exclusiveGateway.setName(node.getName());
         return exclusiveGateway;
+    }
+
+    public static ParallelGateway createParallelGateway(Node node) {
+        ParallelGateway parallelGateway = new ParallelGateway();
+        parallelGateway.setId(node.getId());
+        parallelGateway.setName(node.getName());
+        return parallelGateway;
     }
 
     public static SequenceFlow createSequenceFlow(Sequence sequence, FlowNode source, FlowNode target) {

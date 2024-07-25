@@ -36,4 +36,12 @@ public class Node {
      * 候选组ID
      */
     private List<String> candidateGroups;
+    /**
+     * 任务实例数
+     */
+    private Integer loopCardinality = 1;
+    /**
+     * 完成条件
+     */
+    private String completeCondition = "${nrOfCompletedInstances/nrOfInstances>=1}";
 }
