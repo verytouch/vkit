@@ -12,9 +12,9 @@ import top.verytouch.vkit.oss.OssProperties;
 import top.verytouch.vkit.oss.OssService;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -43,7 +43,7 @@ public class AliOssService implements OssService {
     public String upload(String bucket, String object, File file) {
         checkBucket(bucket);
         try {
-            oss.putObject(bucket, object, new FileInputStream(file));
+            oss.putObject(bucket, object, Files.newInputStream(file.toPath()));
             return getPreviewUrl(bucket, object);
         } catch (Exception e) {
             log.error(String.format("上传文件失败，bucket=%s，object=%s，file=%s", bucket, object, file.getName()), e);

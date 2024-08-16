@@ -1,16 +1,16 @@
 package top.verytouch.vkit.oss.minio;
 
+import io.minio.*;
+import io.minio.http.Method;
+import lombok.extern.slf4j.Slf4j;
 import top.verytouch.vkit.common.exception.BusinessException;
 import top.verytouch.vkit.oss.OssHelper;
 import top.verytouch.vkit.oss.OssProperties;
 import top.verytouch.vkit.oss.OssService;
-import io.minio.*;
-import io.minio.http.Method;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
@@ -42,7 +42,7 @@ public class MinIoService implements OssService {
             PutObjectArgs args = PutObjectArgs.builder()
                     .bucket(bucket)
                     .object(object)
-                    .stream(new FileInputStream(file), file.length(), -1)
+                    .stream(Files.newInputStream(file.toPath()), file.length(), -1)
                     .contentType(OssHelper.getContentType(file))
                     .build();
             client.putObject(args);
