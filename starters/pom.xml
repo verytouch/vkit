@@ -18,8 +18,6 @@
         <module>captcha-spring-boot-starter</module>
         <module>alipay-spring-boot-starter</module>
         <module>rbac-spring-boot-starter</module>
-        <module>chatgpt-spring-boot-starter</module>
-        <module>yiyan-spring-boot-starter</module>
     </modules>
 
     <properties>
@@ -82,12 +80,6 @@
                 <groupId>org.springframework.security.oauth.boot</groupId>
                 <artifactId>spring-security-oauth2-autoconfigure</artifactId>
                 <version>${oauth2.version}</version>
-            </dependency>
-            <!-- chat-gpt token -->
-            <dependency>
-                <groupId>com.knuddels</groupId>
-                <artifactId>jtokkit</artifactId>
-                <version>0.6.1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
