@@ -70,6 +70,8 @@
         .api > div {
             line-height: 2em;
             width: 80%;
+            font-weight: bold;
+            margin-top: 1em;
         }
 
         .api > p {
