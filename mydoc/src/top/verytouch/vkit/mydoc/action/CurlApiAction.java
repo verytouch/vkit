@@ -6,8 +6,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import top.verytouch.vkit.mydoc.builder.BuilderTask;
 import top.verytouch.vkit.mydoc.builder.VoidDocBuilder;
+import top.verytouch.vkit.mydoc.config.ConfigStorage;
 import top.verytouch.vkit.mydoc.constant.DocType;
-import top.verytouch.vkit.mydoc.model.ApiConfig;
 import top.verytouch.vkit.mydoc.model.ApiModel;
 import top.verytouch.vkit.mydoc.model.ApiOperation;
 import top.verytouch.vkit.mydoc.util.BuilderUtil;
@@ -33,7 +33,7 @@ public class CurlApiAction extends AbstractMyAction {
     private static final String WRAP = " \\\n";
 
     private String buildCurl(ApiModel apiModel) {
-        ApiConfig config = apiModel.getConfig();
+        ConfigStorage config = apiModel.getConfig();
         String headers = config.realHeaders().entrySet().stream()
                 .map(entry -> "     --header '" + entry.getKey() + ": " + entry.getValue() + "'")
                 .collect(Collectors.joining(WRAP));

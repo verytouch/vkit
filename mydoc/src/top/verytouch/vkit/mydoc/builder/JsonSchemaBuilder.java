@@ -5,9 +5,9 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.util.PsiTypesUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import top.verytouch.vkit.mydoc.config.ConfigStorage;
 import top.verytouch.vkit.mydoc.constant.ClassKind;
 import top.verytouch.vkit.mydoc.constant.DocType;
-import top.verytouch.vkit.mydoc.model.ApiConfig;
 import top.verytouch.vkit.mydoc.model.ApiField;
 import top.verytouch.vkit.mydoc.util.BuilderUtil;
 import top.verytouch.vkit.mydoc.util.JsonUtil;
@@ -41,7 +41,7 @@ public class JsonSchemaBuilder extends DocBuilder {
             this.schema = JsonUtil.newObject();
             return;
         }
-        ApiConfig config = BuilderUtil.getConfig(event);
+        ConfigStorage config = BuilderUtil.getConfig(event);
         List<ApiField> apiFields = new ApiBuilder(config).buildFromPsiClass(PsiTypesUtil.getClassType(currentJavaClass.get(0)));
         this.schema = buildSchema(apiFields);
     }

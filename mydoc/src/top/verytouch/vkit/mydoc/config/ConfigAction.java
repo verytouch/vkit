@@ -2,17 +2,12 @@ package top.verytouch.vkit.mydoc.config;
 
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.ui.FormBuilder;
-import top.verytouch.vkit.mydoc.constant.ConfigVariable;
+import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Objects;
 
 /**
  * 配置面板
@@ -23,27 +18,12 @@ import java.util.stream.Stream;
 public class ConfigAction implements Configurable {
 
     private final Project project;
+    private final ConfigUI configUI;
 
-    private JTextField docName;
-
-    private JTextField contextPath;
-
-    private JTextField host;
-
-    private JTextArea headers;
-
-    private JTextArea apiFox;
-
-    private JTextField templateDir;
-
-    private JCheckBox showExample;
-
-    private JCheckBox showRequired;
-
-    private JCheckBox showApiDesc;
 
     public ConfigAction(Project project) {
         this.project = project;
+        this.configUI = new ConfigUI(project);
     }
 
     @Override
@@ -55,83 +35,27 @@ public class ConfigAction implements Configurable {
     @Override
     @Nullable
     public JComponent createComponent() {
-        List<String> tips = new ArrayList<>();
-        tips.add(Stream.of(ConfigVariable.values())
-                .map(variable -> variable.getVariable() + "=" + variable.getRemark())
-                .collect(Collectors.joining(", ")));
-        tips.add("Header每行一个，键值之间用冒号分隔");
-        tips.add("TemplateDir非空时使用该目录下的模板文件：html.ftl、markdown.ftl、word.ftl、word.docx");
-
-        docName = new JTextField();
-        contextPath = new JTextField();
-        host = new JTextField();
-        headers = new JTextArea(2, 0);
-        apiFox = new JTextArea(2, 0);
-        templateDir = new JTextField();
-        showExample = new JCheckBox("请求示例");
-        showRequired = new JCheckBox("必填说明");
-        showApiDesc = new JCheckBox("接口描述");
-
-        JPanel checkBoxGroup = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        checkBoxGroup.add(showExample);
-        checkBoxGroup.add(showRequired);
-        checkBoxGroup.add(showApiDesc);
-
-        FormBuilder formBuilder = FormBuilder.createFormBuilder();
-        for (String tip : tips) {
-            formBuilder.addTooltip(tip);
-        }
-        return formBuilder.addLabeledComponent("DocName", docName)
-                .addLabeledComponent("Host", host)
-                .addLabeledComponent("ContextPath", contextPath)
-                .addLabeledComponent("TemplateDir", templateDir)
-                .addLabeledComponent("Headers", headers)
-                .addLabeledComponent("Optional", checkBoxGroup)
-                .addLabeledComponent("ApiFox", apiFox)
-                .addComponentFillVertically(new JPanel(), 0)
-                .getPanel();
+        return this.configUI.create();
     }
 
     @Override
     public boolean isModified() {
-        ConfigStorage config = ConfigStorage.getInstance(project);
-        return !docName.getText().trim().equals(config.docName) ||
-                !host.getText().trim().equals(config.apiServer) ||
-                !contextPath.getText().trim().equals(config.contextPath) ||
-                !headers.getText().trim().equals(config.headers) ||
-                !apiFox.getText().trim().equals(config.apiFox) ||
-                !templateDir.getText().trim().equals(config.templateDir) ||
-                showExample.isSelected() != config.showExample ||
-                showRequired.isSelected() != config.showRequired ||
-                showApiDesc.isSelected() != config.showApiDesc;
+        ConfigStorage config = ConfigStorage.getInstance(this.project);
+        ConfigStorage data = this.configUI.getData();
+        return !Objects.equals(config, data);
     }
 
     @Override
     public void apply() {
-        ConfigStorage config = ConfigStorage.getInstance(project);
-        config.docName = docName.getText().trim();
-        config.apiServer = host.getText().trim();
-        config.contextPath = contextPath.getText().trim();
-        config.headers = headers.getText().trim();
-        config.apiFox = apiFox.getText().trim();
-        config.templateDir = templateDir.getText().trim();
-        config.showExample = showExample.isSelected();
-        config.showRequired = showRequired.isSelected();
-        config.showApiDesc = showApiDesc.isSelected();
+        ConfigStorage config = ConfigStorage.getInstance(this.project);
+        ConfigStorage data = this.configUI.getData();
+        XmlSerializerUtil.copyBean(data, config);
     }
 
     @Override
     public void reset() {
-        ConfigStorage config = ConfigStorage.getInstance(project);
-        docName.setText(config.docName);
-        host.setText(config.apiServer);
-        contextPath.setText(config.contextPath);
-        headers.setText(config.headers);
-        apiFox.setText(config.apiFox);
-        templateDir.setText(config.templateDir);
-        showExample.setSelected(config.showExample);
-        showRequired.setSelected(config.showRequired);
-        showApiDesc.setSelected(config.showApiDesc);
+        ConfigStorage config = ConfigStorage.getInstance(this.project);
+        this.configUI.updateUI(config);
     }
 
 }

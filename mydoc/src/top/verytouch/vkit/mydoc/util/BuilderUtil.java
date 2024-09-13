@@ -16,7 +16,6 @@ import org.apache.commons.lang3.StringUtils;
 import top.verytouch.vkit.mydoc.builder.ApiBuilder;
 import top.verytouch.vkit.mydoc.config.ConfigStorage;
 import top.verytouch.vkit.mydoc.constant.SpecialClassNames;
-import top.verytouch.vkit.mydoc.model.ApiConfig;
 import top.verytouch.vkit.mydoc.model.ApiGroup;
 import top.verytouch.vkit.mydoc.model.ApiModel;
 
@@ -64,13 +63,13 @@ public class BuilderUtil {
                 break;
         }
         // 接口
-        ApiConfig config = getConfig(event);
+        ConfigStorage config = getConfig(event);
         ApiBuilder builder = new ApiBuilder(config);
         List<ApiGroup> data = buildData(builder, classes, selectedMethod);
         // 名称
         String name;
-        if (StringUtils.isNotBlank(config.docName)) {
-            name = config.docName;
+        if (StringUtils.isNotBlank(config.getDocName())) {
+            name = config.getDocName();
         } else if (data.size() == 1) {
             name = data.get(0).getName();
         } else if (event.getData(LangDataKeys.MODULE) != null) {
@@ -111,8 +110,8 @@ public class BuilderUtil {
     /**
      * 获取配置
      */
-    public static ApiConfig getConfig(AnActionEvent event) {
-        ApiConfig config = new ApiConfig(ConfigStorage.getInstance(event.getProject()));
+    public static ConfigStorage getConfig(AnActionEvent event) {
+        ConfigStorage config = ConfigStorage.getInstance(event.getProject());
         config.setContextPath(config.realContextPath(event));
         return config;
     }

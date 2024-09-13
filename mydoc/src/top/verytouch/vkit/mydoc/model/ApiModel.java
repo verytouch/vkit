@@ -2,6 +2,7 @@ package top.verytouch.vkit.mydoc.model;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import top.verytouch.vkit.mydoc.config.ConfigStorage;
 
 import java.util.List;
 
@@ -28,14 +29,14 @@ public class ApiModel {
     /**
      * 配置
      */
-    private ApiConfig config;
+    private ConfigStorage config;
 
 
     public ApiModel() {
 
     }
 
-    public ApiModel(List<ApiGroup> data, ApiConfig config) {
+    public ApiModel(List<ApiGroup> data, ConfigStorage config) {
         this.data = data;
         this.config = config;
     }

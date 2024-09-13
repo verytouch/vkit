@@ -2,6 +2,7 @@ package top.verytouch.vkit.mydoc.builder;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.apache.commons.lang3.StringUtils;
+import top.verytouch.vkit.mydoc.config.ConfigStorage;
 import top.verytouch.vkit.mydoc.constant.DocType;
 import top.verytouch.vkit.mydoc.util.*;
 
@@ -23,33 +24,24 @@ public final class ApiFoxBuilder extends DocBuilder {
 
     @Override
     protected void buildDoc() {
-        String apiFoxConfig = BuilderUtil.getConfig(event).getApiFox();
-        if (StringUtils.isBlank(apiFoxConfig)) {
-            throw new RuntimeException("please config apiFox");
-        }
-        @SuppressWarnings("unchecked")
-        Map<String, Object> apiFoxConfigObj = JsonUtil.toObject(apiFoxConfig, Map.class);
-        String apiFoxProject = apiFoxConfigObj.getOrDefault("project", "").toString();
-        if (StringUtils.isBlank(apiFoxProject)) {
+        ConfigStorage config = BuilderUtil.getConfig(event);
+        if (StringUtils.isBlank(config.getApiFoxProject())) {
             throw new RuntimeException("please config apiFox project");
         }
-        String apiFoxToken = apiFoxConfigObj.getOrDefault("token", "").toString();
-        if (StringUtils.isBlank(apiFoxToken)) {
+        if (StringUtils.isBlank(config.getApiFoxToken())) {
             throw new RuntimeException("please config apiFox token");
         }
-        String folder = apiFoxConfigObj.getOrDefault("folder", "").toString();
-        String status = apiFoxConfigObj.getOrDefault("status", "developing").toString();
         JsonUtil.JsonObject<String, Object> openApi = OpenApiUtil.buildModel(model, (group, operation) -> JsonUtil.newObject()
-                .putOne("x-apifox-folder", StringUtils.isBlank(folder) ? group.getName() : folder + "/" + group.getName())
-                .putOne("x-apifox-status", StringUtils.isBlank(status) ? "developing" : status));
+                .putOne("x-apifox-folder", StringUtils.isBlank(config.getApiFoxFolder()) ? group.getName() : config.getApiFoxFolder() + "/" + group.getName())
+                .putOne("x-apifox-status", "developing"));
         Map<String, Object> data = new HashMap<>();
         data.put("importFormat", "openapi");
         // name both merge ignore
-        data.put("apiOverwriteMode", apiFoxConfigObj.getOrDefault("apiOverwriteMode", "ignore"));
+        data.put("apiOverwriteMode", config.getApiFoxOverwriteMode());
         data.put("data", openApi.toJson());
-        String res = new HttpUtil("https://api.apifox.cn/api/v1/projects/" + apiFoxProject + "/import-data")
+        String res = new HttpUtil("https://api.apifox.cn/api/v1/projects/" + config.getApiFoxProject() + "/import-data")
                 .addHeader("X-Apifox-Version", "2022-11-16")
-                .addHeader("Authorization", "Bearer " + apiFoxToken)
+                .addHeader("Authorization", "Bearer " + config.getApiFoxToken())
                 .addHeader("Content-Type", "application/json")
                 .body(JsonUtil.toJson(data).getBytes(StandardCharsets.UTF_8))
                 .post();
