@@ -40,21 +40,21 @@ public class ConfigAction implements Configurable {
 
     @Override
     public boolean isModified() {
-        ConfigStorage config = ConfigStorage.getInstance(this.project);
+        ConfigStorage config = this.project.getService(ConfigStorage.class);
         ConfigStorage data = this.configUI.getData();
         return !Objects.equals(config, data);
     }
 
     @Override
     public void apply() {
-        ConfigStorage config = ConfigStorage.getInstance(this.project);
+        ConfigStorage config = this.project.getService(ConfigStorage.class);
         ConfigStorage data = this.configUI.getData();
         XmlSerializerUtil.copyBean(data, config);
     }
 
     @Override
     public void reset() {
-        ConfigStorage config = ConfigStorage.getInstance(this.project);
+        ConfigStorage config = this.project.getService(ConfigStorage.class);
         this.configUI.updateUI(config);
     }
 

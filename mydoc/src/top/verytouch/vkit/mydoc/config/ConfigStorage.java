@@ -1,5 +1,6 @@
 package top.verytouch.vkit.mydoc.config;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
@@ -61,6 +62,7 @@ public class ConfigStorage implements PersistentStateComponent<ConfigStorage> {
 
     @Override
     @Nullable
+    @JsonIgnore
     public ConfigStorage getState() {
         return this;
     }
@@ -68,10 +70,6 @@ public class ConfigStorage implements PersistentStateComponent<ConfigStorage> {
     @Override
     public void loadState(@NotNull ConfigStorage configStorage) {
         XmlSerializerUtil.copyBean(configStorage, this);
-    }
-
-    public static ConfigStorage getInstance(Project project) {
-        return project.getService(ConfigStorage.class);
     }
 
     public String realContextPath(AnActionEvent event) {

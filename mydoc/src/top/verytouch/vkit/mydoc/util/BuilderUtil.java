@@ -75,7 +75,7 @@ public class BuilderUtil {
         } else if (event.getData(LangDataKeys.MODULE) != null) {
             name = Objects.requireNonNull(event.getData(LangDataKeys.MODULE)).getName();
         } else {
-            name = "接口文档";
+            name = "MyDoc";
         }
         // 模板数据
         ApiModel model = new ApiModel();
@@ -111,7 +111,7 @@ public class BuilderUtil {
      * 获取配置
      */
     public static ConfigStorage getConfig(AnActionEvent event) {
-        ConfigStorage config = ConfigStorage.getInstance(event.getProject());
+        ConfigStorage config = event.getProject().getService(ConfigStorage.class);
         config.setContextPath(config.realContextPath(event));
         return config;
     }
