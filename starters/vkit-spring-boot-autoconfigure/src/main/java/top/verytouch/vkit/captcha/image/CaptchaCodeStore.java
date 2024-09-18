@@ -1,5 +1,7 @@
 package top.verytouch.vkit.captcha.image;
 
+import top.verytouch.vkit.common.util.RandomUtils;
+
 /**
  * 验证码存储
  *
@@ -24,4 +26,11 @@ public interface CaptchaCodeStore {
      * @return 验证码value，取不到返回null
      */
     String remove(String key);
+
+    /**
+     * 生成验证码key
+     */
+    default String generateKey() {
+        return RandomUtils.uuid();
+    }
 }

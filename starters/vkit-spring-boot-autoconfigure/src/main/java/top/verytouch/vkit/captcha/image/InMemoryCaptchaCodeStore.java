@@ -1,7 +1,6 @@
 package top.verytouch.vkit.captcha.image;
 
 import top.verytouch.vkit.common.base.Cache;
-import top.verytouch.vkit.common.util.RandomUtils;
 
 import java.time.Duration;
 
@@ -22,7 +21,7 @@ public class InMemoryCaptchaCodeStore implements CaptchaCodeStore {
 
     @Override
     public String store(String value, long expireSeconds) {
-        String key = RandomUtils.uuid();
+        String key = generateKey();
         cache.put(key, value, Duration.ofSeconds(expireSeconds));
         return key;
     }
