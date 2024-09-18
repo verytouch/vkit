@@ -6,7 +6,7 @@ import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import top.verytouch.vkit.mydoc.action.group.JavaActionGroup;
 import top.verytouch.vkit.mydoc.builder.BuilderTask;
-import top.verytouch.vkit.mydoc.builder.JsonSchemaBuilder;
+import top.verytouch.vkit.mydoc.builder.clipboard.JsonSchemaDocBuilder;
 
 /**
  * 复制为JsonSchema
@@ -18,7 +18,7 @@ public class JsonSchemaAction extends AbstractMyAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
-        BuilderTask.start(new JsonSchemaBuilder(event));
+        BuilderTask.start(new JsonSchemaDocBuilder(event));
     }
 
     @Override

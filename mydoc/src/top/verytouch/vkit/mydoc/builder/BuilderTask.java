@@ -6,6 +6,8 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import top.verytouch.vkit.mydoc.model.ApiModel;
+import top.verytouch.vkit.mydoc.util.BuilderUtil;
 import top.verytouch.vkit.mydoc.util.NotifyUtil;
 
 /**
@@ -37,23 +39,27 @@ public class BuilderTask extends Task.Backgroundable {
         // 生成接口数据
         progressIndicator.setFraction(0.1);
         progressIndicator.setText("Building API...");
-        ApplicationManager.getApplication().runReadAction(docBuilder::buildApi);
+        ApiModel data = ApplicationManager.getApplication().<ApiModel>runReadAction(() -> {
+            int scope = BuilderUtil.isInEditor(docBuilder.event) ? BuilderUtil.CURRENT_IN_EDITOR : BuilderUtil.SELECTED_IN_TREE;
+            return BuilderUtil.buildModel(docBuilder.event, scope);
+        });
         // 渲染模板
         progressIndicator.setFraction(0.8);
         progressIndicator.setText(String.format("Building %s...", docBuilder.docType.getName()));
-
-        try {
-            this.docBuilder.buildDoc();
-            if (StringUtils.isNotBlank(this.docBuilder.getSuccessMessage())) {
-                NotifyUtil.info(this.docBuilder.event.getProject(), this.docBuilder.getSuccessMessage());
+        ApplicationManager.getApplication().runReadAction(() -> {
+            try {
+                this.docBuilder.buildDoc(data);
+                if (StringUtils.isNotBlank(this.docBuilder.getSuccessMessage())) {
+                    NotifyUtil.info(this.docBuilder.event.getProject(), this.docBuilder.getSuccessMessage());
+                }
+            } catch (Exception e) {
+                NotifyUtil.error(docBuilder.event.getProject(), this.docBuilder.geErrorMessage() + ": " + e.getMessage());
+                throw new RuntimeException(e);
+            } finally {
+                // 完成
+                progressIndicator.setFraction(1.0);
+                progressIndicator.setText("Finished");
             }
-        } catch (Exception e) {
-            NotifyUtil.error(docBuilder.event.getProject(), this.docBuilder.geErrorMessage() + ": " + e.getMessage());
-            throw new RuntimeException(e);
-        } finally {
-            // 完成
-            progressIndicator.setFraction(1.0);
-            progressIndicator.setText("Finished");
-        }
+        });
     }
 }

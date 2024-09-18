@@ -1,14 +1,17 @@
-package top.verytouch.vkit.mydoc.builder;
+package top.verytouch.vkit.mydoc.builder.clipboard;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiClassType;
 import com.intellij.psi.util.PsiTypesUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import top.verytouch.vkit.mydoc.builder.ApiBuilder;
 import top.verytouch.vkit.mydoc.config.ConfigStorage;
 import top.verytouch.vkit.mydoc.constant.ClassKind;
 import top.verytouch.vkit.mydoc.constant.DocType;
 import top.verytouch.vkit.mydoc.model.ApiField;
+import top.verytouch.vkit.mydoc.model.ApiModel;
 import top.verytouch.vkit.mydoc.util.BuilderUtil;
 import top.verytouch.vkit.mydoc.util.JsonUtil;
 import top.verytouch.vkit.mydoc.util.JsonUtil.JsonObject;
@@ -21,33 +24,26 @@ import java.util.List;
  * @author verytouch
  * @since 2021-12
  */
-public class JsonSchemaBuilder extends DocBuilder {
+public class JsonSchemaDocBuilder extends ClipboardDocBuilder {
 
-    private JsonObject<String, Object> schema;
-
-    public JsonSchemaBuilder(AnActionEvent event) {
+    public JsonSchemaDocBuilder(AnActionEvent event) {
         super(event, DocType.JSON_SCHEMA);
     }
 
     @Override
-    protected void buildDoc() {
-        BuilderUtil.copyToClipboard(schema.toJson());
+    protected String buildText(ApiModel model) {
+        return buildSchema().toJson();
     }
 
-    @Override
-    protected void buildApi() {
+    private JsonObject<String, Object> buildSchema() {
+        JsonObject<String, Object> properties = JsonUtil.newObject();
         List<PsiClass> currentJavaClass = BuilderUtil.getCurrentJavaClass(event);
         if (CollectionUtils.isEmpty(currentJavaClass)) {
-            this.schema = JsonUtil.newObject();
-            return;
+            return properties;
         }
         ConfigStorage config = BuilderUtil.getConfig(event);
-        List<ApiField> apiFields = new ApiBuilder(config).buildFromPsiClass(PsiTypesUtil.getClassType(currentJavaClass.get(0)));
-        this.schema = buildSchema(apiFields);
-    }
-
-    private JsonObject<String, Object> buildSchema(List<ApiField> apiFields) {
-        JsonObject<String, Object> properties = JsonUtil.newObject();
+        PsiClassType classType = PsiTypesUtil.getClassType(currentJavaClass.get(0));
+        List<ApiField> apiFields = new ApiBuilder(config).buildFromPsiClass(classType);
         if (apiFields.size() == 1 && apiFields.get(0).getName() == null) {
             return buildField(apiFields.get(0));
         }
@@ -84,4 +80,5 @@ public class JsonSchemaBuilder extends DocBuilder {
         }
         return content;
     }
+
 }

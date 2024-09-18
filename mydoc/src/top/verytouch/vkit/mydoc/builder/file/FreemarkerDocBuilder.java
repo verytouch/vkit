@@ -1,4 +1,4 @@
-package top.verytouch.vkit.mydoc.builder;
+package top.verytouch.vkit.mydoc.builder.file;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.util.ResourceUtil;
@@ -9,7 +9,9 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import top.verytouch.vkit.mydoc.config.ConfigStorage;
 import top.verytouch.vkit.mydoc.constant.DocType;
+import top.verytouch.vkit.mydoc.model.ApiModel;
 import top.verytouch.vkit.mydoc.util.ApiUtil;
 
 import java.io.*;
@@ -23,20 +25,20 @@ import java.nio.file.Paths;
  * @author verytouch
  * @since 2021-12
  */
-public class FreemarkerBuilder extends OutputStreamDocBuilder {
+public class FreemarkerDocBuilder extends OutputStreamDocBuilder {
 
-    public FreemarkerBuilder(AnActionEvent event, DocType docType) {
+    public FreemarkerDocBuilder(AnActionEvent event, DocType docType) {
         super(event, docType);
     }
 
     @Override
-    protected OutputStream buildOutputStream() throws IOException {
+    protected OutputStream buildOutputStream(ApiModel model) throws IOException {
         Configuration configuration = new Configuration(Configuration.getVersion());
         configuration.setDefaultEncoding(StandardCharsets.UTF_8.name());
         configuration.setClassicCompatible(true);
-        configuration.setTemplateLoader(getTemplateLoader());
+        configuration.setTemplateLoader(getTemplateLoader(model.getConfig()));
         Template template = configuration.getTemplate(docType.getName());
-        OutputStream outputStream = Files.newOutputStream(Paths.get(getOutPath()));
+        OutputStream outputStream = Files.newOutputStream(Paths.get(getOutPath(model)));
         OutputStreamWriter streamWriter = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
         try {
             template.process(model, streamWriter);
@@ -47,8 +49,8 @@ public class FreemarkerBuilder extends OutputStreamDocBuilder {
         return outputStream;
     }
 
-    private TemplateLoader getTemplateLoader() throws IOException {
-        InputStream inputStream = getTemplateResourceAsStream(docType.getTemplateFileName());
+    private TemplateLoader getTemplateLoader(ConfigStorage config) throws IOException {
+        InputStream inputStream = getTemplateResourceAsStream(docType.getTemplateFileName(), config);
         ByteArrayOutputStream resourceOut = new ByteArrayOutputStream();
         IOUtils.copy(inputStream, resourceOut);
 
@@ -63,8 +65,8 @@ public class FreemarkerBuilder extends OutputStreamDocBuilder {
      *
      * @param filename 文件名称
      */
-    protected InputStream getTemplateResourceAsStream(String filename) throws FileNotFoundException {
-        String templateDir = model.getConfig().getTemplateDir();
+    protected InputStream getTemplateResourceAsStream(String filename, ConfigStorage config) throws IOException {
+        String templateDir = config.getTemplateDir();
         if (StringUtils.isBlank(templateDir)) {
             InputStream stream = ResourceUtil.getResourceAsStream(ApiUtil.class.getClassLoader(),
                     DocType.TEMPLATE_DIR, filename);
@@ -83,7 +85,7 @@ public class FreemarkerBuilder extends OutputStreamDocBuilder {
             throw new RuntimeException("template file not found: " + templateDir +
                     File.separator + filename);
         }
-        return new FileInputStream(file);
+        return Files.newInputStream(file.toPath());
     }
 
 }

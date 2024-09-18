@@ -15,10 +15,10 @@ public enum DocType {
 
     MARK_DOWN("markdown", ".md", "markdown.ftl"),
     HTML("html", ".html", "html.ftl"),
-    JSON("json", ".json", ""),
+    JSON("json model", ".json", ""),
     POSTMAN("postman", ".postman.json", ""),
     WORD("word", ".docx", "word.ftl"),
-    IDEA_HTTP("idea", ".http", ""),
+    IDEA_HTTP("idea http", ".http", ""),
     NONE("api", "", ""),
     CURL("curl", "", ""),
     API_FOX("apifox", "", ""),

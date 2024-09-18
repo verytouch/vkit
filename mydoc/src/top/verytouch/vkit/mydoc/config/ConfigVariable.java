@@ -1,4 +1,4 @@
-package top.verytouch.vkit.mydoc.constant;
+package top.verytouch.vkit.mydoc.config;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;

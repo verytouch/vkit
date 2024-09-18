@@ -4,13 +4,11 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.ui.TitledSeparator;
-import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBRadioButton;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.ui.components.fields.ExpandableTextField;
 import com.intellij.util.execution.ParametersListUtil;
 import com.intellij.util.ui.FormBuilder;
-import top.verytouch.vkit.mydoc.constant.ConfigVariable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +26,6 @@ public class ConfigUI {
 
     private final Project project;
     private final FileChooserDescriptor folderDescriptor = new FileChooserDescriptor(false, true, false, false, false, false);
-    private final JBLabel space = new JBLabel("    ");
 
     private JBTextField docName;
     private JBTextField contextPath;
@@ -96,33 +93,29 @@ public class ConfigUI {
     }
 
     private JPanel createMergeOptions() {
-        JBRadioButton[] mergeOptions = new JBRadioButton[]{
+        JPanel options = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JBRadioButton[] buttons = new JBRadioButton[]{
                 new JBRadioButton("Ignore"),
                 new JBRadioButton("Merge"),
                 new JBRadioButton("Name"),
                 new JBRadioButton("Both")
         };
-        JPanel mergePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         this.apiFoxOverwriteMode = new ButtonGroup();
-        for (JBRadioButton option : mergeOptions) {
-            mergePanel.add(option);
-            mergePanel.add(space);
-            this.apiFoxOverwriteMode.add(option);
+        for (JBRadioButton button : buttons) {
+            options.add(button);
+            this.apiFoxOverwriteMode.add(button);
         }
-        return mergePanel;
+        return options;
     }
 
     private JPanel createFieldOptions() {
         JPanel options = new JPanel(new FlowLayout(FlowLayout.LEFT));
         this.showExample = new JCheckBox("请求示例");
-        options.add(this.showExample);
-        options.add(this.space);
         this.showRequired = new JCheckBox("必填说明");
-        options.add(this.showRequired);
-        options.add(this.space);
         this.showApiDesc = new JCheckBox("接口描述");
+        options.add(this.showExample);
+        options.add(this.showRequired);
         options.add(this.showApiDesc);
-        options.add(this.space);
         return options;
     }
 

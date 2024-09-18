@@ -32,13 +32,4 @@ public class ApiModel {
     private ConfigStorage config;
 
 
-    public ApiModel() {
-
-    }
-
-    public ApiModel(List<ApiGroup> data, ConfigStorage config) {
-        this.data = data;
-        this.config = config;
-    }
-
 }

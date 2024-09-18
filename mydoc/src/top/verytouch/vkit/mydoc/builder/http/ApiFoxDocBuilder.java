@@ -1,10 +1,15 @@
-package top.verytouch.vkit.mydoc.builder;
+package top.verytouch.vkit.mydoc.builder.http;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.apache.commons.lang3.StringUtils;
+import top.verytouch.vkit.mydoc.builder.DocBuilder;
 import top.verytouch.vkit.mydoc.config.ConfigStorage;
 import top.verytouch.vkit.mydoc.constant.DocType;
-import top.verytouch.vkit.mydoc.util.*;
+import top.verytouch.vkit.mydoc.model.ApiModel;
+import top.verytouch.vkit.mydoc.util.HttpUtil;
+import top.verytouch.vkit.mydoc.util.JsonUtil;
+import top.verytouch.vkit.mydoc.util.NotifyUtil;
+import top.verytouch.vkit.mydoc.util.OpenApiUtil;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -16,15 +21,15 @@ import java.util.Map;
  * @author verytouch
  * @since 2023-11
  */
-public final class ApiFoxBuilder extends DocBuilder {
+public final class ApiFoxDocBuilder extends DocBuilder {
 
-    public ApiFoxBuilder(AnActionEvent event) {
+    public ApiFoxDocBuilder(AnActionEvent event) {
         super(event, DocType.API_FOX);
     }
 
     @Override
-    protected void buildDoc() {
-        ConfigStorage config = BuilderUtil.getConfig(event);
+    protected void buildDoc(ApiModel model) {
+        ConfigStorage config = model.getConfig();
         if (StringUtils.isBlank(config.getApiFoxProject())) {
             throw new RuntimeException("please config apiFox project");
         }

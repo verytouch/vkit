@@ -3,7 +3,6 @@ package top.verytouch.vkit.mydoc.builder;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import top.verytouch.vkit.mydoc.constant.DocType;
 import top.verytouch.vkit.mydoc.model.ApiModel;
-import top.verytouch.vkit.mydoc.util.BuilderUtil;
 
 import java.io.IOException;
 
@@ -17,7 +16,6 @@ public abstract class DocBuilder {
 
     protected final AnActionEvent event;
     protected final DocType docType;
-    protected ApiModel model;
 
     protected DocBuilder(AnActionEvent event, DocType docType) {
         this.event = event;
@@ -25,17 +23,9 @@ public abstract class DocBuilder {
     }
 
     /**
-     * 生成接口
-     */
-    protected void buildApi() {
-        int scope = BuilderUtil.isInEditor(event) ? BuilderUtil.CURRENT_IN_EDITOR : BuilderUtil.SELECTED_IN_TREE;
-        this.model = BuilderUtil.buildModel(event, scope);
-    }
-
-    /**
      * 生成文档
      */
-    protected abstract void buildDoc() throws IOException;
+    protected abstract void buildDoc(ApiModel model) throws IOException;
 
     protected String getSuccessMessage() {
         return "build " + this.docType.getName() + " success";

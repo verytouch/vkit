@@ -1,11 +1,14 @@
-package top.verytouch.vkit.mydoc.builder;
+package top.verytouch.vkit.mydoc.builder.file;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import top.verytouch.vkit.mydoc.builder.file.OutputStreamDocBuilder;
+import top.verytouch.vkit.mydoc.config.ConfigStorage;
 import top.verytouch.vkit.mydoc.constant.DocType;
 import top.verytouch.vkit.mydoc.model.ApiField;
 import top.verytouch.vkit.mydoc.model.ApiGroup;
+import top.verytouch.vkit.mydoc.model.ApiModel;
 import top.verytouch.vkit.mydoc.model.ApiOperation;
 import top.verytouch.vkit.mydoc.util.ApiUtil;
 import top.verytouch.vkit.mydoc.util.JsonUtil;
@@ -24,22 +27,22 @@ import java.util.stream.Stream;
  * @author verytouch
  * @since 2021-12
  */
-public class PostmanBuilder extends OutputStreamDocBuilder {
+public class PostmanDocBuilder extends OutputStreamDocBuilder {
 
     private List<Map<String, String>> headers;
 
-    public PostmanBuilder(AnActionEvent event) {
+    public PostmanDocBuilder(AnActionEvent event) {
         super(event, DocType.POSTMAN);
     }
 
     @Override
-    protected OutputStream buildOutputStream() throws IOException {
-        initHeaders();
+    protected OutputStream buildOutputStream(ApiModel model) throws IOException {
+        initHeaders(model.getConfig());
         List<Map<String, Object>> groupList = JsonUtil.newArray();
         for (ApiGroup group : model.getData()) {
             List<Map<String, Object>> apiList = JsonUtil.newArray();
             for (ApiOperation apiOperation : group.getOperationList()) {
-                apiList.add(buildApiOperation(group, apiOperation));
+                apiList.add(buildApiOperation(group, apiOperation, model.getConfig()));
             }
             groupList.add(JsonUtil.newObject()
                     .putOne("name", group.getName())
@@ -51,26 +54,26 @@ public class PostmanBuilder extends OutputStreamDocBuilder {
         Map<String, Object> collection = JsonUtil.newObject()
                 .putOne("info", info)
                 .putOne("item", groupList);
-        OutputStream outputStream = Files.newOutputStream(Paths.get(getOutPath()));
+        OutputStream outputStream = Files.newOutputStream(Paths.get(getOutPath(model)));
         JsonUtil.toJson(collection, outputStream);
         return outputStream;
     }
 
-    private void initHeaders() {
-        headers = model.getConfig().realHeaders().entrySet().stream()
+    private void initHeaders(ConfigStorage config) {
+        headers = config.realHeaders().entrySet().stream()
                 .map(entry -> JsonUtil.newObject("key", entry.getKey())
                         .putOne("value", entry.getValue())
                         .putOne("type", "text"))
                 .collect(Collectors.toList());
     }
 
-    private Map<String, Object> buildApiOperation(ApiGroup group, ApiOperation apiOperation) {
+    private Map<String, Object> buildApiOperation(ApiGroup group, ApiOperation apiOperation, ConfigStorage config) {
         String contentType = Objects.toString(apiOperation.getContentType(), "");
         // url
         Map<String, Object> url = JsonUtil.newObject()
-                .putOne("host", model.getConfig().getApiServer())
+                .putOne("host", config.getApiServer())
                 .putOne("path", processPathArray(group.getPath() + apiOperation.getPath()))
-                .putOne("raw", model.getConfig().getApiServer() + group.getPath() + apiOperation.getPath())
+                .putOne("raw", config.getApiServer() + group.getPath() + apiOperation.getPath())
                 .putOne("query", contentType.startsWith("multipart/form-data") ?
                         null : processParam(apiOperation.getRequestParam(), ""))
                 .putOne("variable", processParam(apiOperation.getPathVariable(), "1"));

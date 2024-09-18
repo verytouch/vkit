@@ -3,9 +3,8 @@ package top.verytouch.vkit.mydoc.action;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.jetbrains.annotations.NotNull;
 import top.verytouch.vkit.mydoc.builder.BuilderTask;
-import top.verytouch.vkit.mydoc.builder.VoidDocBuilder;
+import top.verytouch.vkit.mydoc.builder.clipboard.ClipboardDocBuilder;
 import top.verytouch.vkit.mydoc.constant.DocType;
-import top.verytouch.vkit.mydoc.util.BuilderUtil;
 import top.verytouch.vkit.mydoc.util.JsonUtil;
 
 /**
@@ -18,10 +17,7 @@ public class JsonModelAction extends AbstractMyAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
-        BuilderTask.start(new VoidDocBuilder(event, DocType.JSON, apiModel -> {
-            String json = JsonUtil.toJson(apiModel);
-            BuilderUtil.copyToClipboard(json);
-        }));
+        BuilderTask.start(ClipboardDocBuilder.of(event, DocType.JSON, JsonUtil::toJson));
     }
 
 }
