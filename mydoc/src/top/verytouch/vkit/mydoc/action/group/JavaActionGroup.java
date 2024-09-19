@@ -37,7 +37,7 @@ public abstract class JavaActionGroup extends DefaultActionGroup {
             event.getPresentation().setVisible(false);
             return;
         }
-        boolean javaFileSelected = Arrays.stream(data).anyMatch(e -> isJavaFile(e) ||isJavaDirectory(e));
+        boolean javaFileSelected = Arrays.stream(data).anyMatch(e -> isJavaFile(e) || isJavaDirectory(e));
         event.getPresentation().setVisible(javaFileSelected);
     }
 

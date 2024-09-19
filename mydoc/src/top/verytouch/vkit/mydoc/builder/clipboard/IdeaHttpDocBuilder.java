@@ -3,6 +3,7 @@ package top.verytouch.vkit.mydoc.builder.clipboard;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import top.verytouch.vkit.mydoc.constant.ClassKind;
 import top.verytouch.vkit.mydoc.constant.DocType;
 import top.verytouch.vkit.mydoc.model.ApiField;
 import top.verytouch.vkit.mydoc.model.ApiModel;
@@ -25,7 +26,7 @@ public class IdeaHttpDocBuilder extends ClipboardDocBuilder {
     @Override
     public String buildText(ApiModel apiModel) {
         if (apiModel == null || CollectionUtils.isEmpty(apiModel.getData())) {
-            return "";
+            return null;
         }
         String host = apiModel.getConfig().getApiServer();
         String headers = apiModel.getConfig().realHeaders().entrySet().stream()
@@ -53,8 +54,13 @@ public class IdeaHttpDocBuilder extends ClipboardDocBuilder {
             content.append("\nContent-Type: multipart/form-data; boundary=WebAppBoundary");
             for (ApiField file : apiOperation.getRequestFile()) {
                 content.append("\n\n--WebAppBoundary")
-                        .append("\nContent-Disposition: form-data; name=\"").append(file.getName()).append("\"; filename=\"file.txt\"")
-                        .append("\n\n< D:\\\\file.txt");
+                        .append("\nContent-Disposition: form-data; name=\"").append(file.getName()).append("\"");
+                if (file.getClassKind() == ClassKind.FILE) {
+                    content.append("; filename=\"file.txt\"")
+                            .append("\n\n< D:\\\\file.txt");
+                } else {
+                    content.append("\n\n").append(file.getMock());
+                }
             }
             content.append("\n--WebAppBoundary--");
         } else if (StringUtils.isNotBlank(apiOperation.getRequestBodyExample())) {

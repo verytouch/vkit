@@ -2,6 +2,7 @@ package top.verytouch.vkit.mydoc.util;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -75,6 +76,17 @@ public class JsonUtil {
     }
 
     /**
+     * 转为jsonNode
+     */
+    public static JsonNode toJsonNode(String json) {
+        try {
+            return JSON.readTree(json);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * 创建一个对象
      */
     public static JsonObject<String, Object> newObject() {
@@ -137,4 +149,5 @@ public class JsonUtil {
             return JsonUtil.toJson(this);
         }
     }
+
 }

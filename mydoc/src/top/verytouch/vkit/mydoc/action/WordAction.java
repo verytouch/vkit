@@ -17,4 +17,5 @@ public class WordAction extends AbstractMyAction {
     public void actionPerformed(@NotNull AnActionEvent event) {
         BuilderTask.start(new WordDocDocBuilder(event));
     }
+
 }

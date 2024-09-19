@@ -38,7 +38,7 @@
 </@ftable>
 <#else>
 <@ftable fields=api.requestBody>
-    ▪ **RequestBody**
+▪ **RequestBody**
 </@ftable>
 <#if api.requestBodyExample>
 > RequestBody示例

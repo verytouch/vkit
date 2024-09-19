@@ -4,8 +4,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import top.verytouch.vkit.mydoc.constant.DocType;
 import top.verytouch.vkit.mydoc.model.ApiModel;
 
-import java.io.IOException;
-
 /**
  * 文档生成
  *
@@ -25,15 +23,6 @@ public abstract class DocBuilder {
     /**
      * 生成文档
      */
-    protected abstract void buildDoc(ApiModel model) throws IOException;
-
-    protected String getSuccessMessage() {
-        return "build " + this.docType.getName() + " success";
-    }
-
-    protected String geErrorMessage() {
-        return "build " + this.docType.getName() + " failed";
-    }
-
+    protected abstract Result buildDoc(ApiModel model);
 
 }

@@ -66,7 +66,8 @@ public class ApiOperation {
     private List<ApiField> requestBody;
 
     /**
-     * 文件上传
+     * 文件上传，requestFile不空时，认为ContentType是multipart/form-data
+     * 忽略requestBody，且requestParam移动到requestFile
      */
     private List<ApiField> requestFile;
 

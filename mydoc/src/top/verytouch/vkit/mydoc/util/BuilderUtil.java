@@ -19,9 +19,6 @@ import top.verytouch.vkit.mydoc.constant.SpecialClassNames;
 import top.verytouch.vkit.mydoc.model.ApiGroup;
 import top.verytouch.vkit.mydoc.model.ApiModel;
 
-import java.awt.*;
-import java.awt.datatransfer.StringSelection;
-import java.util.List;
 import java.util.*;
 
 import static top.verytouch.vkit.mydoc.constant.SpecialClassNames.CONTROLLER;
@@ -213,10 +210,4 @@ public class BuilderUtil {
         }
     }
 
-    /**
-     * 复制到粘贴板
-     */
-    public static void copyToClipboard(String text) {
-        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(text), null);
-    }
 }

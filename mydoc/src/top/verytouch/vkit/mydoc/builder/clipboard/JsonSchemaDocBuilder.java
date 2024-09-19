@@ -32,14 +32,15 @@ public class JsonSchemaDocBuilder extends ClipboardDocBuilder {
 
     @Override
     protected String buildText(ApiModel model) {
-        return buildSchema().toJson();
+        JsonObject<String, Object> schema = buildSchema();
+        return schema != null ? schema.toJson() : null;
     }
 
     private JsonObject<String, Object> buildSchema() {
         JsonObject<String, Object> properties = JsonUtil.newObject();
         List<PsiClass> currentJavaClass = BuilderUtil.getCurrentJavaClass(event);
         if (CollectionUtils.isEmpty(currentJavaClass)) {
-            return properties;
+            return null;
         }
         ConfigStorage config = BuilderUtil.getConfig(event);
         PsiClassType classType = PsiTypesUtil.getClassType(currentJavaClass.get(0));

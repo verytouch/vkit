@@ -31,5 +31,4 @@ public class ApiModel {
      */
     private ConfigStorage config;
 
-
 }

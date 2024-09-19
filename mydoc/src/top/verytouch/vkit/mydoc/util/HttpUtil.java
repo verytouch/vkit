@@ -12,8 +12,8 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -53,7 +53,7 @@ public class HttpUtil {
      * @return 接口返回的字符串
      */
     public static String get(String url) {
-        return new HttpUtil(url).get();
+        return new HttpUtil(url).get().asString();
     }
 
     /**
@@ -64,7 +64,7 @@ public class HttpUtil {
      * @return 接口返回的字符串
      */
     public static String get(String url, Map<String, Object> params) {
-        return new HttpUtil(url).params(params).get();
+        return new HttpUtil(url).params(params).get().asString();
     }
 
     /**
@@ -75,7 +75,7 @@ public class HttpUtil {
      * @return 接口返回的字符串
      */
     public static String post(String url, Map<String, Object> params) {
-        return new HttpUtil(url).params(params).post();
+        return new HttpUtil(url).params(params).post().asString();
     }
 
     /**
@@ -89,25 +89,37 @@ public class HttpUtil {
         return new HttpUtil(url)
                 .addHeader("Content-Type", APPLICATION_JSON)
                 .body(JsonUtil.toJson(body).getBytes(StandardCharsets.UTF_8))
-                .post();
+                .post()
+                .asString();
     }
 
     /**
      * 下载
      */
     public static byte[] download(String url) {
-        return new HttpUtil(url).caughtRequest().getBytes();
+        return new HttpUtil(url).caughtRequest().getBody();
+    }
+
+    /**
+     * 执行请求，失败抛出RuntimeException
+     */
+    public HttpResponse caughtRequest(Integer okResponseCode) {
+        try {
+            HttpResponse response = request();
+            if (okResponseCode != null && !okResponseCode.equals(response.getCode())) {
+                throw new RuntimeException(response.getMsg());
+            }
+            return response;
+        } catch (Exception e) {
+            throw new RuntimeException("Http请求失败：" + e.getMessage());
+        }
     }
 
     /**
      * 执行请求，失败抛出RuntimeException
      */
     public HttpResponse caughtRequest() {
-        try {
-            return request();
-        } catch (Exception e) {
-            throw new RuntimeException("Http请求失败：" + e.getMessage());
-        }
+        return caughtRequest(200);
     }
 
     /**
@@ -117,7 +129,7 @@ public class HttpUtil {
         HttpURLConnection connection = null;
         try {
             connection = getConnection(null);
-            return new HttpResponse(IOUtils.toByteArray(connection.getInputStream()), connection.getHeaderFields());
+            return new HttpResponse(connection);
         } finally {
             if (connection != null) {
                 connection.disconnect();
@@ -177,20 +189,15 @@ public class HttpUtil {
             }
         }
         connection.connect();
-        if (connection.getResponseCode() != 200) {
-            String message = String.format("request failed: code=%s, message=%s", connection.getResponseCode(), connection.getResponseMessage());
-            connection.disconnect();
-            throw new RuntimeException(message);
-        }
         return connection;
     }
 
-    public String get() {
-        return method("GET").caughtRequest().getString();
+    public HttpResponse get() {
+        return method("GET").caughtRequest();
     }
 
-    public String post() {
-        return method("POST").caughtRequest().getString();
+    public HttpResponse post() {
+        return method("POST").caughtRequest();
     }
 
     /**
@@ -321,28 +328,32 @@ public class HttpUtil {
      */
     @Data
     public static class HttpResponse {
-        private final byte[] bytes;
-        private final Map<String, String> headers;
 
-        public HttpResponse(byte[] bytes, Map<String, List<String>> headers) {
-            this.bytes = bytes;
-            this.headers = headers.entrySet().stream()
-                    .collect(Collectors.toMap(Map.Entry::getKey,
-                            entry -> entry.getValue() != null && !entry.getValue().isEmpty() ? entry.getValue().get(0) : ""));
+        private final int code;
+        private final String msg;
+        private final Map<String, String> headers;
+        private final byte[] body;
+
+        public HttpResponse(HttpURLConnection connection) throws IOException {
+            this.code = connection.getResponseCode();
+            this.msg = connection.getResponseMessage();
+            this.headers = connection.getHeaderFields().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey,
+                    entry -> entry.getValue() != null && !entry.getValue().isEmpty() ? entry.getValue().get(0) : ""));
+            this.body = Objects.equals(200, this.code) ? IOUtils.toByteArray(connection.getInputStream()) : null;
         }
 
         /**
          * 返回字符串
          */
-        public String getString() {
-            return new String(bytes);
+        public String asString() {
+            return new String(body);
         }
 
         /**
          * 返回javaBean，格式必须为json
          */
-        public <T> T toBean(Class<T> beanType) {
-            return JsonUtil.toObject(new String(bytes), beanType);
+        public <T> T asBean(Class<T> beanType) {
+            return JsonUtil.toObject(new String(body), beanType);
         }
 
     }
