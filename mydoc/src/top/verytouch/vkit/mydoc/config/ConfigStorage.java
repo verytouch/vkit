@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 @State(name = "top.verytouch.vkit.mydoc.config.ConfigAction", storages = @Storage("mydoc.xml"))
 @Data
 public class ConfigStorage implements PersistentStateComponent<ConfigStorage> {
-
+    // common
     @Tag
     private String contextPath = "";
     @Tag
@@ -47,8 +47,10 @@ public class ConfigStorage implements PersistentStateComponent<ConfigStorage> {
     @Tag
     private boolean showApiDesc = true;
     @Tag
+    private boolean ignoreMap = true;
+    @Tag
     private String docName = "";
-
+    // apifox
     @Tag
     private String apiFoxProject = "";
     @Tag

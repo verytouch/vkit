@@ -5,8 +5,9 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.module.JavaModuleType;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.file.PsiJavaDirectoryImpl;
@@ -170,7 +171,7 @@ public class BuilderUtil {
         List<PsiClass> javaClasses = new LinkedList<>();
         Project project = event.getProject();
         assert project != null;
-        for (Module module : ModuleManager.getInstance(project).getModules()) {
+        for (Module module : ModuleUtil.getModulesOfType(project, JavaModuleType.getModuleType())) {
             Collection<PsiAnnotation> annotations = JavaAnnotationIndex.getInstance().getAnnotations(restController, project, module.getModuleScope());
             annotations.addAll(JavaAnnotationIndex.getInstance().getAnnotations(controller, project, module.getModuleScope()));
             for (PsiAnnotation psiAnnotation : annotations) {

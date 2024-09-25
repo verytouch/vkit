@@ -13,8 +13,10 @@ import top.verytouch.vkit.mydoc.model.ApiOperation;
  * @since 2023-11
  */
 public class UrlSearchEverywhereContributorFactory implements SearchEverywhereContributorFactory<ApiOperation> {
+
     @Override
     public @NotNull SearchEverywhereContributor<ApiOperation> createContributor(@NotNull AnActionEvent anActionEvent) {
         return new UrlSearchEverywhereContributor(anActionEvent);
     }
+
 }

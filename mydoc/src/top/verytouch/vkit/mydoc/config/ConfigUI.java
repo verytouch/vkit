@@ -37,6 +37,7 @@ public class ConfigUI {
     private JCheckBox showExample;
     private JCheckBox showRequired;
     private JCheckBox showApiDesc;
+    private JCheckBox ignoreMap;
 
     private JBTextField apiFoxProject;
     private JBTextField apiFoxToken;
@@ -113,9 +114,11 @@ public class ConfigUI {
         this.showExample = new JCheckBox("请求示例");
         this.showRequired = new JCheckBox("必填说明");
         this.showApiDesc = new JCheckBox("接口描述");
+        this.ignoreMap = new JCheckBox("忽略Map");
         options.add(this.showExample);
         options.add(this.showRequired);
         options.add(this.showApiDesc);
+        options.add(this.ignoreMap);
         return options;
     }
 
@@ -135,6 +138,7 @@ public class ConfigUI {
         value.setShowExample(this.showExample.isSelected());
         value.setShowRequired(this.showRequired.isSelected());
         value.setShowApiDesc(this.showApiDesc.isSelected());
+        value.setIgnoreMap(this.ignoreMap.isSelected());
         return value;
     }
 
@@ -153,6 +157,7 @@ public class ConfigUI {
         this.showExample.setSelected(value.isShowExample());
         this.showRequired.setSelected(value.isShowRequired());
         this.showApiDesc.setSelected(value.isShowApiDesc());
+        this.ignoreMap.setSelected(value.isIgnoreMap());
     }
 
     private void setSelected(ButtonGroup buttonGroup, String selection) {

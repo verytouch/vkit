@@ -5,6 +5,7 @@ import lombok.experimental.Accessors;
 import org.apache.commons.lang3.StringUtils;
 import top.verytouch.vkit.mydoc.constant.ClassKind;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -52,6 +53,13 @@ public class ApiField {
      * 子元素
      */
     private List<ApiField> children;
+
+    public void addChildren(List<ApiField> children) {
+        if (this.children == null) {
+            this.children = new LinkedList<>();
+        }
+        this.children.addAll(children);
+    }
 
     public String getOpenApiType() {
         String apiType = this.getClassKind().getOpenApiType();

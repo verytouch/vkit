@@ -4,6 +4,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import top.verytouch.vkit.mydoc.config.ConfigStorage;
+import top.verytouch.vkit.mydoc.constant.ClassKind;
 import top.verytouch.vkit.mydoc.constant.DocType;
 import top.verytouch.vkit.mydoc.model.ApiModel;
 import top.verytouch.vkit.mydoc.model.ApiOperation;
@@ -48,7 +49,7 @@ public class CurlDocBuilder extends ClipboardDocBuilder {
         String body = "";
         if (CollectionUtils.isNotEmpty(operation.getRequestFile())) {
             body = operation.getRequestFile().stream()
-                    .map(field -> "     --form '" + field.getName() + "=@\"\"'")
+                    .map(field -> "     --form '" + field.getName() + "=" + (field.getClassKind() == ClassKind.FILE ? "@" : "") + "\"\"'")
                     .collect(Collectors.joining(WRAP, WRAP, ""));
             headers = WRAP + "     --header 'Content-Type: multipart/form-data'" + headers;
         } else if (CollectionUtils.isNotEmpty(operation.getRequestBody())) {
