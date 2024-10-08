@@ -48,11 +48,11 @@ public class BuilderTask extends Task.Backgroundable {
         progressIndicator.setText(String.format("Building %s...", docBuilder.docType.getName()));
         ApplicationManager.getApplication().runReadAction(() -> {
             try {
-                Result result = this.docBuilder.buildDoc(data);
-                if (result.isSuccess()) {
-                    NotifyUtil.info(this.docBuilder.event.getProject(), result.getMsg());
+                BuilderResult builderResult = this.docBuilder.buildDoc(data);
+                if (builderResult.isSuccess()) {
+                    NotifyUtil.info(this.docBuilder.event.getProject(), builderResult.getMsg());
                 } else {
-                    NotifyUtil.error(this.docBuilder.event.getProject(), result.getMsg());
+                    NotifyUtil.error(this.docBuilder.event.getProject(), builderResult.getMsg());
                 }
             } catch (Exception e) {
                 String msg = StringUtils.isBlank(e.getMessage()) ? "build failed" : e.getMessage();

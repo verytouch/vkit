@@ -4,7 +4,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import top.verytouch.vkit.mydoc.builder.DocBuilder;
-import top.verytouch.vkit.mydoc.builder.Result;
+import top.verytouch.vkit.mydoc.builder.BuilderResult;
 import top.verytouch.vkit.mydoc.config.ConfigStorage;
 import top.verytouch.vkit.mydoc.constant.DocType;
 import top.verytouch.vkit.mydoc.model.ApiModel;
@@ -27,15 +27,15 @@ public abstract class OutputStreamDocBuilder extends DocBuilder {
     }
 
     @Override
-    protected Result buildDoc(ApiModel model) {
+    protected BuilderResult buildDoc(ApiModel model) {
         try {
             OutputStream outputStream = buildOutputStream(model);
             outputStream.flush();
             IOUtils.close(outputStream);
             openOutPath(model.getConfig());
-            return Result.ok("build " + this.docType.getName() + " success");
+            return BuilderResult.ok("build " + this.docType.getName() + " success");
         } catch (IOException e) {
-            return Result.failed("build " + this.docType.getName() + " failed: " + e.getMessage());
+            return BuilderResult.failed("build " + this.docType.getName() + " failed: " + e.getMessage());
         }
     }
 

@@ -3,7 +3,7 @@ package top.verytouch.vkit.mydoc.builder.clipboard;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.apache.commons.lang3.StringUtils;
 import top.verytouch.vkit.mydoc.builder.DocBuilder;
-import top.verytouch.vkit.mydoc.builder.Result;
+import top.verytouch.vkit.mydoc.builder.BuilderResult;
 import top.verytouch.vkit.mydoc.constant.DocType;
 import top.verytouch.vkit.mydoc.model.ApiModel;
 
@@ -23,13 +23,13 @@ public abstract class ClipboardDocBuilder extends DocBuilder {
     }
 
     @Override
-    protected Result buildDoc(ApiModel model) {
+    protected BuilderResult buildDoc(ApiModel model) {
         String text = buildText(model);
         if (StringUtils.isBlank(text)) {
-            return Result.ok("nothing to copy");
+            return BuilderResult.ok("nothing to copy");
         }
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(text), null);
-        return Result.ok("copy " + this.docType.getName() + " success");
+        return BuilderResult.ok("copy " + this.docType.getName() + " success");
     }
 
     protected abstract String buildText(ApiModel model);

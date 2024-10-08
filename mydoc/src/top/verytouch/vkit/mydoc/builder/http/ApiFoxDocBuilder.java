@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.apache.commons.lang3.StringUtils;
 import top.verytouch.vkit.mydoc.builder.DocBuilder;
-import top.verytouch.vkit.mydoc.builder.Result;
+import top.verytouch.vkit.mydoc.builder.BuilderResult;
 import top.verytouch.vkit.mydoc.config.ConfigStorage;
 import top.verytouch.vkit.mydoc.constant.DocType;
 import top.verytouch.vkit.mydoc.model.ApiGroup;
@@ -32,13 +32,13 @@ public final class ApiFoxDocBuilder extends DocBuilder {
     }
 
     @Override
-    protected Result buildDoc(ApiModel model) {
+    protected BuilderResult buildDoc(ApiModel model) {
         ConfigStorage config = model.getConfig();
         if (StringUtils.isBlank(config.getApiFoxProject())) {
-            return Result.failed("apifox project absent");
+            return BuilderResult.failed("apifox project absent");
         }
         if (StringUtils.isBlank(config.getApiFoxToken())) {
-            return Result.failed("apifox token absent");
+            return BuilderResult.failed("apifox token absent");
         }
         BiFunction<ApiGroup, ApiOperation, Map<String, Object>> extra = (group, operation) -> JsonUtil.newObject()
                 .putOne("x-apifox-folder", StringUtils.isBlank(config.getApiFoxFolder()) ? group.getName() : config.getApiFoxFolder() + "/" + group.getName())
@@ -57,19 +57,19 @@ public final class ApiFoxDocBuilder extends DocBuilder {
                 .method("POST")
                 .caughtRequest(null);
         if (Objects.equals(403, response.getCode())) {
-            return Result.failed("illegal apifox project");
+            return BuilderResult.failed("illegal apifox project");
         }
         if (Objects.equals(401, response.getCode())) {
-            return Result.failed("illegal apifox token");
+            return BuilderResult.failed("illegal apifox token");
         }
         if (!Objects.equals(200, response.getCode())) {
-            return Result.failed("upload apifox failed " + response.getMsg());
+            return BuilderResult.failed("upload apifox failed " + response.getMsg());
         }
         JsonNode root = JsonUtil.toJsonNode(response.asString());
         if (root.get("success").asBoolean()) {
-            return Result.ok("upload apifox success " + root.get("data").get("apiCollection").get("item").toString());
+            return BuilderResult.ok("upload apifox success " + root.get("data").get("apiCollection").get("item").toString());
         }
-        return Result.failed("upload apifox failed " + root.get("errorMessage").toString());
+        return BuilderResult.failed("upload apifox failed " + root.get("errorMessage").toString());
     }
 
 }

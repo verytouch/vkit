@@ -23,6 +23,6 @@ public abstract class DocBuilder {
     /**
      * 生成文档
      */
-    protected abstract Result buildDoc(ApiModel model);
+    protected abstract BuilderResult buildDoc(ApiModel model);
 
 }

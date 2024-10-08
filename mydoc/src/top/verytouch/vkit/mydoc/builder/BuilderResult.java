@@ -11,17 +11,17 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-public class Result {
+public class BuilderResult {
 
     private boolean success;
     private String msg;
 
-    public static Result ok(String msg) {
-        return new Result(true, msg);
+    public static BuilderResult ok(String msg) {
+        return new BuilderResult(true, msg);
     }
 
-    public static Result failed(String msg) {
-        return new Result(false, msg);
+    public static BuilderResult failed(String msg) {
+        return new BuilderResult(false, msg);
     }
 
 }
