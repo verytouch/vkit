@@ -56,10 +56,10 @@ public class ConfigUI {
         this.headers = new ExpandableTextField(ParametersListUtil.COLON_LINE_PARSER, ParametersListUtil.COLON_LINE_JOINER);
         this.headers.setColumns(0);
         this.templateDir = new TextFieldWithBrowseButton();
-        this.templateDir.addBrowseFolderListener("请选择模版文件目录", "", this.project, folderDescriptor);
+        this.templateDir.addBrowseFolderListener("TemplateDir", "", this.project, folderDescriptor);
         this.outputDir = new TextFieldWithBrowseButton();
-        this.outputDir.addBrowseFolderListener("请选择文档输出目录", "", this.project, folderDescriptor);
-        this.openOutputDir = new JCheckBox("生成文档后自动打开");
+        this.outputDir.addBrowseFolderListener("OutputDir", "", this.project, folderDescriptor);
+        this.openOutputDir = new JCheckBox("Open the file after building");
         this.apiFoxProject = new JBTextField();
         this.apiFoxToken = new JBTextField();
         this.apiFoxFolder = new JBTextField();
@@ -72,16 +72,16 @@ public class ConfigUI {
                 .setVerticalGap(verticalGap)
                 .addComponent(new TitledSeparator("File Settings"))
                 .addLabeledComponent("DocName", this.docName)
-                .addTooltip("DocName > Controller名称 > 模块名称 > MyDoc")
+                .addTooltip("DocName > ControllerName > ModuleName > 'MyDoc'")
                 .addLabeledComponent("Host", this.host)
                 .addLabeledComponent("ContextPath", this.contextPath)
                 .addTooltip(variableTip)
                 .addLabeledComponent("TemplateDir", this.templateDir)
-                .addTooltip("TemplateDir非空时使用该目录下的模板文件：html.ftl、markdown.ftl、word.ftl、word.docx")
+                .addTooltip("Using these files in template dir：html.ftl、markdown.ftl、word.ftl、word.docx")
                 .addLabeledComponent("OutputDir", this.outputDir)
                 .addComponentToRightColumn(this.openOutputDir)
                 .addLabeledComponent("Headers", this.headers)
-                .addTooltip("Header每行一个，键值之间用冒号:分隔")
+                .addTooltip("HeaderKey:HeaderValue")
                 .addLabeledComponent("Optional", this.createFieldOptions())
                 .addVerticalGap(verticalGap)
                 .addComponent(new TitledSeparator("ApiFox Settings"))
@@ -111,10 +111,10 @@ public class ConfigUI {
 
     private JPanel createFieldOptions() {
         JPanel options = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        this.showExample = new JCheckBox("请求示例");
-        this.showRequired = new JCheckBox("必填说明");
-        this.showApiDesc = new JCheckBox("接口描述");
-        this.ignoreMap = new JCheckBox("忽略Map");
+        this.showExample = new JCheckBox("Show Example");
+        this.showRequired = new JCheckBox("Show Required");
+        this.showApiDesc = new JCheckBox("Show desc");
+        this.ignoreMap = new JCheckBox("Ignore Map");
         options.add(this.showExample);
         options.add(this.showRequired);
         options.add(this.showApiDesc);

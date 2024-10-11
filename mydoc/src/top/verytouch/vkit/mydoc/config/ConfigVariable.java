@@ -19,12 +19,12 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public enum ConfigVariable {
 
-    PROJECT_NAME("${projectName}", "项目名", event -> {
+    PROJECT_NAME("${projectName}", "project name", event -> {
         Project project = event.getProject();
         return project == null ? "" : project.getName();
     }),
 
-    MODULE_NAME("${moduleName}", "模块名", event -> {
+    MODULE_NAME("${moduleName}", "module name", event -> {
         Module module = event.getData(LangDataKeys.MODULE);
         return module == null ? "" : module.getName();
     });

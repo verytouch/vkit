@@ -3,8 +3,8 @@ package top.verytouch.vkit.mydoc.builder.file;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import top.verytouch.vkit.mydoc.builder.DocBuilder;
 import top.verytouch.vkit.mydoc.builder.BuilderResult;
+import top.verytouch.vkit.mydoc.builder.DocBuilder;
 import top.verytouch.vkit.mydoc.config.ConfigStorage;
 import top.verytouch.vkit.mydoc.constant.DocType;
 import top.verytouch.vkit.mydoc.model.ApiModel;
@@ -32,7 +32,7 @@ public abstract class OutputStreamDocBuilder extends DocBuilder {
             OutputStream outputStream = buildOutputStream(model);
             outputStream.flush();
             IOUtils.close(outputStream);
-            openOutPath(model.getConfig());
+            openOutPath(model);
             return BuilderResult.ok("build " + this.docType.getName() + " success");
         } catch (IOException e) {
             return BuilderResult.failed("build " + this.docType.getName() + " failed: " + e.getMessage());
@@ -49,8 +49,8 @@ public abstract class OutputStreamDocBuilder extends DocBuilder {
         return getOutBasePath(model.getConfig()) + File.separator + model.getName() + docType.getSuffix();
     }
 
-    protected void openOutPath(ConfigStorage config) throws IOException {
-        if (!config.isOpenOutDir()) {
+    protected void openOutPath(ApiModel model) throws IOException {
+        if (!model.getConfig().isOpenOutDir()) {
             return;
         }
         String os = System.getProperty("os.name").toLowerCase();
@@ -62,7 +62,7 @@ public abstract class OutputStreamDocBuilder extends DocBuilder {
         } else {
             command = "xdg-open";
         }
-        Runtime.getRuntime().exec(new String[]{command, getOutBasePath(config)});
+        Runtime.getRuntime().exec(new String[]{command, getOutPath(model)});
     }
 
 }
