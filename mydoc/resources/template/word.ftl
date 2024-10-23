@@ -433,8 +433,11 @@
                 </w:p>
                 <w:p>
                     <w:r>
-                        <w:rPr><w:color w:val="666666"/></w:rPr>
-                        <w:t>${api.requestBodyExample ? replace('\r\n', '<w:br/>')}</w:t>
+                        <w:rPr>
+                            <w:color w:val="666666"/>
+                            <w:rFonts w:ascii="宋体" w:eastAsia="宋体" w:hAnsi="宋体" w:cs="Open Sans"/>
+                        </w:rPr>
+                        <w:t xml:space="preserve">${api.requestBodyExample ? replace('\r\n', '<w:br/>')}</w:t>
                     </w:r>
                 </w:p>
             </#if>
@@ -464,8 +467,11 @@
             </w:p>
             <w:p>
                 <w:r>
-                    <w:rPr><w:color w:val="666666"/></w:rPr>
-                    <w:t>${api.responseBodyExample ? replace('\r\n', '<w:br/>')}</w:t>
+                    <w:rPr>
+                        <w:rFonts w:ascii="宋体" w:eastAsia="宋体" w:hAnsi="宋体" w:cs="Open Sans"/>
+                        <w:color w:val="666666"/>
+                    </w:rPr>
+                    <w:t xml:space="preserve">${api.responseBodyExample ? replace('\r\n', '<w:br/>')}</w:t>
                 </w:r>
             </w:p>
         </#if>
