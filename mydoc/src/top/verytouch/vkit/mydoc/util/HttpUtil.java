@@ -4,10 +4,7 @@ import lombok.Data;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.Proxy;
-import java.net.URL;
-import java.net.URLEncoder;
+import java.net.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -166,7 +163,7 @@ public class HttpUtil {
                     map(entry -> entry.getKey() + "=" + entry.getValue())
                     .collect(Collectors.joining("&"));
         }
-        URL u = new URL(url);
+        URL u = new URI(url).toURL();
         HttpURLConnection connection = (HttpURLConnection) (this.proxy != null ? u.openConnection(this.proxy) : u.openConnection());
         connection.setDoInput(true);
         connection.setDoOutput(body != null);
