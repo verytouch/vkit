@@ -2,7 +2,7 @@
     <id>top.verytouch.vkit.mydoc.plugin.idea</id>
     <name>MyDoc</name>
     <version>2.2.8</version>
-    <vendor email="verytouch@qq.com" url="url">verytouch</vendor>
+    <vendor email="mydoc@20872019.xyz" url="url">mydoc</vendor>
 
     <description><![CDATA[
       <strong>click the right mouse button and build api docs, support: </strong>
