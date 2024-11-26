@@ -1,1 +1,0 @@
-D:\ideaIC-2023.3.6.win\jbr\bin\java -jar verifier-cli-1.379-all.jar check-plugin mydoc.zip D:\ideaIU-2024.1.4.win
